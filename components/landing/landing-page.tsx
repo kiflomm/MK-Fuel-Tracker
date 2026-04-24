@@ -71,21 +71,6 @@ export function LandingPage() {
           </Card>
         </section>
 
-        <section className="mx-auto w-full max-w-6xl px-6 pb-16 md:pb-24">
-          <div className="grid gap-4 md:grid-cols-3">
-            {featureCards.map((feature) => (
-              <Card key={feature.title}>
-                <CardHeader>
-                  <feature.icon className="mb-2 size-5 text-primary" />
-                  <CardTitle>{feature.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground">{feature.description}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </section>
       </main>
 
       <footer className="border-t">
