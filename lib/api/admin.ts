@@ -186,8 +186,7 @@ export interface QuotaRule {
   id: number;
   vehicleCategory: string;
   period: "DAILY" | "WEEKLY" | "MONTHLY";
-  maxLiters: number;
-  description?: string;
+  litersLimit: number;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -202,8 +201,8 @@ export async function createQuotaRule(
   data: {
     vehicleCategory: string;
     period: "DAILY" | "WEEKLY" | "MONTHLY";
-    maxLiters: number;
-    description?: string;
+    litersLimit: number;
+    isActive?: boolean;
   },
 ) {
   return adminRequest<QuotaRule>("/admin/quota-rules", accessToken, {
@@ -216,10 +215,7 @@ export async function updateQuotaRule(
   accessToken: string,
   id: number,
   data: {
-    vehicleCategory?: string;
-    period?: "DAILY" | "WEEKLY" | "MONTHLY";
-    maxLiters?: number;
-    description?: string;
+    litersLimit?: number;
     isActive?: boolean;
   },
 ) {
