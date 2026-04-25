@@ -1,0 +1,51 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+const NAV_ITEMS = [
+  { href: "/app/station-manager", label: "Overview", exact: true },
+  { href: "/app/station-manager/workers", label: "Workers" },
+  { href: "/app/station-manager/queue", label: "Live Queue" },
+  { href: "/app/station-manager/reports", label: "Reports" },
+];
+
+function cn(...classes: (string | undefined | null | false)[]) {
+  return classes.filter(Boolean).join(" ");
+}
+
+export default function StationManagerLayout({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+
+  return (
+    <div className="flex w-full gap-8">
+      <aside className="w-64 shrink-0 pr-4">
+        <h2 className="mb-4 text-lg font-semibold tracking-tight">Station Manager</h2>
+        <nav className="flex flex-col space-y-1">
+          {NAV_ITEMS.map((item) => {
+            const isActive = item.exact
+              ? pathname === item.href
+              : pathname.startsWith(item.href);
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                  isActive
+                    ? "bg-secondary text-secondary-foreground"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                )}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
+        </nav>
+      </aside>
+      <div className="flex-1 min-w-0">
+        {children}
+      </div>
+    </div>
+  );
+}
