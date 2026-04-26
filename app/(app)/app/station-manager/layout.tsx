@@ -42,14 +42,14 @@ export default function StationManagerLayout({ children }: { children: React.Rea
     <div className="flex flex-col lg:flex-row w-full gap-6 lg:gap-8 relative">
       
       {/* MOBILE HEADER TOGGLE */}
-      <div className="lg:hidden w-full flex items-center justify-between bg-green-50/50 rounded-2xl p-4 border border-green-200/50 backdrop-blur-sm">
+      <div className="lg:hidden w-full flex items-center justify-between bg-yellow-50/50 rounded-2xl p-4 border border-yellow-200/50 backdrop-blur-sm">
         <div className="flex items-center gap-2">
-          <span className="material-symbols-outlined text-green-700 text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>local_gas_station</span>
-          <h2 className="text-xs font-black tracking-[0.2em] text-green-700 uppercase">Station Menu</h2>
+          <span className="material-symbols-outlined text-yellow-700 text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>local_gas_station</span>
+          <h2 className="text-xs font-black tracking-[0.2em] text-yellow-700 uppercase">Station Menu</h2>
         </div>
         <button 
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
-          className="p-2 bg-green-600/10 hover:bg-green-600/20 rounded-xl text-green-800 transition-colors"
+          className="p-2 bg-yellow-600/10 hover:bg-yellow-600/20 rounded-xl text-yellow-800 transition-colors"
         >
           <span className="material-symbols-outlined text-xl">{isMobileMenuOpen ? "close" : "menu"}</span>
         </button>
@@ -77,10 +77,10 @@ export default function StationManagerLayout({ children }: { children: React.Rea
         <div className="mb-6 px-1 flex justify-between items-start lg:block">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="material-symbols-outlined text-green-700 text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>local_gas_station</span>
-              <h2 className="text-xs font-black tracking-[0.2em] text-green-700 uppercase">Station Command</h2>
+              <span className="material-symbols-outlined text-yellow-700 text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>local_gas_station</span>
+              <h2 className="text-xs font-black tracking-[0.2em] text-yellow-700 uppercase">Station Command</h2>
             </div>
-            <div className="h-0.5 bg-gradient-to-r from-green-600 via-green-400 to-transparent rounded-full" />
+            <div className="h-0.5 bg-gradient-to-r from-yellow-600 via-yellow-400 to-transparent rounded-full" />
             <p className="text-[10px] text-black/40 mt-1.5 uppercase tracking-widest font-semibold">Local Facility Management</p>
           </div>
           {/* Close button on mobile inside the drawer */}
@@ -106,7 +106,7 @@ export default function StationManagerLayout({ children }: { children: React.Rea
                 className={cn(
                   "flex items-center gap-3 rounded-xl px-3 py-2.5 transition-all duration-200 group",
                   isActive
-                    ? "bg-green-50 shadow-sm ring-1 ring-green-600/20"
+                    ? "bg-primary-container shadow-sm ring-1 ring-yellow-600/20"
                     : "hover:bg-surface-tint hover:shadow-md hover:translate-x-0.5"
                 )}
               >
@@ -115,7 +115,7 @@ export default function StationManagerLayout({ children }: { children: React.Rea
                   className={cn(
                     "material-symbols-outlined text-[18px] w-8 h-8 flex items-center justify-center rounded-lg shrink-0 transition-all",
                     isActive
-                      ? "bg-green-600/20 text-green-800"
+                      ? "bg-yellow-600/20 text-yellow-800"
                       : "bg-black/5 text-black/50 group-hover:bg-white/20 group-hover:text-white"
                   )}
                   style={{ fontVariationSettings: isActive ? "'FILL' 1" : "'FILL' 0" }}
@@ -141,7 +141,7 @@ export default function StationManagerLayout({ children }: { children: React.Rea
 
                 {/* Active indicator */}
                 {isActive && (
-                  <span className="ml-auto w-1.5 h-1.5 rounded-full bg-green-600 shrink-0" />
+                  <span className="ml-auto w-1.5 h-1.5 rounded-full bg-yellow-600 shrink-0" />
                 )}
               </Link>
             );

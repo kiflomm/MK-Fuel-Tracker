@@ -94,18 +94,18 @@ export default function StationManagerPage() {
       {/* Hero Header */}
       <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-neutral-900 to-neutral-800 px-6 sm:px-8 py-8 sm:py-10 shadow-xl">
         <div className="absolute inset-0 opacity-5 pointer-events-none" style={{ backgroundImage: "repeating-linear-gradient(45deg, #fff 0, #fff 1px, transparent 0, transparent 50%)", backgroundSize: "12px 12px" }} />
-        <div className="absolute top-0 right-0 w-64 h-64 bg-green-500/10 rounded-full -mr-32 -mt-32 blur-3xl" />
+        <div className="absolute top-0 right-0 w-64 h-64 bg-yellow-500/10 rounded-full -mr-32 -mt-32 blur-3xl" />
         <div className="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <span className="material-symbols-outlined text-green-500 text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>local_gas_station</span>
-              <span className="text-xs font-black tracking-[0.25em] text-green-500 uppercase">Station Facility Dashboard</span>
+              <span className="material-symbols-outlined text-yellow-500 text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>local_gas_station</span>
+              <span className="text-xs font-black tracking-[0.25em] text-yellow-500 uppercase">Station Facility Dashboard</span>
             </div>
             <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight leading-none mb-2">
               Station Overview
             </h1>
             <p className="text-neutral-400 text-sm font-medium">
-              Manager: <span className="text-green-400 font-bold">{user?.firstName ?? "Unknown"}</span> • Station ID: <span className="text-white font-bold">{user?.stationId ?? "Unknown"}</span>
+              Manager: <span className="text-yellow-400 font-bold">{user?.firstName ?? "Unknown"}</span> • Station ID: <span className="text-white font-bold">{user?.stationId ?? "Unknown"}</span>
             </p>
           </div>
           <Button variant="outline" size="sm" onClick={() => fetchData()} className="shrink-0 bg-white/5 border-white/10 text-white hover:bg-white/10 hover:text-white font-label-caps text-[10px] tracking-widest uppercase rounded-full">
