@@ -5,11 +5,13 @@ import { LogoutButton } from "@/components/auth/logout-button";
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <ProtectedAppGate>
-      <div className="flex min-h-screen flex-col bg-background-landing relative overflow-hidden font-['Public_Sans']">
-        {/* Background Patterns */}
-        <div className="absolute inset-0 tilfi-pattern opacity-5 pointer-events-none"></div>
-        <div className="absolute top-0 right-0 w-96 h-96 bg-primary-container/5 rounded-full -mr-48 -mt-48 blur-3xl pointer-events-none"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-secondary/5 rounded-full -ml-48 -mb-48 blur-3xl pointer-events-none"></div>
+      <div className="flex min-h-screen flex-col bg-background-landing relative font-['Public_Sans']">
+        {/* Background Patterns — scoped to avoid bleeding outside the page */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
+          <div className="absolute inset-0 tilfi-pattern opacity-5" />
+          <div className="absolute top-0 right-0 w-96 h-96 bg-primary-container/5 rounded-full -mr-48 -mt-48 blur-3xl" />
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-secondary/5 rounded-full -ml-48 -mb-48 blur-3xl" />
+        </div>
 
         <header className="sticky top-0 z-40 w-full bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md border-b-4 border-yellow-600/20 shadow-sm transition-all duration-300">
           <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 h-20">

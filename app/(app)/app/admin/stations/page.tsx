@@ -37,19 +37,27 @@ export default function StationsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Stations</h1>
-          <p className="text-muted-foreground">Manage fuel stations across the region.</p>
+      {/* Premium Header */}
+      <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-amber-950 to-neutral-900 px-6 py-7 shadow-lg">
+        <div className="absolute top-0 right-0 w-48 h-48 bg-amber-500/10 rounded-full -mr-16 -mt-16 blur-3xl" />
+        <div className="relative z-10 flex items-center justify-between">
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <span className="material-symbols-outlined text-amber-400 text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>local_gas_station</span>
+              <span className="text-[10px] font-black tracking-[0.25em] text-amber-400 uppercase">Network Infrastructure</span>
+            </div>
+            <h1 className="text-3xl font-black text-white tracking-tight leading-none mb-1">Stations</h1>
+            <p className="text-sm text-neutral-400 font-medium">Manage and monitor all fuel stations across the region.</p>
+          </div>
+          <CreateStationDialog
+            open={isCreateOpen}
+            onOpenChange={setIsCreateOpen}
+            onSuccess={fetchStations}
+          />
         </div>
-        <CreateStationDialog 
-          open={isCreateOpen} 
-          onOpenChange={setIsCreateOpen} 
-          onSuccess={fetchStations} 
-        />
       </div>
 
-      <div className="rounded-md border">
+      <div className="rounded-xl border border-outline/10 overflow-hidden shadow-sm">
         <Table>
           <TableHeader>
             <TableRow>

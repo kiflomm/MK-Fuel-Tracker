@@ -46,26 +46,34 @@ export default function ReportsPage() {
 
   return (
     <div className="space-y-6 text-black">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Reports</h1>
-          <p className="text-muted-foreground">View system activity and analytics.</p>
-        </div>
-        <div className="w-64">
-          <Select value={reportType} onValueChange={setReportType}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select Report Type" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="dailyTotals">Daily Totals</SelectItem>
-              <SelectItem value="serviceActivity">Service Activity</SelectItem>
-              <SelectItem value="distribution">Distribution Report</SelectItem>
-            </SelectContent>
-          </Select>
+      {/* Premium Header */}
+      <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-violet-950 to-neutral-900 px-6 py-7 shadow-lg">
+        <div className="absolute top-0 right-0 w-48 h-48 bg-violet-500/10 rounded-full -mr-16 -mt-16 blur-3xl" />
+        <div className="relative z-10 flex items-center justify-between">
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <span className="material-symbols-outlined text-violet-400 text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>assessment</span>
+              <span className="text-[10px] font-black tracking-[0.25em] text-violet-400 uppercase">Analytics & Insights</span>
+            </div>
+            <h1 className="text-3xl font-black text-white tracking-tight leading-none mb-1">Reports</h1>
+            <p className="text-sm text-neutral-400 font-medium">View system activity, distribution totals, and operational metrics.</p>
+          </div>
+          <div className="w-56">
+            <Select value={reportType} onValueChange={setReportType}>
+              <SelectTrigger className="bg-white/10 border-white/20 text-white">
+                <SelectValue placeholder="Select Report Type" />
+              </SelectTrigger>
+              <SelectContent position="popper">
+                <SelectItem value="dailyTotals">Daily Totals</SelectItem>
+                <SelectItem value="serviceActivity">Service Activity</SelectItem>
+                <SelectItem value="distribution">Distribution Report</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
       </div>
 
-      <div className="rounded-md border p-6 bg-white shadow-md overflow-x-auto">
+      <div className="rounded-xl border border-outline/10 p-6 bg-white shadow-sm overflow-x-auto">
         {loading ? (
           <p className="text-center text-muted-foreground py-6">Loading report data...</p>
         ) : data.length === 0 ? (

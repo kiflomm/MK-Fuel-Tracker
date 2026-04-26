@@ -47,15 +47,23 @@ export default function FuelPricesPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Fuel Prices</h1>
-          <p className="text-muted-foreground">Configure the global price per liter for each fuel type.</p>
+      {/* Premium Header */}
+      <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-blue-950 to-neutral-900 px-6 py-7 shadow-lg">
+        <div className="absolute top-0 right-0 w-48 h-48 bg-blue-500/10 rounded-full -mr-16 -mt-16 blur-3xl" />
+        <div className="relative z-10 flex items-center justify-between">
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <span className="material-symbols-outlined text-blue-400 text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>price_change</span>
+              <span className="text-[10px] font-black tracking-[0.25em] text-blue-400 uppercase">Economic Controls</span>
+            </div>
+            <h1 className="text-3xl font-black text-white tracking-tight leading-none mb-1">Fuel Prices</h1>
+            <p className="text-sm text-neutral-400 font-medium">Configure the global price per liter for each fuel type.</p>
+          </div>
+          <UpdatePriceDialog onSuccess={fetchPrices} />
         </div>
-        <UpdatePriceDialog onSuccess={fetchPrices} />
       </div>
 
-      <div className="rounded-md border">
+      <div className="rounded-xl border border-outline/10 overflow-hidden shadow-sm">
         <Table>
           <TableHeader>
             <TableRow>

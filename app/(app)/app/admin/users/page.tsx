@@ -45,14 +45,22 @@ export default function UsersPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Users</h1>
-          <p className="text-muted-foreground">Manage managers and vehicle owners.</p>
-        </div>
-        <div className="flex gap-2">
-          <CreateManagerDialog onSuccess={fetchUsers} />
-          <CreateOwnerDialog onSuccess={fetchUsers} />
+      {/* Premium Header */}
+      <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-indigo-950 to-neutral-900 px-6 py-7 shadow-lg">
+        <div className="absolute top-0 right-0 w-48 h-48 bg-indigo-500/10 rounded-full -mr-16 -mt-16 blur-3xl" />
+        <div className="relative z-10 flex items-center justify-between">
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <span className="material-symbols-outlined text-indigo-400 text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>manage_accounts</span>
+              <span className="text-[10px] font-black tracking-[0.25em] text-indigo-400 uppercase">User Management</span>
+            </div>
+            <h1 className="text-3xl font-black text-white tracking-tight leading-none mb-1">Users</h1>
+            <p className="text-sm text-neutral-400 font-medium">Manage station managers and vehicle owners.</p>
+          </div>
+          <div className="flex gap-2">
+            <CreateManagerDialog onSuccess={fetchUsers} />
+            <CreateOwnerDialog onSuccess={fetchUsers} />
+          </div>
         </div>
       </div>
 
