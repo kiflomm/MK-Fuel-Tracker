@@ -9,7 +9,6 @@ export function MarketingHeader() {
 
   const navLinks = [
     { label: "Home", href: isHome ? "#home" : "/#home" },
-    { label: "Impact", href: isHome ? "#impact" : "/#impact" },
     { label: "Services", href: isHome ? "#services" : "/#services" },
     { label: "Authorities", href: isHome ? "#authorities" : "/#authorities" },
   ];

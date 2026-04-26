@@ -9,12 +9,11 @@ export function MarketingFooter() {
         <div className="flex items-center gap-2">
           <span className="material-symbols-outlined text-yellow-600">energy_savings_leaf</span>
           <span className="font-black text-neutral-800 dark:text-neutral-200 text-lg">
-            MEKELLE ENERGY OVERSIGHT
+            Mekelle Fuel Tracker
           </span>
         </div>
         <p className="text-neutral-500 dark:text-neutral-500 max-w-md text-center md:text-left text-xs leading-relaxed">
-          © 2024 Mekelle Energy Oversight. Official Government Portal. Dedicated to the
-          sustainable development of the Tigray region.
+          © 2026 GC Software Engineering. Mekelle Fuel Tracker
         </p>
       </div>
       <div className="flex flex-wrap justify-center gap-8">
