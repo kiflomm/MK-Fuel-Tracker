@@ -61,9 +61,9 @@ export default function UsersPage() {
           <TableHeader>
             <TableRow>
               <TableHead>ID</TableHead>
-              <TableHead>Role</TableHead>
               <TableHead>Name</TableHead>
               <TableHead>Email</TableHead>
+              <TableHead>Role</TableHead>
               <TableHead>Station ID</TableHead>
               <TableHead>Status</TableHead>
               <TableHead className="text-right">Actions</TableHead>
@@ -86,13 +86,13 @@ export default function UsersPage() {
               users.map((user) => (
                 <TableRow key={user.id}>
                   <TableCell>{user.id}</TableCell>
+                  <TableCell className="font-medium">{user.firstName} {user.lastName}</TableCell>
+                  <TableCell>{user.email}</TableCell>
                   <TableCell>
                     <span className="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10">
                       {user.role}
                     </span>
                   </TableCell>
-                  <TableCell className="font-medium">{user.firstName} {user.lastName}</TableCell>
-                  <TableCell>{user.email}</TableCell>
                   <TableCell>{user.stationId || "-"}</TableCell>
                   <TableCell>{user.isActive ? "Active" : "Suspended"}</TableCell>
                   <TableCell className="text-right">
