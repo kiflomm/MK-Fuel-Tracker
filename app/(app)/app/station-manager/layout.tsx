@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState, useEffect } from "react";
 
 const NAV_ITEMS = [
   { href: "/app/station-manager", label: "Overview", exact: true, icon: "dashboard", desc: "Live status & summary" },
@@ -16,18 +17,79 @@ function cn(...classes: (string | undefined | null | false)[]) {
 
 export default function StationManagerLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Close mobile drawer on scroll
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+    
+    let isScrolling = false;
+    const handleScroll = () => {
+      if (!isScrolling) {
+        window.requestAnimationFrame(() => {
+          setIsMobileMenuOpen(false);
+          isScrolling = false;
+        });
+        isScrolling = true;
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [isMobileMenuOpen]);
 
   return (
-    <div className="flex w-full gap-8">
-      <aside className="w-72 shrink-0 sticky top-24 self-start max-h-[calc(100vh-6rem)] overflow-y-auto">
+    <div className="flex flex-col lg:flex-row w-full gap-6 lg:gap-8 relative">
+      
+      {/* MOBILE HEADER TOGGLE */}
+      <div className="lg:hidden w-full flex items-center justify-between bg-green-50/50 rounded-2xl p-4 border border-green-200/50 backdrop-blur-sm">
+        <div className="flex items-center gap-2">
+          <span className="material-symbols-outlined text-green-700 text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>local_gas_station</span>
+          <h2 className="text-xs font-black tracking-[0.2em] text-green-700 uppercase">Station Menu</h2>
+        </div>
+        <button 
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
+          className="p-2 bg-green-600/10 hover:bg-green-600/20 rounded-xl text-green-800 transition-colors"
+        >
+          <span className="material-symbols-outlined text-xl">{isMobileMenuOpen ? "close" : "menu"}</span>
+        </button>
+      </div>
+
+      {/* MOBILE OVERLAY */}
+      {isMobileMenuOpen && (
+        <div 
+          className="fixed inset-0 bg-neutral-900/40 z-40 lg:hidden backdrop-blur-sm"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
+      {/* SIDEBAR */}
+      <aside className={cn(
+        "shrink-0 transition-transform duration-300 z-50",
+        // Desktop styles
+        "lg:w-72 lg:sticky lg:top-24 lg:self-start lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto lg:block lg:translate-x-0",
+        // Mobile styles
+        isMobileMenuOpen 
+          ? "fixed inset-y-0 left-0 w-[280px] bg-white p-6 shadow-2xl h-[100dvh] top-0 overflow-y-auto translate-x-0" 
+          : "fixed inset-y-0 left-0 w-[280px] bg-white p-6 shadow-2xl h-[100dvh] top-0 overflow-y-auto -translate-x-full lg:translate-x-0 lg:p-0 lg:shadow-none lg:bg-transparent"
+      )}>
         {/* Sidebar Header */}
-        <div className="mb-6 px-1">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="material-symbols-outlined text-green-700 text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>local_gas_station</span>
-            <h2 className="text-xs font-black tracking-[0.2em] text-green-700 uppercase">Station Command</h2>
+        <div className="mb-6 px-1 flex justify-between items-start lg:block">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="material-symbols-outlined text-green-700 text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>local_gas_station</span>
+              <h2 className="text-xs font-black tracking-[0.2em] text-green-700 uppercase">Station Command</h2>
+            </div>
+            <div className="h-0.5 bg-gradient-to-r from-green-600 via-green-400 to-transparent rounded-full" />
+            <p className="text-[10px] text-black/40 mt-1.5 uppercase tracking-widest font-semibold">Local Facility Management</p>
           </div>
-          <div className="h-0.5 bg-gradient-to-r from-green-600 via-green-400 to-transparent rounded-full" />
-          <p className="text-[10px] text-black/40 mt-1.5 uppercase tracking-widest font-semibold">Local Facility Management</p>
+          {/* Close button on mobile inside the drawer */}
+          <button 
+            className="lg:hidden p-1.5 bg-neutral-100 rounded-lg text-neutral-500 hover:text-black transition-colors"
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            <span className="material-symbols-outlined text-lg">close</span>
+          </button>
         </div>
 
         {/* Nav Items */}
@@ -40,6 +102,7 @@ export default function StationManagerLayout({ children }: { children: React.Rea
               <Link
                 key={item.href}
                 href={item.href}
+                onClick={() => setIsMobileMenuOpen(false)}
                 className={cn(
                   "flex items-center gap-3 rounded-xl px-3 py-2.5 transition-all duration-200 group",
                   isActive
