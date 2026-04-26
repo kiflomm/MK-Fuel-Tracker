@@ -7,9 +7,64 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
+  --font-sans: "Public Sans", var(--font-sans);
   --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-sans);
+  --font-heading: "Public Sans", var(--font-sans);
+  --font-body-md: "Public Sans", var(--font-sans);
+  --font-label-caps: "Inter", var(--font-sans);
+  --font-display-lg: "Public Sans", var(--font-sans);
+  --font-title-sm: "Public Sans", var(--font-sans);
+  --font-headline-md: "Public Sans", var(--font-sans);
+
+  /* Landing Page Colors */
+  --color-tertiary-container: #e3aa00;
+  --color-surface-tint: #735c00;
+  --color-surface-container: #f0eded;
+  --color-on-surface-variant: #4d4635;
+  --color-on-primary-fixed-variant: #574500;
+  --color-on-primary-fixed: #241a00;
+  --color-outline: #7f7663;
+  --color-on-tertiary-fixed: #261a00;
+  --color-on-surface: #1c1b1b;
+  --color-on-error: #ffffff;
+  --color-tertiary: #795900;
+  --color-primary-fixed-dim: #e9c349;
+  --color-on-primary-container: #554300;
+  --color-tertiary-fixed: #ffdfa0;
+  --color-surface-variant: #e5e2e1;
+  --color-on-tertiary-container: #5a4100;
+  --color-on-tertiary-fixed-variant: #5c4300;
+  --color-secondary: #934b19;
+  --color-on-secondary: #ffffff;
+  --color-primary: #735c00;
+  --color-inverse-on-surface: #f3f0ef;
+  --color-surface-container-highest: #e5e2e1;
+  --color-outline-variant: #d0c5af;
+  --color-on-secondary-fixed-variant: #753401;
+  --color-secondary-fixed-dim: #ffb68c;
+  --color-secondary-container: #ffa26a;
+  --color-on-secondary-fixed: #321200;
+  --color-inverse-primary: #e9c349;
+  --color-primary-container: #d4af37;
+  --color-inverse-surface: #313030;
+  --color-on-background: #1c1b1b;
+  --color-error: #ba1a1a;
+  --color-error-container: #ffdad6;
+  --color-primary-fixed: #ffe088;
+  --color-surface-dim: #dcd9d9;
+  --color-surface-bright: #fcf9f8;
+  --color-on-secondary-container: #783603;
+  --color-surface-container-low: #f6f3f2;
+  --color-secondary-fixed: #ffdbc9;
+  --color-surface-container-high: #eae7e7;
+  --color-surface: #fcf9f8;
+  --color-on-error-container: #93000a;
+  --color-tertiary-fixed-dim: #fbbc00;
+  --color-on-tertiary: #ffffff;
+  --color-on-primary: #ffffff;
+  --color-background-landing: #fcf9f8;
+  --color-surface-container-lowest: #ffffff;
+
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -126,5 +181,31 @@
   }
   html {
     @apply font-sans;
+    scroll-behavior: smooth;
+  }
+}
+
+@layer utilities {
+  .tilfi-pattern {
+    background-image: radial-gradient(#d4af37 0.5px, transparent 0.5px);
+    background-size: 16px 16px;
+    opacity: 0.05;
+  }
+  .tilfi-border {
+    position: relative;
+  }
+  .tilfi-border::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: repeating-linear-gradient(45deg, #d4af37, #d4af37 4px, #735c00 4px, #735c00 8px);
+  }
+  .glass-card {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(127, 118, 99, 0.1);
   }
 }

@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { Home } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export function AuthShell({
   title,
@@ -12,7 +14,15 @@ export function AuthShell({
   footer?: React.ReactNode;
 }) {
   return (
-    <div className="mx-auto flex w-full max-w-md flex-col gap-6 px-6 py-12">
+    <div className="relative mx-auto flex w-full max-w-md flex-col gap-6 px-6 py-12">
+      <div className="absolute left-4 top-4">
+        <Button variant="ghost" size="sm" asChild className="text-muted-foreground hover:text-foreground">
+          <Link href="/">
+            <Home className="size-4" />
+            <span>Home</span>
+          </Link>
+        </Button>
+      </div>
       <div className="space-y-2 text-center">
         <Link href="/" className="text-sm font-medium text-muted-foreground">
           Mekelle Fuel Tracker
