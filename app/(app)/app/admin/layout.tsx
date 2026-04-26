@@ -89,7 +89,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </nav>
 
         {/* Bottom badge */}
-        <div className="mt-8 mx-1 rounded-xl bg-gradient-to-br from-yellow-50 to-amber-50 border border-yellow-200 p-3">
+        {/* <div className="mt-8 mx-1 rounded-xl bg-gradient-to-br from-yellow-50 to-amber-50 border border-yellow-200 p-3">
           <div className="flex items-center gap-2 mb-1">
             <span className="material-symbols-outlined text-yellow-700 text-base" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
             <span className="text-[10px] font-black uppercase tracking-widest text-yellow-800">Authorized Access</span>
@@ -97,7 +97,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <p className="text-[9px] text-yellow-700/70 leading-relaxed">
             Tigray Regional Energy<br />Oversight Division
           </p>
-        </div>
+        </div> */}
       </aside>
 
       <div className="flex-1 min-w-0 text-black">

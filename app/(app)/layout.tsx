@@ -46,7 +46,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <footer className="w-full py-8 mt-auto border-t border-outline/10 bg-surface-container-lowest/50 backdrop-blur-sm">
           <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
             <p className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">
-              © 2024 Tigray Regional Administration • Energy Oversight Division
+              © 2026 GC Software Engineering • Mekelle Fuel Tracker
             </p>
             <div className="flex items-center gap-4">
               <div className="h-[1px] w-8 bg-neutral-300"></div>
