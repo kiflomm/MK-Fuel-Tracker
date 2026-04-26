@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const NAV_ITEMS = [
   { href: "/app/admin", label: "Dashboard", exact: true, icon: "dashboard", desc: "Overview & stats" },
@@ -20,6 +20,25 @@ function cn(...classes: (string | undefined | null | false)[]) {
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Close mobile drawer on scroll
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+    
+    let isScrolling = false;
+    const handleScroll = () => {
+      if (!isScrolling) {
+        window.requestAnimationFrame(() => {
+          setIsMobileMenuOpen(false);
+          isScrolling = false;
+        });
+        isScrolling = true;
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [isMobileMenuOpen]);
 
   return (
     <div className="flex flex-col lg:flex-row w-full gap-6 lg:gap-8 relative">
