@@ -14,31 +14,24 @@ export function AuthShell({
   footer?: React.ReactNode;
 }) {
   return (
-    <div className="relative mx-auto flex w-full max-w-md flex-col gap-8 px-6">
-      <div className="absolute -left-12 top-0">
-        <Button variant="ghost" size="sm" asChild className="text-on-surface hover:text-primary font-label-caps text-xs tracking-widest uppercase gap-2 transition-all hover:translate-x-1 font-bold">
-          <Link href="/">
-            <Home className="size-4" />
-            <span>Portal Home</span>
-          </Link>
-        </Button>
-      </div>
-      <div className="space-y-3 text-center">
-        <div className="flex flex-col items-center gap-1">
-          <span className="material-symbols-outlined text-yellow-600 text-4xl mb-2">
-            energy_savings_leaf
-          </span>
-          <span className="font-label-caps text-xs text-on-surface font-bold tracking-[0.2em] uppercase">
-            Mekelle Fuel Tracker
-          </span>
+    <div className="flex flex-col w-full animate-in fade-in slide-in-from-bottom-8 duration-1000 ease-out">
+      <div className="space-y-4 mb-10 text-center flex flex-col items-center">
+        <div className="inline-flex items-center justify-center p-3.5 bg-neutral-200/50 rounded-2xl mb-2 text-neutral-800 shadow-sm border border-black/5">
+          <span className="material-symbols-outlined text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>admin_panel_settings</span>
         </div>
-        <h1 className="font-display-lg text-4xl text-on-surface tracking-tight">{title}</h1>
-        <p className="font-semibold text-sm text-on-surface/70 max-w-[320px] mx-auto leading-relaxed">{description}</p>
+        <h1 className="text-4xl font-black tracking-tight text-neutral-900 leading-none">{title}</h1>
+        <p className="text-neutral-500 font-semibold text-sm leading-relaxed">{description}</p>
       </div>
-      <div className="bg-white/90 backdrop-blur-md rounded-none border-l-4 border-l-primary-container p-10 shadow-2xl border-y border-r border-outline/20">
+      
+      <div className="space-y-6">
         {children}
       </div>
-      {footer ? <div className="text-center font-label-caps text-xs text-on-surface font-bold tracking-widest uppercase">{footer}</div> : null}
+      
+      {footer && (
+        <div className="mt-10 pt-6 border-t border-neutral-200 text-center text-[10px] text-neutral-400 font-bold tracking-widest uppercase">
+          {footer}
+        </div>
+      )}
     </div>
   );
 }
