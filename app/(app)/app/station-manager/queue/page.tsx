@@ -59,47 +59,46 @@ export default function QueuePage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Live Queue</h1>
-          <p className="text-muted-foreground">Monitor and manage your station's active vehicle queue.</p>
-        </div>
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={fetchQueue} disabled={loading}>
-            <RefreshCw className={`mr-2 h-4 w-4 ${loading ? "animate-spin" : ""}`} />
-            Refresh
-          </Button>
-          <Button 
-            variant={queue?.isIntakePaused ? "default" : "secondary"} 
-            size="sm" 
-            onClick={handleToggleIntake}
-            disabled={updating || !queue}
-          >
-            {queue?.isIntakePaused ? <Play className="mr-2 h-4 w-4" /> : <Pause className="mr-2 h-4 w-4" />}
-            {queue?.isIntakePaused ? "Resume Intake" : "Pause Intake"}
-          </Button>
+      {/* Premium Header */}
+      <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-sky-950 to-neutral-900 px-6 py-7 shadow-lg">
+        <div className="absolute top-0 right-0 w-48 h-48 bg-sky-500/10 rounded-full -mr-16 -mt-16 blur-3xl" />
+        <div className="relative z-10 flex items-center justify-between">
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <span className="material-symbols-outlined text-sky-400 text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>format_list_numbered</span>
+              <span className="text-[10px] font-black tracking-[0.25em] text-sky-400 uppercase">Live Queue Monitoring</span>
+            </div>
+            <h1 className="text-3xl font-black text-white tracking-tight leading-none mb-1">Live Queue</h1>
+            <p className="text-sm text-neutral-400 font-medium">Monitor and manage your station's active vehicle queue.</p>
+          </div>
+          <div className="flex gap-3">
+            <Button className="bg-white/10 hover:bg-white/20 text-white border-0 transition-all shadow-sm font-label-caps text-[10px] uppercase tracking-widest px-4 h-9 rounded-full" onClick={fetchQueue} disabled={loading}>
+              <RefreshCw className={`mr-2 h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`} />
+              Refresh
+            </Button>
+            <Button 
+              className={`${queue?.isIntakePaused ? "bg-white text-black hover:bg-neutral-200" : "bg-red-500 hover:bg-red-600 text-white"} transition-all shadow-sm font-label-caps text-[10px] uppercase tracking-widest px-4 h-9 rounded-full`}
+              onClick={handleToggleIntake}
+              disabled={updating || !queue}
+            >
+              {queue?.isIntakePaused ? <Play className="mr-2 h-3.5 w-3.5" /> : <Pause className="mr-2 h-3.5 w-3.5" />}
+              {queue?.isIntakePaused ? "Resume Intake" : "Pause Intake"}
+            </Button>
+          </div>
         </div>
       </div>
 
       <div className="grid gap-4 md:grid-cols-4">
-        <Card className="md:col-span-1">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Intake Status</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Badge variant={queue?.isIntakePaused ? "destructive" : "default"}>
-              {queue?.isIntakePaused ? "Paused" : "Active"}
-            </Badge>
-          </CardContent>
-        </Card>
-        <Card className="md:col-span-1">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Queue Length</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{queue?.queueLength ?? 0}</div>
-          </CardContent>
-        </Card>
+        <div className="md:col-span-1 rounded-2xl border border-outline/10 bg-neutral-50 p-5">
+          <h3 className="text-[10px] font-black uppercase tracking-widest text-black/40 mb-3">Intake Status</h3>
+          <Badge variant={queue?.isIntakePaused ? "destructive" : "default"}>
+            {queue?.isIntakePaused ? "Paused" : "Active"}
+          </Badge>
+        </div>
+        <div className="md:col-span-1 rounded-2xl border border-outline/10 bg-neutral-50 p-5">
+          <h3 className="text-[10px] font-black uppercase tracking-widest text-black/40 mb-2">Queue Length</h3>
+          <div className="text-3xl font-black text-black leading-none">{queue?.queueLength ?? 0}</div>
+        </div>
       </div>
 
       <div className="rounded-md border">

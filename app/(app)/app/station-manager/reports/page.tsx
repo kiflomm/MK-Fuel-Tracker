@@ -68,9 +68,19 @@ export default function ReportsPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">Station Reports</h1>
-        <p className="text-muted-foreground">View history and performance data for your station.</p>
+      {/* Premium Header */}
+      <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-violet-950 to-neutral-900 px-6 py-7 shadow-lg">
+        <div className="absolute top-0 right-0 w-48 h-48 bg-violet-500/10 rounded-full -mr-16 -mt-16 blur-3xl" />
+        <div className="relative z-10 flex items-center justify-between">
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <span className="material-symbols-outlined text-violet-400 text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>monitoring</span>
+              <span className="text-[10px] font-black tracking-[0.25em] text-violet-400 uppercase">Station Analytics</span>
+            </div>
+            <h1 className="text-3xl font-black text-white tracking-tight leading-none mb-1">Station Reports</h1>
+            <p className="text-sm text-neutral-400 font-medium">View history and performance data for your station.</p>
+          </div>
+        </div>
       </div>
 
       <Card>
@@ -153,9 +163,9 @@ export default function ReportsPage() {
                   dailyTotals.map((day) => (
                     <TableRow key={day.date}>
                       <TableCell className="font-medium">{new Date(day.date).toLocaleDateString()}</TableCell>
-                      <TableCell>{day.totalLiters.toFixed(2)} L</TableCell>
-                      <TableCell>{day.totalRevenue.toLocaleString()} ETB</TableCell>
-                      <TableCell>{day.transactionCount}</TableCell>
+                      <TableCell>{Number(day.totalLitersDispensed).toFixed(2)} L</TableCell>
+                      <TableCell>{Number(day.totalGrossAmount).toLocaleString()} ETB</TableCell>
+                      <TableCell>{day.completedTransactionCount}</TableCell>
                     </TableRow>
                   ))
                 )}

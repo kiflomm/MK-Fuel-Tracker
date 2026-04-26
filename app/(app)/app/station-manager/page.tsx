@@ -2,10 +2,51 @@
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth/context";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getLiveQueue, updateFuelStatus, FuelStatus, LiveQueue } from "@/lib/api/station-manager";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+
+const SECTIONS = [
+  {
+    href: "/app/station-manager/workers",
+    icon: "badge",
+    title: "Personnel",
+    subtitle: "Manage Workers",
+    desc: "Add, remove, or modify worker access credentials for this station.",
+    accent: "from-blue-500/10 to-indigo-500/5",
+    border: "border-blue-200",
+    iconBg: "bg-blue-100",
+    iconColor: "text-blue-700",
+    badge: "Access",
+    badgeColor: "bg-blue-50 text-blue-700 ring-blue-700/10",
+  },
+  {
+    href: "/app/station-manager/queue",
+    icon: "directions_car",
+    title: "Monitoring",
+    subtitle: "Live Queue",
+    desc: "Monitor incoming vehicles, pause intake, or review recent transactions.",
+    accent: "from-green-500/10 to-emerald-500/5",
+    border: "border-green-200",
+    iconBg: "bg-green-100",
+    iconColor: "text-green-700",
+    badge: "Active",
+    badgeColor: "bg-green-50 text-green-700 ring-green-700/10",
+  },
+  {
+    href: "/app/station-manager/reports",
+    icon: "assessment",
+    title: "Analytics",
+    subtitle: "Daily Reports",
+    desc: "View end-of-day reports, total sales, and detailed station analytics.",
+    accent: "from-amber-500/10 to-yellow-500/5",
+    border: "border-amber-200",
+    iconBg: "bg-amber-100",
+    iconColor: "text-amber-700",
+    badge: "Metrics",
+    badgeColor: "bg-amber-50 text-amber-700 ring-amber-700/10",
+  },
+];
 
 export default function StationManagerPage() {
   const { user, accessToken } = useAuth();
@@ -37,7 +78,6 @@ export default function StationManagerPage() {
     setUpdating(true);
     try {
       await updateFuelStatus(accessToken, status);
-      // In a real app we'd refresh the whole station object or let a parent handle it
       alert("Fuel status updated successfully");
       fetchData();
     } catch (error) {
@@ -49,85 +89,136 @@ export default function StationManagerPage() {
   };
 
   return (
-    <div className="w-full space-y-8">
-      <div className="flex items-center justify-between relative">
-        <div className="absolute -left-6 top-0 bottom-0 w-1 bg-primary-container"></div>
-        <div>
-          <h1 className="font-display-lg text-4xl text-on-surface tracking-tight">Station Overview</h1>
-          <p className="font-label-caps text-sm text-on-surface font-semibold tracking-[0.1em] mt-3 uppercase">
-            Manager: <span className="text-primary font-bold">{user?.firstName}</span> • Station ID: <span className="text-secondary font-bold">{user?.stationId ?? "Unknown"}</span>
-          </p>
+    <div className="w-full space-y-10">
+
+      {/* Hero Header */}
+      <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-neutral-900 to-neutral-800 px-8 py-10 shadow-xl">
+        <div className="absolute inset-0 opacity-5 pointer-events-none" style={{ backgroundImage: "repeating-linear-gradient(45deg, #fff 0, #fff 1px, transparent 0, transparent 50%)", backgroundSize: "12px 12px" }} />
+        <div className="absolute top-0 right-0 w-64 h-64 bg-green-500/10 rounded-full -mr-32 -mt-32 blur-3xl" />
+        <div className="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div>
+            <div className="flex items-center gap-2 mb-4">
+              <span className="material-symbols-outlined text-green-500 text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>local_gas_station</span>
+              <span className="text-xs font-black tracking-[0.25em] text-green-500 uppercase">Station Facility Dashboard</span>
+            </div>
+            <h1 className="text-4xl font-black text-white tracking-tight leading-none mb-2">
+              Station Overview
+            </h1>
+            <p className="text-neutral-400 text-sm font-medium">
+              Manager: <span className="text-green-400 font-bold">{user?.firstName ?? "Unknown"}</span> • Station ID: <span className="text-white font-bold">{user?.stationId ?? "Unknown"}</span>
+            </p>
+          </div>
+          <Button variant="outline" size="sm" onClick={() => fetchData()} className="shrink-0 bg-white/5 border-white/10 text-white hover:bg-white/10 hover:text-white font-label-caps text-[10px] tracking-widest uppercase rounded-full">
+            <span className="material-symbols-outlined text-sm mr-1">refresh</span>
+            Refresh Status
+          </Button>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={() => fetchData()} className="font-label-caps text-[10px] tracking-widest uppercase">Refresh</Button>
+
+        {/* Status bar */}
+        <div className="relative z-10 mt-8 flex flex-wrap gap-4">
+          <div className="flex items-center gap-1.5">
+            <span className={`material-symbols-outlined text-base ${queue?.isIntakePaused ? 'text-red-400' : 'text-green-400'}`} style={{ fontVariationSettings: "'FILL' 1" }}>
+              {queue?.isIntakePaused ? "pause_circle" : "check_circle"}
+            </span>
+            <span className={`text-xs font-semibold ${queue?.isIntakePaused ? 'text-red-400' : 'text-green-400'}`}>
+              {loading ? "Checking Queue..." : queue?.isIntakePaused ? "Intake Paused" : "Accepting Vehicles"}
+            </span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="material-symbols-outlined text-base text-blue-400" style={{ fontVariationSettings: "'FILL' 1" }}>local_shipping</span>
+            <span className="text-xs font-semibold text-blue-400">
+              {loading ? "..." : `${queue?.queueLength ?? 0} Vehicles in Queue`}
+            </span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="material-symbols-outlined text-base text-neutral-400" style={{ fontVariationSettings: "'FILL' 1" }}>schedule</span>
+            <span className="text-xs font-semibold text-neutral-400">
+              {new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}
+            </span>
+          </div>
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Queue Status</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold font-title-sm text-on-surface">{loading ? "..." : `${queue?.queueLength ?? 0} Vehicles`}</div>
-            <p className="text-sm text-on-surface-variant mt-2 font-medium">
-              {queue?.isIntakePaused ? "Intake is currently paused." : "Accepting new vehicles."}
-            </p>
-          </CardContent>
-        </Card>
+      {/* Section heading */}
+      <div>
+        <h2 className="text-xs font-black tracking-[0.2em] uppercase text-black/40 mb-4">Station Modules</h2>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Quick Fuel Control</CardTitle>
-          </CardHeader>
-          <CardContent className="pt-2">
-            <div className="flex flex-wrap gap-2">
-              <Button 
-                size="sm" 
-                variant="outline" 
-                className="bg-green-50 text-green-700 hover:bg-green-100 border-green-200"
-                disabled={updating}
-                onClick={() => handleUpdateFuel('AVAILABLE')}
-              >
-                Available
-              </Button>
-              <Button 
-                size="sm" 
-                variant="outline" 
-                className="bg-amber-50 text-amber-700 hover:bg-amber-100 border-amber-200"
-                disabled={updating}
-                onClick={() => handleUpdateFuel('UNAVAILABLE')}
-              >
-                Unavailable
-              </Button>
-              <Button 
-                size="sm" 
-                variant="outline" 
-                className="bg-red-50 text-red-700 hover:bg-red-100 border-red-200"
-                disabled={updating}
-                onClick={() => handleUpdateFuel('DEPLETED')}
-              >
-                Depleted
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {SECTIONS.map((section) => (
+            <Link key={section.href} href={section.href} className="group block">
+              <div className={`relative rounded-2xl border ${section.border} bg-gradient-to-br ${section.accent} p-5 h-full transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5`}>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Quick Actions</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-col gap-2">
-              <Button variant="secondary" size="sm" asChild>
-                <a href="/app/station-manager/workers">Manage Workers</a>
-              </Button>
-              <Button variant="secondary" size="sm" asChild>
-                <a href="/app/station-manager/queue">View Full Queue</a>
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+                {/* Badge */}
+                <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-black uppercase tracking-widest ring-1 ring-inset mb-4 ${section.badgeColor}`}>
+                  {section.badge}
+                </span>
+
+                {/* Icon + Title */}
+                <div className="flex items-start gap-3 mb-3">
+                  <div className={`${section.iconBg} w-10 h-10 rounded-xl flex items-center justify-center shrink-0`}>
+                    <span className={`material-symbols-outlined text-xl ${section.iconColor}`} style={{ fontVariationSettings: "'FILL' 1" }}>{section.icon}</span>
+                  </div>
+                  <div>
+                    <div className="text-[10px] font-black tracking-widest uppercase text-black/40">{section.title}</div>
+                    <div className="text-xl font-black text-black leading-tight">{section.subtitle}</div>
+                  </div>
+                </div>
+
+                {/* Desc */}
+                <p className="text-xs text-black/60 leading-relaxed">{section.desc}</p>
+
+                {/* Arrow CTA */}
+                <div className="mt-4 flex items-center gap-1 text-xs font-bold text-black/40 group-hover:text-black/70 transition-colors">
+                  <span>Open module</span>
+                  <span className="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+
+      {/* Quick links row equivalent for station manager -> Quick Fuel Control */}
+      <div className="rounded-2xl border border-outline/10 bg-neutral-50 p-5">
+        <div className="flex items-center gap-2 mb-3">
+          <span className="material-symbols-outlined text-black/40 text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>settings_input_component</span>
+          <p className="text-[10px] font-black uppercase tracking-widest text-black/40 m-0">Quick Fuel Control</p>
+        </div>
+        <p className="text-xs text-black/60 mb-4 max-w-xl">
+          Instantly update the operational fuel status of this station. This will reflect immediately on the network.
+        </p>
+        <div className="flex flex-wrap gap-3">
+          <Button 
+            size="sm" 
+            variant="outline" 
+            className="bg-green-50 text-green-700 hover:bg-green-100 hover:text-green-800 border-green-200 rounded-full px-4"
+            disabled={updating}
+            onClick={() => handleUpdateFuel('AVAILABLE')}
+          >
+            <span className="material-symbols-outlined text-base mr-1.5" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
+            Available
+          </Button>
+          <Button 
+            size="sm" 
+            variant="outline" 
+            className="bg-amber-50 text-amber-700 hover:bg-amber-100 hover:text-amber-800 border-amber-200 rounded-full px-4"
+            disabled={updating}
+            onClick={() => handleUpdateFuel('UNAVAILABLE')}
+          >
+            <span className="material-symbols-outlined text-base mr-1.5" style={{ fontVariationSettings: "'FILL' 1" }}>warning</span>
+            Unavailable
+          </Button>
+          <Button 
+            size="sm" 
+            variant="outline" 
+            className="bg-red-50 text-red-700 hover:bg-red-100 hover:text-red-800 border-red-200 rounded-full px-4"
+            disabled={updating}
+            onClick={() => handleUpdateFuel('DEPLETED')}
+          >
+            <span className="material-symbols-outlined text-base mr-1.5" style={{ fontVariationSettings: "'FILL' 1" }}>ev_station</span>
+            Depleted
+          </Button>
+        </div>
       </div>
     </div>
   );

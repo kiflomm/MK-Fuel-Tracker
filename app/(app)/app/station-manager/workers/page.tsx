@@ -41,12 +41,20 @@ export default function WorkersPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Station Workers</h1>
-          <p className="text-muted-foreground">Manage the workers assigned to your station.</p>
+      {/* Premium Header */}
+      <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-emerald-950 to-neutral-900 px-6 py-7 shadow-lg">
+        <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500/10 rounded-full -mr-16 -mt-16 blur-3xl" />
+        <div className="relative z-10 flex items-center justify-between">
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <span className="material-symbols-outlined text-emerald-400 text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>badge</span>
+              <span className="text-[10px] font-black tracking-[0.25em] text-emerald-400 uppercase">Personnel Management</span>
+            </div>
+            <h1 className="text-3xl font-black text-white tracking-tight leading-none mb-1">Station Workers</h1>
+            <p className="text-sm text-neutral-400 font-medium">Manage the workers assigned to your station.</p>
+          </div>
+          <CreateWorkerDialog onSuccess={fetchWorkers} />
         </div>
-        <CreateWorkerDialog onSuccess={fetchWorkers} />
       </div>
 
       <div className="rounded-md border">
@@ -144,7 +152,11 @@ function CreateWorkerDialog({ onSuccess }: { onSuccess: () => void }) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild><Button>Add Worker</Button></DialogTrigger>
+      <DialogTrigger asChild>
+        <Button className="bg-primary-container text-on-primary-container hover:bg-surface-tint hover:text-white transition-all shadow-sm font-label-caps text-[10px] uppercase tracking-widest px-4 h-9 rounded-full">
+          Add Worker
+        </Button>
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader><DialogTitle>Create Station Worker</DialogTitle></DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4 pt-4">

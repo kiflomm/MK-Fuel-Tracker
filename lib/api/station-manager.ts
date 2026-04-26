@@ -181,9 +181,10 @@ export async function updateFuelStatus(accessToken: string, fuelStatus: FuelStat
 
 export interface StationDailyTotal {
   date: string;
-  totalLiters: number;
-  totalRevenue: number;
-  transactionCount: number;
+  totalLitersDispensed: string;
+  totalGrossAmount: string;
+  completedTransactionCount: number;
+  uniqueVehiclesServedCount: number;
 }
 
 export async function getStationTransactions(
