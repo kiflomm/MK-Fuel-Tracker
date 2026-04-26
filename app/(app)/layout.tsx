@@ -21,7 +21,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 <span className="text-base font-bold tracking-tighter text-neutral-900 dark:text-white uppercase leading-none">
                   Mekelle
                 </span>
-                <span className="text-[10px] font-bold tracking-[0.2em] text-on-surface-variant uppercase leading-none mt-1.5">
+                <span className="text-[10px] font-bold tracking-[0.2em] text-yellow-700 dark:text-yellow-500 uppercase leading-none mt-1.5">
                   Fuel Tracker
                 </span>
               </div>
