@@ -52,7 +52,7 @@ export default function AdminPage() {
     <div className="w-full space-y-10">
 
       {/* Hero Header */}
-      <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-neutral-900 to-neutral-800 px-8 py-10 shadow-xl">
+      <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-neutral-900 to-neutral-800 px-6 sm:px-8 py-8 sm:py-10 shadow-xl">
         <div className="absolute inset-0 opacity-5 pointer-events-none" style={{ backgroundImage: "repeating-linear-gradient(45deg, #fff 0, #fff 1px, transparent 0, transparent 50%)", backgroundSize: "12px 12px" }} />
         <div className="absolute top-0 right-0 w-64 h-64 bg-yellow-500/10 rounded-full -mr-32 -mt-32 blur-3xl" />
         <div className="relative z-10">
@@ -60,7 +60,7 @@ export default function AdminPage() {
             <span className="material-symbols-outlined text-yellow-500 text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>shield_person</span>
             <span className="text-xs font-black tracking-[0.25em] text-yellow-500 uppercase">System Command Center</span>
           </div>
-          <h1 className="text-4xl font-black text-white tracking-tight leading-none mb-2">
+          <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight leading-none mb-2">
             Admin Overview
           </h1>
           <p className="text-neutral-400 text-sm font-medium">

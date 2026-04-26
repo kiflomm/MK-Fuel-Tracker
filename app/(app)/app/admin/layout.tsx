@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect } from "react";
+import { useState } from "react";
 
 const NAV_ITEMS = [
   { href: "/app/admin", label: "Dashboard", exact: true, icon: "dashboard", desc: "Overview & stats" },
@@ -19,18 +19,60 @@ function cn(...classes: (string | undefined | null | false)[]) {
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <div className="flex w-full gap-8">
-      <aside className="w-72 shrink-0 sticky top-24 self-start max-h-[calc(100vh-6rem)] overflow-y-auto">
+    <div className="flex flex-col lg:flex-row w-full gap-6 lg:gap-8 relative">
+      
+      {/* MOBILE HEADER TOGGLE */}
+      <div className="lg:hidden w-full flex items-center justify-between bg-yellow-50/50 rounded-2xl p-4 border border-yellow-200/50 backdrop-blur-sm">
+        <div className="flex items-center gap-2">
+          <span className="material-symbols-outlined text-yellow-700 text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>shield_person</span>
+          <h2 className="text-xs font-black tracking-[0.2em] text-yellow-700 uppercase">Admin Menu</h2>
+        </div>
+        <button 
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
+          className="p-2 bg-yellow-600/10 hover:bg-yellow-600/20 rounded-xl text-yellow-800 transition-colors"
+        >
+          <span className="material-symbols-outlined text-xl">{isMobileMenuOpen ? "close" : "menu"}</span>
+        </button>
+      </div>
+
+      {/* MOBILE OVERLAY */}
+      {isMobileMenuOpen && (
+        <div 
+          className="fixed inset-0 bg-neutral-900/40 z-40 lg:hidden backdrop-blur-sm"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
+      {/* SIDEBAR */}
+      <aside className={cn(
+        "shrink-0 transition-transform duration-300 z-50",
+        // Desktop styles
+        "lg:w-72 lg:sticky lg:top-24 lg:self-start lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto lg:block lg:translate-x-0",
+        // Mobile styles
+        isMobileMenuOpen 
+          ? "fixed inset-y-0 left-0 w-[280px] bg-white p-6 shadow-2xl h-[100dvh] top-0 overflow-y-auto translate-x-0" 
+          : "fixed inset-y-0 left-0 w-[280px] bg-white p-6 shadow-2xl h-[100dvh] top-0 overflow-y-auto -translate-x-full lg:translate-x-0 lg:p-0 lg:shadow-none lg:bg-transparent"
+      )}>
         {/* Sidebar Header */}
-        <div className="mb-6 px-1">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="material-symbols-outlined text-yellow-700 text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>shield_person</span>
-            <h2 className="text-xs font-black tracking-[0.2em] text-yellow-700 uppercase">Admin Control</h2>
+        <div className="mb-6 px-1 flex justify-between items-start lg:block">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="material-symbols-outlined text-yellow-700 text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>shield_person</span>
+              <h2 className="text-xs font-black tracking-[0.2em] text-yellow-700 uppercase">Admin Control</h2>
+            </div>
+            <div className="h-0.5 bg-gradient-to-r from-yellow-600 via-yellow-400 to-transparent rounded-full" />
+            <p className="text-[10px] text-black/40 mt-1.5 uppercase tracking-widest font-semibold">System Administration Panel</p>
           </div>
-          <div className="h-0.5 bg-gradient-to-r from-yellow-600 via-yellow-400 to-transparent rounded-full" />
-          <p className="text-[10px] text-black/40 mt-1.5 uppercase tracking-widest font-semibold">System Administration Panel</p>
+          {/* Close button on mobile inside the drawer */}
+          <button 
+            className="lg:hidden p-1.5 bg-neutral-100 rounded-lg text-neutral-500 hover:text-black transition-colors"
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            <span className="material-symbols-outlined text-lg">close</span>
+          </button>
         </div>
 
         {/* Nav Items */}
@@ -43,6 +85,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <Link
                 key={item.href}
                 href={item.href}
+                onClick={() => setIsMobileMenuOpen(false)}
                 className={cn(
                   "flex items-center gap-3 rounded-xl px-3 py-2.5 transition-all duration-200 group",
                   isActive
@@ -87,17 +130,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             );
           })}
         </nav>
-
-        {/* Bottom badge */}
-        {/* <div className="mt-8 mx-1 rounded-xl bg-gradient-to-br from-yellow-50 to-amber-50 border border-yellow-200 p-3">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="material-symbols-outlined text-yellow-700 text-base" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
-            <span className="text-[10px] font-black uppercase tracking-widest text-yellow-800">Authorized Access</span>
-          </div>
-          <p className="text-[9px] text-yellow-700/70 leading-relaxed">
-            Tigray Regional Energy<br />Oversight Division
-          </p>
-        </div> */}
       </aside>
 
       <div className="flex-1 min-w-0 text-black">
