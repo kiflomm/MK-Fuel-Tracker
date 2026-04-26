@@ -9,6 +9,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function FuelPricesPage() {
   const { accessToken } = useAuth();
@@ -129,16 +130,25 @@ function UpdatePriceDialog({ onSuccess }: { onSuccess: () => void }) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild><Button>Update Price</Button></DialogTrigger>
+      <DialogTrigger asChild>
+        <Button className="bg-primary-container text-on-primary-container hover:bg-surface-tint hover:text-white transition-all shadow-sm font-label-caps text-[10px] uppercase tracking-widest px-4 h-9 rounded-full">
+          Update Price
+        </Button>
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader><DialogTitle>Update Fuel Price</DialogTitle></DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4 pt-4">
           <div className="space-y-2">
             <Label>Fuel Type</Label>
-            <select required className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background" value={fuelType} onChange={e => setFuelType(e.target.value)}>
-              <option value="BENZENE">Benzene</option>
-              <option value="DIESEL">Diesel</option>
-            </select>
+            <Select value={fuelType} onValueChange={setFuelType}>
+              <SelectTrigger className="w-full bg-transparent">
+                <SelectValue placeholder="Fuel Type" />
+              </SelectTrigger>
+              <SelectContent position="popper">
+                <SelectItem value="BENZENE">Benzene</SelectItem>
+                <SelectItem value="DIESEL">Diesel</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <div className="space-y-2">
             <Label>New Price (per liter)</Label>

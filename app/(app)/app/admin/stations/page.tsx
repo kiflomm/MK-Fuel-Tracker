@@ -8,6 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function StationsPage() {
   const { accessToken } = useAuth();
@@ -131,7 +132,9 @@ function CreateStationDialog({ open, onOpenChange, onSuccess }: { open: boolean,
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
-        <Button>Add Station</Button>
+        <Button className="bg-primary-container text-on-primary-container hover:bg-surface-tint hover:text-white transition-all shadow-sm font-label-caps text-[10px] uppercase tracking-widest px-4 h-9 rounded-full">
+          Add Station
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -156,11 +159,16 @@ function CreateStationDialog({ open, onOpenChange, onSuccess }: { open: boolean,
           </div>
           <div className="space-y-2">
             <Label htmlFor="fuelStatus">Fuel Status</Label>
-            <select id="fuelStatus" required className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm" value={fuelStatus} onChange={e => setFuelStatus(e.target.value)}>
-              <option value="AVAILABLE">Available</option>
-              <option value="UNAVAILABLE">Unavailable</option>
-              <option value="DEPLETED">Depleted</option>
-            </select>
+            <Select value={fuelStatus} onValueChange={setFuelStatus}>
+              <SelectTrigger id="fuelStatus" className="w-full bg-transparent focus:ring-1 focus:ring-primary">
+                <SelectValue placeholder="Select Status" />
+              </SelectTrigger>
+              <SelectContent position="popper">
+                <SelectItem value="AVAILABLE">Available</SelectItem>
+                <SelectItem value="UNAVAILABLE">Unavailable</SelectItem>
+                <SelectItem value="DEPLETED">Depleted</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={isSubmitting}>
@@ -231,11 +239,16 @@ function EditStationDialog({ station, onSuccess }: { station: Station, onSuccess
           </div>
           <div className="space-y-2">
             <Label htmlFor="edit-fuelStatus">Fuel Status</Label>
-            <select id="edit-fuelStatus" required className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm" value={fuelStatus} onChange={e => setFuelStatus(e.target.value)}>
-              <option value="AVAILABLE">Available</option>
-              <option value="UNAVAILABLE">Unavailable</option>
-              <option value="DEPLETED">Depleted</option>
-            </select>
+            <Select value={fuelStatus} onValueChange={setFuelStatus}>
+              <SelectTrigger id="edit-fuelStatus" className="w-full bg-transparent focus:ring-1 focus:ring-primary">
+                <SelectValue placeholder="Select Status" />
+              </SelectTrigger>
+              <SelectContent position="popper">
+                <SelectItem value="AVAILABLE">Available</SelectItem>
+                <SelectItem value="UNAVAILABLE">Unavailable</SelectItem>
+                <SelectItem value="DEPLETED">Depleted</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <div className="flex items-center space-x-2 mt-4">
             <input 

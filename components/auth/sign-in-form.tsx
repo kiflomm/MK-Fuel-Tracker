@@ -37,7 +37,7 @@ export function SignInForm() {
   return (
     <form className="space-y-4" onSubmit={handleSubmit}>
       <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
+        <Label htmlFor="email" className="font-label-caps text-xs uppercase tracking-widest text-on-surface font-bold">Administrative Email</Label>
         <Input
           id="email"
           type="email"
@@ -50,9 +50,9 @@ export function SignInForm() {
       </div>
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <Label htmlFor="password">Password</Label>
-          <Link href="/forgot-password" className="text-xs text-muted-foreground hover:text-foreground">
-            Forgot password?
+          <Label htmlFor="password" className="font-label-caps text-xs uppercase tracking-widest text-on-surface font-bold">Identification Key</Label>
+          <Link href="/forgot-password" title="Forgot Password" className="font-label-caps text-xs uppercase tracking-widest text-primary hover:text-surface-tint transition-colors font-bold">
+            Forgot?
           </Link>
         </div>
         <Input
@@ -64,8 +64,19 @@ export function SignInForm() {
           required
         />
       </div>
-      <Button className="w-full" type="submit" disabled={isSubmitting}>
-        {isSubmitting ? "Signing in..." : "Sign in"}
+      <Button 
+        className="w-full bg-primary-container text-on-primary-container font-label-caps text-xs uppercase tracking-[0.2em] py-6 rounded-none hover:bg-surface-tint hover:text-white transition-all transform active:scale-[0.98] shadow-lg mt-4" 
+        type="submit" 
+        disabled={isSubmitting}
+      >
+        {isSubmitting ? (
+          <span className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-current animate-pulse"></span>
+            Authenticating...
+          </span>
+        ) : (
+          "Official Sign In"
+        )}
       </Button>
     </form>
   );

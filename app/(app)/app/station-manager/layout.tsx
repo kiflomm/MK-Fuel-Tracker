@@ -43,7 +43,7 @@ export default function StationManagerLayout({ children }: { children: React.Rea
           })}
         </nav>
       </aside>
-      <div className="flex-1 min-w-0">
+      <div className="flex-1 min-w-0 text-black">
         {children}
       </div>
     </div>

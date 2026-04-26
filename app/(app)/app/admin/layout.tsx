@@ -22,7 +22,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <div className="flex w-full gap-8">
       <aside className="w-64 shrink-0 pr-4">
-        <h2 className="mb-4 text-lg font-semibold tracking-tight">Admin</h2>
+        <h2 className="mb-6 text-xl font-bold tracking-tight text-black uppercase">Admin Control</h2>
         <nav className="flex flex-col space-y-1">
           {NAV_ITEMS.map((item) => {
             const isActive = item.exact
@@ -33,10 +33,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                  "flex items-center rounded-md px-3 py-2 text-sm transition-all duration-200",
                   isActive
-                    ? "bg-secondary text-secondary-foreground"
-                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                    ? "bg-primary-container text-black font-bold ring-1 ring-black/10 shadow-sm"
+                    : "text-black/70 hover:bg-surface-tint hover:text-white font-medium hover:shadow-md"
                 )}
               >
                 {item.label}
@@ -45,7 +45,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           })}
         </nav>
       </aside>
-      <div className="flex-1 min-w-0">
+      <div className="flex-1 min-w-0 text-black">
         {children}
       </div>
     </div>

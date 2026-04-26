@@ -49,16 +49,17 @@ export default function StationManagerPage() {
   };
 
   return (
-    <div className="w-full space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="w-full space-y-8">
+      <div className="flex items-center justify-between relative">
+        <div className="absolute -left-6 top-0 bottom-0 w-1 bg-primary-container"></div>
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Station Overview</h1>
-          <p className="text-muted-foreground mt-2">
-            Welcome back, {user?.firstName}. Managing station ID: {user?.stationId ?? "Unknown"}.
+          <h1 className="font-display-lg text-4xl text-on-surface tracking-tight">Station Overview</h1>
+          <p className="font-label-caps text-sm text-on-surface font-semibold tracking-[0.1em] mt-3 uppercase">
+            Manager: <span className="text-primary font-bold">{user?.firstName}</span> • Station ID: <span className="text-secondary font-bold">{user?.stationId ?? "Unknown"}</span>
           </p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={() => fetchData()}>Refresh</Button>
+          <Button variant="outline" size="sm" onClick={() => fetchData()} className="font-label-caps text-[10px] tracking-widest uppercase">Refresh</Button>
         </div>
       </div>
 
@@ -68,8 +69,8 @@ export default function StationManagerPage() {
             <CardTitle className="text-sm font-medium">Queue Status</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{loading ? "..." : `${queue?.queueLength ?? 0} Vehicles`}</div>
-            <p className="text-xs text-muted-foreground mt-1">
+            <div className="text-2xl font-bold font-title-sm text-on-surface">{loading ? "..." : `${queue?.queueLength ?? 0} Vehicles`}</div>
+            <p className="text-sm text-on-surface-variant mt-2 font-medium">
               {queue?.isIntakePaused ? "Intake is currently paused." : "Accepting new vehicles."}
             </p>
           </CardContent>

@@ -45,7 +45,7 @@ export default function ReportsPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-black">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Reports</h1>
@@ -65,7 +65,7 @@ export default function ReportsPage() {
         </div>
       </div>
 
-      <div className="rounded-md border p-4 bg-background">
+      <div className="rounded-md border p-6 bg-white shadow-md overflow-x-auto">
         {loading ? (
           <p className="text-center text-muted-foreground py-6">Loading report data...</p>
         ) : data.length === 0 ? (

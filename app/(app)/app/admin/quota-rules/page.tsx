@@ -8,6 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function QuotaRulesPage() {
   const { accessToken } = useAuth();
@@ -128,28 +129,42 @@ function CreateRuleDialog({ onSuccess }: { onSuccess: () => void }) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild><Button>Add Rule</Button></DialogTrigger>
+      <DialogTrigger asChild>
+        <Button className="bg-primary-container text-on-primary-container hover:bg-surface-tint hover:text-white transition-all shadow-sm font-label-caps text-[10px] uppercase tracking-widest px-4 h-9 rounded-full">
+          Add Rule
+        </Button>
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader><DialogTitle>Create Quota Rule</DialogTitle></DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label>Vehicle Category</Label>
-            <select required className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm" value={formData.vehicleCategory} onChange={e => setFormData({...formData, vehicleCategory: e.target.value})}>
-              <option value="PRIVATE_CAR">Private Car</option>
-              <option value="TAXI">Taxi</option>
-              <option value="BUS">Bus</option>
-              <option value="TRUCK">Truck</option>
-              <option value="MOTORCYCLE">Motorcycle</option>
-              <option value="OTHER">Other</option>
-            </select>
+            <Select value={formData.vehicleCategory} onValueChange={val => setFormData({...formData, vehicleCategory: val})}>
+              <SelectTrigger className="w-full bg-transparent">
+                <SelectValue placeholder="Category" />
+              </SelectTrigger>
+              <SelectContent position="popper">
+                <SelectItem value="PRIVATE_CAR">Private Car</SelectItem>
+                <SelectItem value="TAXI">Taxi</SelectItem>
+                <SelectItem value="BUS">Bus</SelectItem>
+                <SelectItem value="TRUCK">Truck</SelectItem>
+                <SelectItem value="MOTORCYCLE">Motorcycle</SelectItem>
+                <SelectItem value="OTHER">Other</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <div className="space-y-2">
             <Label>Period</Label>
-            <select required className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm" value={formData.period} onChange={e => setFormData({...formData, period: e.target.value})}>
-              <option value="DAILY">Daily</option>
-              <option value="WEEKLY">Weekly</option>
-              <option value="MONTHLY">Monthly</option>
-            </select>
+            <Select value={formData.period} onValueChange={val => setFormData({...formData, period: val})}>
+              <SelectTrigger className="w-full bg-transparent">
+                <SelectValue placeholder="Period" />
+              </SelectTrigger>
+              <SelectContent position="popper">
+                <SelectItem value="DAILY">Daily</SelectItem>
+                <SelectItem value="WEEKLY">Weekly</SelectItem>
+                <SelectItem value="MONTHLY">Monthly</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <div className="space-y-2">
             <Label>Liters Limit</Label>

@@ -23,8 +23,20 @@ export function LogoutButton() {
   }
 
   return (
-    <Button variant="outline" onClick={handleLogout} disabled={isSubmitting}>
-      {isSubmitting ? "Signing out..." : "Sign out"}
+    <Button 
+      variant="default" 
+      onClick={handleLogout} 
+      disabled={isSubmitting}
+      className="bg-primary-container text-on-primary-container font-label-caps text-[10px] uppercase tracking-widest px-6 h-9 rounded-none hover:bg-surface-tint hover:text-white transition-all transform active:scale-95 shadow-md border border-primary/10"
+    >
+      {isSubmitting ? (
+        <span className="flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-current animate-pulse"></span>
+          Signing out...
+        </span>
+      ) : (
+        "Sign out"
+      )}
     </Button>
   );
 }

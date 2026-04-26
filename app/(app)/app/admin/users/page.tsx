@@ -8,6 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function UsersPage() {
   const { accessToken } = useAuth();
@@ -95,8 +96,8 @@ export default function UsersPage() {
                   <TableCell>{user.stationId || "-"}</TableCell>
                   <TableCell>{user.isActive ? "Active" : "Suspended"}</TableCell>
                   <TableCell className="text-right">
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       size="sm"
                       onClick={() => handleStatusChange(user.id, user.isActive)}
                     >
@@ -147,23 +148,30 @@ function CreateManagerDialog({ onSuccess }: { onSuccess: () => void }) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild><Button variant="outline">Add Manager</Button></DialogTrigger>
+      <DialogTrigger asChild>
+        <Button className="bg-primary-container text-on-primary-container hover:bg-surface-tint hover:text-white transition-all shadow-sm font-label-caps text-[10px] uppercase tracking-widest px-4 h-9 rounded-full">
+          Add Station Manager
+        </Button>
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader><DialogTitle>Create Station Manager</DialogTitle></DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2"><Label>First Name</Label><Input required value={formData.firstName} onChange={e => setFormData({...formData, firstName: e.target.value})} /></div>
-            <div className="space-y-2"><Label>Last Name</Label><Input required value={formData.lastName} onChange={e => setFormData({...formData, lastName: e.target.value})} /></div>
+            <div className="space-y-2"><Label>First Name</Label><Input required value={formData.firstName} onChange={e => setFormData({ ...formData, firstName: e.target.value })} /></div>
+            <div className="space-y-2"><Label>Last Name</Label><Input required value={formData.lastName} onChange={e => setFormData({ ...formData, lastName: e.target.value })} /></div>
           </div>
-          <div className="space-y-2"><Label>Email</Label><Input type="email" required value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} /></div>
-          <div className="space-y-2"><Label>Password (optional)</Label><Input type="password" value={formData.password} onChange={e => setFormData({...formData, password: e.target.value})} /></div>
+          <div className="space-y-2"><Label>Email</Label><Input type="email" required value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} /></div>
+          <div className="space-y-2"><Label>Password (optional)</Label><Input type="password" value={formData.password} onChange={e => setFormData({ ...formData, password: e.target.value })} /></div>
           <div className="space-y-2">
             <Label>Station</Label>
-            <select required className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm"
-              value={formData.stationId} onChange={e => setFormData({...formData, stationId: e.target.value})}>
-              <option value="" disabled>Select a station</option>
-              {stations.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
-            </select>
+            <Select value={formData.stationId} onValueChange={val => setFormData({ ...formData, stationId: val })}>
+              <SelectTrigger className="w-full bg-transparent">
+                <SelectValue placeholder="Select a station" />
+              </SelectTrigger>
+              <SelectContent position="popper">
+                {stations.map(s => <SelectItem key={s.id} value={s.id.toString()}>{s.name}</SelectItem>)}
+              </SelectContent>
+            </Select>
           </div>
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
@@ -205,28 +213,37 @@ function CreateOwnerDialog({ onSuccess }: { onSuccess: () => void }) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild><Button>Add Owner</Button></DialogTrigger>
+      <DialogTrigger asChild>
+        <Button className="bg-primary-container text-on-primary-container hover:bg-surface-tint hover:text-white transition-all shadow-sm font-label-caps text-[10px] uppercase tracking-widest px-4 h-9 rounded-full">
+          Add Vehicle Owner
+        </Button>
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader><DialogTitle>Create Vehicle Owner</DialogTitle></DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2"><Label>First Name</Label><Input required value={formData.firstName} onChange={e => setFormData({...formData, firstName: e.target.value})} /></div>
-            <div className="space-y-2"><Label>Last Name</Label><Input required value={formData.lastName} onChange={e => setFormData({...formData, lastName: e.target.value})} /></div>
+            <div className="space-y-2"><Label>First Name</Label><Input required value={formData.firstName} onChange={e => setFormData({ ...formData, firstName: e.target.value })} /></div>
+            <div className="space-y-2"><Label>Last Name</Label><Input required value={formData.lastName} onChange={e => setFormData({ ...formData, lastName: e.target.value })} /></div>
           </div>
-          <div className="space-y-2"><Label>Email</Label><Input type="email" required value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} /></div>
-          <div className="space-y-2"><Label>Password (optional)</Label><Input type="password" value={formData.password} onChange={e => setFormData({...formData, password: e.target.value})} /></div>
+          <div className="space-y-2"><Label>Email</Label><Input type="email" required value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} /></div>
+          <div className="space-y-2"><Label>Password (optional)</Label><Input type="password" value={formData.password} onChange={e => setFormData({ ...formData, password: e.target.value })} /></div>
           <div className="pt-4 pb-2 border-b"><h3 className="font-medium text-sm">Initial Vehicle</h3></div>
-          <div className="space-y-2"><Label>Plate Number</Label><Input required value={formData.plateNumber} onChange={e => setFormData({...formData, plateNumber: e.target.value})} /></div>
+          <div className="space-y-2"><Label>Plate Number</Label><Input required value={formData.plateNumber} onChange={e => setFormData({ ...formData, plateNumber: e.target.value })} /></div>
           <div className="space-y-2">
             <Label>Category</Label>
-            <select required className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm" value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})}>
-              <option value="PRIVATE_CAR">Private Car</option>
-              <option value="TAXI">Taxi</option>
-              <option value="BUS">Bus</option>
-              <option value="TRUCK">Truck</option>
-              <option value="MOTORCYCLE">Motorcycle</option>
-              <option value="OTHER">Other</option>
-            </select>
+            <Select value={formData.category} onValueChange={val => setFormData({ ...formData, category: val })}>
+              <SelectTrigger className="w-full bg-transparent">
+                <SelectValue placeholder="Select Category" />
+              </SelectTrigger>
+              <SelectContent position="popper">
+                <SelectItem value="PRIVATE_CAR">Private Car</SelectItem>
+                <SelectItem value="TAXI">Taxi</SelectItem>
+                <SelectItem value="BUS">Bus</SelectItem>
+                <SelectItem value="TRUCK">Truck</SelectItem>
+                <SelectItem value="MOTORCYCLE">Motorcycle</SelectItem>
+                <SelectItem value="OTHER">Other</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
