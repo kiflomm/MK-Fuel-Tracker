@@ -18,40 +18,40 @@ export function LandingPage() {
             <div className="absolute bottom-0 left-0 w-[700px] h-[700px] bg-emerald-500/10 rounded-full blur-[150px] -ml-64 -mb-64 pointer-events-none"></div>
           </div>
 
-          <div className="container mx-auto px-6 lg:px-12 relative z-10 grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+          <div className="max-w-6xl mx-auto px-6 lg:px-8 relative z-10 grid lg:grid-cols-2 gap-10 lg:gap-12 items-center">
             
             {/* Left Content */}
-            <div className="max-w-2xl">
-              <div className="flex items-center gap-3 mb-8">
+            <div className="max-w-xl">
+              <div className="flex items-center gap-3 mb-6">
                 <div className="h-px w-8 bg-yellow-500/50"></div>
                 <span className="font-label-caps text-[10px] uppercase font-black tracking-[0.3em] text-yellow-500">
                   Regional Energy Oversight
                 </span>
               </div>
               
-              <h1 className="text-5xl lg:text-7xl font-black text-white tracking-tighter leading-[1.05] mb-8">
+              <h1 className="text-4xl lg:text-5xl font-black text-white tracking-tighter leading-[1.1] mb-6">
                 Modernizing Fuel<br />Distribution for<br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-600">
                   Mekelle
                 </span>
               </h1>
               
-              <p className="text-neutral-400 text-lg lg:text-xl font-medium leading-relaxed mb-10 max-w-lg">
+              <p className="text-neutral-400 text-base lg:text-lg font-medium leading-relaxed mb-8 max-w-md">
                 An authoritative digital framework ensuring equitable, transparent, and efficient energy resource management for the Tigray regional administration.
               </p>
               
               <div className="flex flex-col sm:flex-row flex-wrap gap-4 items-center">
                 <Link href="/sign-in" className="w-full sm:w-auto">
-                  <button className="w-full sm:w-auto bg-yellow-500 text-black px-10 py-4 font-label-caps text-[11px] font-black uppercase tracking-[0.2em] rounded-full hover:bg-yellow-400 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_0_40px_-10px_rgba(234,179,8,0.4)] flex items-center justify-center gap-3">
+                  <button className="w-full sm:w-auto bg-yellow-500 text-black px-8 py-3.5 font-label-caps text-[11px] font-black uppercase tracking-[0.2em] rounded-full hover:bg-yellow-400 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_0_40px_-10px_rgba(234,179,8,0.4)] flex items-center justify-center gap-3">
                     Official Login
                     <ArrowRight className="w-4 h-4" />
                   </button>
                 </Link>
-                <button className="w-full sm:w-auto bg-transparent border border-neutral-700 text-white px-10 py-4 font-label-caps text-[11px] font-bold uppercase tracking-[0.2em] rounded-full hover:bg-white/5 hover:border-neutral-500 transition-all">
+                <button className="w-full sm:w-auto bg-transparent border border-neutral-700 text-white px-8 py-3.5 font-label-caps text-[11px] font-bold uppercase tracking-[0.2em] rounded-full hover:bg-white/5 hover:border-neutral-500 transition-all">
                   Documentation
                 </button>
               </div>
-              <div className="mt-8 flex items-center justify-center sm:justify-start gap-4 text-neutral-500">
+              <div className="mt-6 flex items-center justify-center sm:justify-start gap-4 text-neutral-500">
                 <Link
                   href="/forgot-password"
                   className="hover:text-yellow-500 text-[10px] font-label-caps font-bold uppercase tracking-widest transition-colors"
@@ -110,7 +110,7 @@ export function LandingPage() {
           id="services"
           className="py-24 bg-neutral-950 relative overflow-hidden"
         >
-          <div className="container mx-auto px-6 lg:px-12 relative z-10">
+          <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
             <div className="text-center max-w-3xl mx-auto mb-20">
               <h2 className="text-3xl lg:text-5xl font-black text-white tracking-tighter mb-6">
                 Strategic Operational Verticals
@@ -197,7 +197,7 @@ export function LandingPage() {
           id="authorities"
           className="border-t border-neutral-800 bg-neutral-950 py-16 lg:py-20"
         >
-          <div className="container mx-auto px-6 lg:px-12">
+          <div className="max-w-7xl mx-auto px-6 lg:px-12">
             <div className="text-center mb-10">
               <p className="font-label-caps text-[10px] text-neutral-600 font-bold tracking-[0.3em] uppercase">
                 Authorized Governing Partners
