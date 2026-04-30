@@ -297,6 +297,7 @@ export interface VehicleCategory {
   code: string;
   name: string;
   description: string | null;
+  fuelSubsidyPercentage: number | string;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -318,6 +319,7 @@ export async function createVehicleCategory(
     code: string;
     name: string;
     description?: string;
+    fuelSubsidyPercentage?: number;
     isActive?: boolean;
   },
 ) {
@@ -334,6 +336,7 @@ export async function updateVehicleCategory(
     code?: string;
     name?: string;
     description?: string;
+    fuelSubsidyPercentage?: number;
     isActive?: boolean;
   },
 ) {
