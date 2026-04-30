@@ -4,9 +4,10 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth/context";
 import {
   getFuelTypes,
-  createFuelType,
+  createFuelTypeWithPrice,
   updateFuelType,
   deleteFuelType,
+  upsertFuelPrice,
   FuelType,
 } from "@/lib/api/admin";
 import { Button } from "@/components/ui/button";
@@ -85,6 +86,7 @@ export default function FuelTypesPage() {
             <TableRow>
               <TableHead>Code</TableHead>
               <TableHead>Name</TableHead>
+              <TableHead>Price (Birr/L)</TableHead>
               <TableHead>Status</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
@@ -92,13 +94,13 @@ export default function FuelTypesPage() {
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={4} className="text-center py-6 text-muted-foreground">
+                <TableCell colSpan={5} className="text-center py-6 text-muted-foreground">
                   Loading fuel types...
                 </TableCell>
               </TableRow>
             ) : fuelTypes.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={4} className="text-center py-6 text-muted-foreground">
+                <TableCell colSpan={5} className="text-center py-6 text-muted-foreground">
                   No fuel types found.
                 </TableCell>
               </TableRow>
@@ -107,6 +109,17 @@ export default function FuelTypesPage() {
                 <TableRow key={t.id}>
                   <TableCell className="font-mono font-semibold">{t.code}</TableCell>
                   <TableCell className="font-medium">{t.name}</TableCell>
+                  <TableCell>
+                    {t.pricePerLiter ? (
+                      <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-700/10">
+                        {Number(t.pricePerLiter).toFixed(2)}
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-500 ring-1 ring-inset ring-gray-700/10">
+                        Not set
+                      </span>
+                    )}
+                  </TableCell>
                   <TableCell>{t.isActive ? "Active" : "Inactive"}</TableCell>
                   <TableCell className="text-right space-x-2">
                     <EditFuelTypeDialog fuelType={t} onSuccess={fetchFuelTypes} />
@@ -127,7 +140,7 @@ export default function FuelTypesPage() {
 function CreateFuelTypeDialog({ onSuccess }: { onSuccess: () => void }) {
   const { accessToken } = useAuth();
   const [open, setOpen] = useState(false);
-  const [formData, setFormData] = useState({ code: "", name: "", isActive: true });
+  const [formData, setFormData] = useState({ code: "", name: "", pricePerLiter: "", isActive: true });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -135,14 +148,15 @@ function CreateFuelTypeDialog({ onSuccess }: { onSuccess: () => void }) {
     if (!accessToken) return;
     try {
       setIsSubmitting(true);
-      await createFuelType(accessToken, {
+      await createFuelTypeWithPrice(accessToken, {
         code: formData.code,
         name: formData.name,
+        pricePerLiter: parseFloat(formData.pricePerLiter),
         isActive: formData.isActive,
       });
       onSuccess();
       setOpen(false);
-      setFormData({ code: "", name: "", isActive: true });
+      setFormData({ code: "", name: "", pricePerLiter: "", isActive: true });
     } catch (error: any) {
       console.error(error);
       alert(error?.message ?? "Failed to create fuel type");
@@ -180,6 +194,17 @@ function CreateFuelTypeDialog({ onSuccess }: { onSuccess: () => void }) {
             />
           </div>
           <div className="space-y-2">
+            <Label>Price per Liter (Birr)</Label>
+            <Input
+              type="number"
+              step="0.01"
+              required
+              value={formData.pricePerLiter}
+              onChange={(e) => setFormData((p) => ({ ...p, pricePerLiter: e.target.value }))}
+              placeholder="e.g. 74.50"
+            />
+          </div>
+          <div className="space-y-2">
             <Label>Status</Label>
             <Select
               value={formData.isActive ? "ACTIVE" : "INACTIVE"}
@@ -207,12 +232,22 @@ function CreateFuelTypeDialog({ onSuccess }: { onSuccess: () => void }) {
 function EditFuelTypeDialog({ fuelType, onSuccess }: { fuelType: FuelType; onSuccess: () => void }) {
   const { accessToken } = useAuth();
   const [open, setOpen] = useState(false);
-  const [formData, setFormData] = useState({ code: fuelType.code, name: fuelType.name, isActive: fuelType.isActive });
+  const [formData, setFormData] = useState({ 
+    code: fuelType.code, 
+    name: fuelType.name, 
+    pricePerLiter: fuelType.pricePerLiter?.toString() || "", 
+    isActive: fuelType.isActive 
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (!open) return;
-    setFormData({ code: fuelType.code, name: fuelType.name, isActive: fuelType.isActive });
+    setFormData({ 
+      code: fuelType.code, 
+      name: fuelType.name, 
+      pricePerLiter: fuelType.pricePerLiter?.toString() || "", 
+      isActive: fuelType.isActive 
+    });
   }, [open, fuelType]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -220,11 +255,22 @@ function EditFuelTypeDialog({ fuelType, onSuccess }: { fuelType: FuelType; onSuc
     if (!accessToken) return;
     try {
       setIsSubmitting(true);
+      
+      // Update fuel type details
       await updateFuelType(accessToken, fuelType.id, {
         code: formData.code,
         name: formData.name,
         isActive: formData.isActive,
       });
+
+      // Update price if provided
+      if (formData.pricePerLiter && parseFloat(formData.pricePerLiter) > 0) {
+        await upsertFuelPrice(accessToken, {
+          fuelTypeCode: formData.code,
+          pricePerLiter: parseFloat(formData.pricePerLiter),
+        });
+      }
+
       onSuccess();
       setOpen(false);
     } catch (error: any) {
@@ -257,6 +303,16 @@ function EditFuelTypeDialog({ fuelType, onSuccess }: { fuelType: FuelType; onSuc
               required
               value={formData.name}
               onChange={(e) => setFormData((p) => ({ ...p, name: e.target.value }))}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label>Price per Liter (Birr)</Label>
+            <Input
+              type="number"
+              step="0.01"
+              value={formData.pricePerLiter}
+              onChange={(e) => setFormData((p) => ({ ...p, pricePerLiter: e.target.value }))}
+              placeholder="e.g. 74.50"
             />
           </div>
           <div className="space-y-2">

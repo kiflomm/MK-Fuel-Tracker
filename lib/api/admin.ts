@@ -224,6 +224,8 @@ export interface FuelType {
   code: string;
   name: string;
   isActive: boolean;
+  pricePerLiter: number | null;
+  priceUpdatedAt: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -238,9 +240,9 @@ export async function getFuelTypes(
   return adminRequest<FuelType[]>(`/admin/fuel-types${suffix}`, accessToken, { method: "GET" });
 }
 
-export async function createFuelType(
+export async function createFuelTypeWithPrice(
   accessToken: string,
-  data: { code: string; name: string; isActive?: boolean },
+  data: { code: string; name: string; pricePerLiter: number; isActive?: boolean },
 ) {
   return adminRequest<FuelType>("/admin/fuel-types", accessToken, {
     method: "POST",
