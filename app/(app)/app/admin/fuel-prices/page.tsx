@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth/context";
-import { getFuelPrices, upsertFuelPrice, FuelPrice } from "@/lib/api/admin";
+import { getFuelPrices, upsertFuelPrice, FuelPrice, getFuelTypes, FuelType } from "@/lib/api/admin";
 import { format, isValid } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -14,6 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 export default function FuelPricesPage() {
   const { accessToken } = useAuth();
   const [prices, setPrices] = useState<FuelPrice[]>([]);
+  const [fuelTypes, setFuelTypes] = useState<FuelType[]>([]);
   const [loading, setLoading] = useState(true);
 
   const formatDate = (dateString?: string) => {
@@ -29,7 +30,10 @@ export default function FuelPricesPage() {
   };
 
   useEffect(() => {
-    if (accessToken) fetchPrices();
+    if (accessToken) {
+      fetchPrices();
+      fetchFuelTypes();
+    }
   }, [accessToken]);
 
   const fetchPrices = async () => {
@@ -42,6 +46,16 @@ export default function FuelPricesPage() {
       console.error(error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchFuelTypes = async () => {
+    try {
+      if (!accessToken) return;
+      const res = await getFuelTypes(accessToken);
+      if (res.data) setFuelTypes(res.data);
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -59,7 +73,7 @@ export default function FuelPricesPage() {
             <h1 className="text-3xl font-black text-white tracking-tight leading-none mb-1">Fuel Prices</h1>
             <p className="text-sm text-neutral-400 font-medium">Configure the global price per liter for each fuel type.</p>
           </div>
-          <UpdatePriceDialog onSuccess={fetchPrices} />
+          <UpdatePriceDialog fuelTypes={fuelTypes} onSuccess={() => { fetchPrices(); fetchFuelTypes(); }} />
         </div>
       </div>
 
@@ -109,12 +123,19 @@ export default function FuelPricesPage() {
   );
 }
 
-function UpdatePriceDialog({ onSuccess }: { onSuccess: () => void }) {
+function UpdatePriceDialog({ fuelTypes, onSuccess }: { fuelTypes: FuelType[]; onSuccess: () => void }) {
   const { accessToken } = useAuth();
   const [open, setOpen] = useState(false);
-  const [fuelType, setFuelType] = useState("BENZENE");
+  const [fuelTypeCode, setFuelTypeCode] = useState<string>("");
   const [price, setPrice] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (!open) return;
+    if (fuelTypeCode) return;
+    const first = fuelTypes.find((t) => t.isActive) ?? fuelTypes[0];
+    if (first) setFuelTypeCode(first.code);
+  }, [open, fuelTypes, fuelTypeCode]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -122,7 +143,7 @@ function UpdatePriceDialog({ onSuccess }: { onSuccess: () => void }) {
     try {
       setIsSubmitting(true);
       await upsertFuelPrice(accessToken, {
-        fuelType,
+        fuelTypeCode,
         pricePerLiter: parseFloat(price),
       });
       onSuccess();
@@ -148,13 +169,16 @@ function UpdatePriceDialog({ onSuccess }: { onSuccess: () => void }) {
         <form onSubmit={handleSubmit} className="space-y-4 pt-4">
           <div className="space-y-2">
             <Label>Fuel Type</Label>
-            <Select value={fuelType} onValueChange={setFuelType}>
+            <Select value={fuelTypeCode} onValueChange={setFuelTypeCode} disabled={fuelTypes.length === 0}>
               <SelectTrigger className="w-full bg-transparent">
                 <SelectValue placeholder="Fuel Type" />
               </SelectTrigger>
               <SelectContent position="popper">
-                <SelectItem value="BENZENE">Benzene</SelectItem>
-                <SelectItem value="DIESEL">Diesel</SelectItem>
+                {fuelTypes.map((t) => (
+                  <SelectItem key={t.id} value={t.code}>
+                    {t.name} ({t.code})
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
