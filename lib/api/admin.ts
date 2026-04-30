@@ -191,10 +191,57 @@ export async function updateUserStatus(
 // Fuel Prices
 // ----------------------------------------------------------------------------
 
+export interface FuelType {
+  id: number;
+  code: string;
+  name: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export async function getFuelTypes(
+  accessToken: string,
+  params?: { includeInactive?: boolean },
+) {
+  const query = new URLSearchParams();
+  if (params?.includeInactive) query.set("includeInactive", "true");
+  const suffix = query.toString() ? `?${query.toString()}` : "";
+  return adminRequest<FuelType[]>(`/admin/fuel-types${suffix}`, accessToken, { method: "GET" });
+}
+
+export async function createFuelType(
+  accessToken: string,
+  data: { code: string; name: string; isActive?: boolean },
+) {
+  return adminRequest<FuelType>("/admin/fuel-types", accessToken, {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function updateFuelType(
+  accessToken: string,
+  id: number,
+  data: { code?: string; name?: string; isActive?: boolean },
+) {
+  return adminRequest<FuelType>(`/admin/fuel-types/${id}`, accessToken, {
+    method: "PATCH",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function deleteFuelType(accessToken: string, id: number) {
+  return adminRequest<{ id: number }>(`/admin/fuel-types/${id}`, accessToken, {
+    method: "DELETE",
+  });
+}
+
 export interface FuelPrice {
   id: number;
   fuelType: string;
   pricePerLiter: number;
+  fuelTypeName?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -205,7 +252,7 @@ export async function getFuelPrices(accessToken: string) {
 
 export async function upsertFuelPrice(
   accessToken: string,
-  data: { fuelType: string; pricePerLiter: number },
+  data: { fuelTypeCode: string; pricePerLiter: number; isActive?: boolean },
 ) {
   return adminRequest<FuelPrice>("/admin/fuel-prices", accessToken, {
     method: "POST",
