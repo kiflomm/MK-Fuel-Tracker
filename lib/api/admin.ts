@@ -132,7 +132,16 @@ export async function createVehicleOwner(
     firstName: string;
     lastName: string;
     phoneNumber?: string;
-    vehicles?: Array<{ plateNumber: string; category: string; label?: string }>;
+    vehicles?: Array<{
+      plateNumber: string;
+      categoryId: number;
+      label?: string;
+      quotaRules: Array<{
+        period: "DAILY" | "WEEKLY" | "MONTHLY";
+        litersLimit: number;
+        isActive?: boolean;
+      }>;
+    }>;
   },
 ) {
   return adminRequest<User>("/admin/users/vehicle-owners", accessToken, {
@@ -144,9 +153,19 @@ export async function createVehicleOwner(
 export interface OwnerVehicle {
   id: number;
   plateNumber: string;
-  category: string;
+  categoryId: number;
+  categoryCode: string | null;
+  categoryName: string | null;
   label: string | null;
   isActive: boolean;
+  quotaRules: Array<{
+    id: number;
+    period: "DAILY" | "WEEKLY" | "MONTHLY";
+    litersLimit: number;
+    isActive: boolean;
+    createdAt: string;
+    updatedAt: string;
+  }>;
   createdAt: string;
   updatedAt: string;
 }
@@ -164,7 +183,16 @@ export async function getUserById(accessToken: string, id: number) {
 export async function addVehiclesToOwner(
   accessToken: string,
   ownerUserId: number,
-  vehicles: Array<{ plateNumber: string; category: string; label?: string }>,
+  vehicles: Array<{
+    plateNumber: string;
+    categoryId: number;
+    label?: string;
+    quotaRules: Array<{
+      period: "DAILY" | "WEEKLY" | "MONTHLY";
+      litersLimit: number;
+      isActive?: boolean;
+    }>;
+  }>,
 ) {
   return adminRequest<OwnerVehicle[]>(
     `/admin/users/vehicle-owners/${ownerUserId}/vehicles`,
@@ -261,54 +289,62 @@ export async function upsertFuelPrice(
 }
 
 // ----------------------------------------------------------------------------
-// Quota Rules
+// Vehicle Categories
 // ----------------------------------------------------------------------------
 
-export interface QuotaRule {
+export interface VehicleCategory {
   id: number;
-  vehicleCategory: string;
-  period: "DAILY" | "WEEKLY" | "MONTHLY";
-  litersLimit: number;
+  code: string;
+  name: string;
+  description: string | null;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
 }
 
-export async function getQuotaRules(accessToken: string) {
-  return adminRequest<QuotaRule[]>("/admin/quota-rules", accessToken, { method: "GET" });
+export async function getVehicleCategories(
+  accessToken: string,
+  params?: { includeInactive?: boolean },
+) {
+  const query = new URLSearchParams();
+  if (params?.includeInactive) query.set("includeInactive", "true");
+  const suffix = query.toString() ? `?${query.toString()}` : "";
+  return adminRequest<VehicleCategory[]>(`/admin/vehicle-categories${suffix}`, accessToken, { method: "GET" });
 }
 
-export async function createQuotaRule(
+export async function createVehicleCategory(
   accessToken: string,
   data: {
-    vehicleCategory: string;
-    period: "DAILY" | "WEEKLY" | "MONTHLY";
-    litersLimit: number;
+    code: string;
+    name: string;
+    description?: string;
     isActive?: boolean;
   },
 ) {
-  return adminRequest<QuotaRule>("/admin/quota-rules", accessToken, {
+  return adminRequest<VehicleCategory>("/admin/vehicle-categories", accessToken, {
     method: "POST",
     body: JSON.stringify(data),
   });
 }
 
-export async function updateQuotaRule(
+export async function updateVehicleCategory(
   accessToken: string,
   id: number,
   data: {
-    litersLimit?: number;
+    code?: string;
+    name?: string;
+    description?: string;
     isActive?: boolean;
   },
 ) {
-  return adminRequest<QuotaRule>(`/admin/quota-rules/${id}`, accessToken, {
+  return adminRequest<VehicleCategory>(`/admin/vehicle-categories/${id}`, accessToken, {
     method: "PATCH",
     body: JSON.stringify(data),
   });
 }
 
-export async function deleteQuotaRule(accessToken: string, id: number) {
-  return adminRequest<void>(`/admin/quota-rules/${id}`, accessToken, {
+export async function deleteVehicleCategory(accessToken: string, id: number) {
+  return adminRequest<void>(`/admin/vehicle-categories/${id}`, accessToken, {
     method: "DELETE",
   });
 }
