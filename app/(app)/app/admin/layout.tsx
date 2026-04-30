@@ -9,8 +9,7 @@ const NAV_ITEMS = [
   { href: "/app/admin/stations", label: "Stations", icon: "local_gas_station", desc: "Manage fuel stations" },
   { href: "/app/admin/users", label: "Users", icon: "manage_accounts", desc: "Managers & owners" },
   { href: "/app/admin/vehicle-categories", label: "Vehicle Categories", icon: "category", desc: "Dynamic category list" },
-  { href: "/app/admin/fuel-types", label: "Fuel Types", icon: "local_gas_station", desc: "Manage fuel options" },
-  { href: "/app/admin/fuel-prices", label: "Fuel Prices", icon: "price_change", desc: "Global pricing rules" },
+  { href: "/app/admin/fuel-types", label: "Fuel Types", icon: "local_gas_station", desc: "Manage fuel options & pricing" },
   { href: "/app/admin/reports", label: "Reports", icon: "assessment", desc: "Analytics & exports" },
 ];
 
