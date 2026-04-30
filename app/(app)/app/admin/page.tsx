@@ -22,7 +22,7 @@ const SECTIONS = [
     icon: "price_change",
     title: "Pricing & Rules",
     subtitle: "Economics",
-    desc: "Configure global fuel pricing per liter and enforce distribution quota rules per vehicle category.",
+    desc: "Configure global fuel pricing per liter and review operational controls.",
     accent: "from-blue-500/10 to-indigo-500/5",
     border: "border-blue-200",
     iconBg: "bg-blue-100",
@@ -126,7 +126,7 @@ export default function AdminPage() {
         <p className="text-[10px] font-black uppercase tracking-widest text-black/40 mb-3">Quick Access</p>
         <div className="flex flex-wrap gap-2">
           {[
-            { href: "/app/admin/quota-rules", icon: "rule", label: "Quota Rules" },
+            { href: "/app/admin/users", icon: "directions_car", label: "Vehicles & Quotas" },
             { href: "/app/admin/users", icon: "manage_accounts", label: "Users" },
             { href: "/app/admin/stations", icon: "local_gas_station", label: "Stations" },
           ].map((item) => (
