@@ -132,13 +132,48 @@ export async function createVehicleOwner(
     firstName: string;
     lastName: string;
     phoneNumber?: string;
-    vehicles: Array<{ plateNumber: string; category: string }>;
+    vehicles?: Array<{ plateNumber: string; category: string; label?: string }>;
   },
 ) {
   return adminRequest<User>("/admin/users/vehicle-owners", accessToken, {
     method: "POST",
     body: JSON.stringify(data),
   });
+}
+
+export interface OwnerVehicle {
+  id: number;
+  plateNumber: string;
+  category: string;
+  label: string | null;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface UserWithVehicles extends User {
+  vehicles?: OwnerVehicle[];
+}
+
+export async function getUserById(accessToken: string, id: number) {
+  return adminRequest<UserWithVehicles>("/admin/users/" + id, accessToken, {
+    method: "GET",
+  });
+}
+
+export async function addVehiclesToOwner(
+  accessToken: string,
+  ownerUserId: number,
+  vehicles: Array<{ plateNumber: string; category: string; label?: string }>,
+) {
+  return adminRequest<OwnerVehicle[]>(
+    `/admin/users/vehicle-owners/${ownerUserId}/vehicles`,
+    accessToken,
+    {
+      method: "POST",
+      body: JSON.stringify({ vehicles }),
+    },
+  );
 }
 
 export async function updateUserStatus(
