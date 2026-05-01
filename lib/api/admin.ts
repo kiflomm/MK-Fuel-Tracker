@@ -137,11 +137,6 @@ export async function createVehicleOwner(
       plateNumber: string;
       categoryId: number;
       label?: string;
-      quotaRules: Array<{
-        period: "DAILY" | "WEEKLY" | "MONTHLY";
-        litersLimit: number;
-        isActive?: boolean;
-      }>;
     }>;
   },
 ) {
@@ -188,11 +183,6 @@ export async function addVehiclesToOwner(
     plateNumber: string;
     categoryId: number;
     label?: string;
-    quotaRules: Array<{
-      period: "DAILY" | "WEEKLY" | "MONTHLY";
-      litersLimit: number;
-      isActive?: boolean;
-    }>;
   }>,
 ) {
   return adminRequest<OwnerVehicle[]>(
@@ -301,6 +291,14 @@ export interface VehicleCategory {
   name: string;
   description: string | null;
   fuelSubsidyPercentage: number | string;
+  quotaRules: Array<{
+    id: number;
+    period: "DAILY" | "WEEKLY" | "MONTHLY";
+    litersLimit: number;
+    isActive: boolean;
+    createdAt: string;
+    updatedAt: string;
+  }>;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -324,6 +322,11 @@ export async function createVehicleCategory(
     description?: string;
     fuelSubsidyPercentage?: number;
     isActive?: boolean;
+    quotaRules: Array<{
+      period: "DAILY" | "WEEKLY" | "MONTHLY";
+      litersLimit: number;
+      isActive?: boolean;
+    }>;
   },
 ) {
   return adminRequest<VehicleCategory>("/admin/vehicle-categories", accessToken, {
@@ -341,6 +344,11 @@ export async function updateVehicleCategory(
     description?: string;
     fuelSubsidyPercentage?: number;
     isActive?: boolean;
+    quotaRules?: Array<{
+      period: "DAILY" | "WEEKLY" | "MONTHLY";
+      litersLimit: number;
+      isActive?: boolean;
+    }>;
   },
 ) {
   return adminRequest<VehicleCategory>(`/admin/vehicle-categories/${id}`, accessToken, {
@@ -352,6 +360,45 @@ export async function updateVehicleCategory(
 export async function deleteVehicleCategory(accessToken: string, id: number) {
   return adminRequest<void>(`/admin/vehicle-categories/${id}`, accessToken, {
     method: "DELETE",
+  });
+}
+
+export async function getVehicleQuotaRules(accessToken: string, id: number) {
+  return adminRequest<
+    Array<{
+      id: number;
+      period: "DAILY" | "WEEKLY" | "MONTHLY";
+      litersLimit: number;
+      isActive: boolean;
+      createdAt: string;
+      updatedAt: string;
+    }>
+  >(`/admin/vehicles/${id}/quota-rules`, accessToken, {
+    method: "GET",
+  });
+}
+
+export async function updateVehicleQuotaRules(
+  accessToken: string,
+  id: number,
+  quotaRules: Array<{
+    period: "DAILY" | "WEEKLY" | "MONTHLY";
+    litersLimit: number;
+    isActive?: boolean;
+  }>,
+) {
+  return adminRequest<
+    Array<{
+      id: number;
+      period: "DAILY" | "WEEKLY" | "MONTHLY";
+      litersLimit: number;
+      isActive: boolean;
+      createdAt: string;
+      updatedAt: string;
+    }>
+  >(`/admin/vehicles/${id}/quota-rules`, accessToken, {
+    method: "PATCH",
+    body: JSON.stringify({ quotaRules }),
   });
 }
 
