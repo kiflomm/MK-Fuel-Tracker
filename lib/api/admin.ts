@@ -464,3 +464,34 @@ export async function getDistributionReport(
     method: "GET",
   });
 }
+
+// ----------------------------------------------------------------------------
+// Audit Logs
+// ----------------------------------------------------------------------------
+
+export interface AuditLog {
+  id: number;
+  userId: number;
+  userFirstName: string;
+  userLastName: string;
+  userRole: string;
+  action: string;
+  entity: string;
+  entityId: string | null;
+  details: any;
+  createdAt: string;
+}
+
+export async function getAuditLogs(
+  accessToken: string,
+  params?: { limit?: number; offset?: number },
+) {
+  const query = new URLSearchParams();
+  if (params?.limit) query.append("limit", params.limit.toString());
+  if (params?.offset) query.append("offset", params.offset.toString());
+
+  const qs = query.toString() ? `?${query.toString()}` : "";
+  return adminRequest<AuditLog[]>(`/admin/audit-logs${qs}`, accessToken, {
+    method: "GET",
+  });
+}

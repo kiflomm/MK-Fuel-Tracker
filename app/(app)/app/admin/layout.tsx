@@ -11,6 +11,7 @@ const NAV_ITEMS = [
   { href: "/app/admin/vehicle-categories", label: "Vehicle Categories", icon: "category", desc: "Dynamic category list" },
   { href: "/app/admin/fuel-types", label: "Fuel Types", icon: "local_gas_station", desc: "Manage fuel options & pricing" },
   { href: "/app/admin/reports", label: "Reports", icon: "assessment", desc: "Analytics & exports" },
+  { href: "/app/admin/audit-logs", label: "Audit Logs", icon: "policy", desc: "System activity trail" },
 ];
 
 function cn(...classes: (string | undefined | null | false)[]) {
