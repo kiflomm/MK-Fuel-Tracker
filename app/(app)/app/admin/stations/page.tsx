@@ -63,10 +63,10 @@ export default function StationsPage() {
             <TableRow>
               <TableHead>ID</TableHead>
               <TableHead>Name</TableHead>
-              <TableHead>Address</TableHead>
+              <TableHead>Coordinates</TableHead>
               <TableHead>City</TableHead>
               <TableHead>Phone</TableHead>
-              <TableHead>Fuel Status</TableHead>
+              <TableHead>Remaining Fuel (L)</TableHead>
               <TableHead>Active</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
@@ -89,10 +89,14 @@ export default function StationsPage() {
                 <TableRow key={station.id}>
                   <TableCell>{station.id}</TableCell>
                   <TableCell className="font-medium">{station.name}</TableCell>
-                  <TableCell>{station.address || "N/A"}</TableCell>
+                  <TableCell>
+                    {station.latitude && station.longitude
+                      ? `${station.latitude}, ${station.longitude}`
+                      : "N/A"}
+                  </TableCell>
                   <TableCell>{station.city || "N/A"}</TableCell>
                   <TableCell>{station.phone || "N/A"}</TableCell>
-                  <TableCell>{station.fuelStatus || "AVAILABLE"}</TableCell>
+                  <TableCell>{station.remainingFuel ?? "N/A"}</TableCell>
                   <TableCell>{station.isActive ? "Active" : "Inactive"}</TableCell>
                   <TableCell className="text-right">
                     <EditStationDialog station={station} onSuccess={fetchStations} />
@@ -110,10 +114,10 @@ export default function StationsPage() {
 function CreateStationDialog({ open, onOpenChange, onSuccess }: { open: boolean, onOpenChange: (open: boolean) => void, onSuccess: () => void }) {
   const { accessToken } = useAuth();
   const [name, setName] = useState("");
-  const [address, setAddress] = useState("");
+  const [latitude, setLatitude] = useState("");
+  const [longitude, setLongitude] = useState("");
   const [city, setCity] = useState("");
   const [phone, setPhone] = useState("");
-  const [fuelStatus, setFuelStatus] = useState("AVAILABLE");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -121,14 +125,20 @@ function CreateStationDialog({ open, onOpenChange, onSuccess }: { open: boolean,
     if (!accessToken) return;
     try {
       setIsSubmitting(true);
-      await createStation(accessToken, { name, address, city, phone, fuelStatus });
+      await createStation(accessToken, {
+        name,
+        latitude: latitude ? parseFloat(latitude) : undefined,
+        longitude: longitude ? parseFloat(longitude) : undefined,
+        city,
+        phone,
+      });
       onSuccess();
       onOpenChange(false);
       setName("");
-      setAddress("");
+      setLatitude("");
+      setLongitude("");
       setCity("");
       setPhone("");
-      setFuelStatus("AVAILABLE");
     } catch (error) {
       console.error(error);
       alert("Failed to create station");
@@ -153,30 +163,23 @@ function CreateStationDialog({ open, onOpenChange, onSuccess }: { open: boolean,
             <Label htmlFor="name">Station Name</Label>
             <Input id="name" required value={name} onChange={e => setName(e.target.value)} />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="address">Address</Label>
-            <Input id="address" required value={address} onChange={e => setAddress(e.target.value)} />
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="latitude">Latitude</Label>
+              <Input id="latitude" type="number" step="any" value={latitude} onChange={e => setLatitude(e.target.value)} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="longitude">Longitude</Label>
+              <Input id="longitude" type="number" step="any" value={longitude} onChange={e => setLongitude(e.target.value)} />
+            </div>
           </div>
           <div className="space-y-2">
             <Label htmlFor="city">City</Label>
-            <Input id="city" required value={city} onChange={e => setCity(e.target.value)} />
+            <Input id="city" value={city} onChange={e => setCity(e.target.value)} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="phone">Phone</Label>
-            <Input id="phone" required value={phone} onChange={e => setPhone(e.target.value)} />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="fuelStatus">Fuel Status</Label>
-            <Select value={fuelStatus} onValueChange={setFuelStatus}>
-              <SelectTrigger id="fuelStatus" className="w-full bg-transparent focus:ring-1 focus:ring-primary">
-                <SelectValue placeholder="Select Status" />
-              </SelectTrigger>
-              <SelectContent position="popper">
-                <SelectItem value="AVAILABLE">Available</SelectItem>
-                <SelectItem value="UNAVAILABLE">Unavailable</SelectItem>
-                <SelectItem value="DEPLETED">Depleted</SelectItem>
-              </SelectContent>
-            </Select>
+            <Input id="phone" value={phone} onChange={e => setPhone(e.target.value)} />
           </div>
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={isSubmitting}>
@@ -196,10 +199,11 @@ function EditStationDialog({ station, onSuccess }: { station: Station, onSuccess
   const { accessToken } = useAuth();
   const [open, setOpen] = useState(false);
   const [name, setName] = useState(station.name);
-  const [address, setAddress] = useState(station.address || "");
+  const [latitude, setLatitude] = useState(station.latitude?.toString() || "");
+  const [longitude, setLongitude] = useState(station.longitude?.toString() || "");
   const [city, setCity] = useState(station.city || "");
   const [phone, setPhone] = useState(station.phone || "");
-  const [fuelStatus, setFuelStatus] = useState(station.fuelStatus || "AVAILABLE");
+  const [remainingFuel, setRemainingFuel] = useState(station.remainingFuel?.toString() || "");
   const [isActive, setIsActive] = useState(station.isActive);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -208,7 +212,15 @@ function EditStationDialog({ station, onSuccess }: { station: Station, onSuccess
     if (!accessToken) return;
     try {
       setIsSubmitting(true);
-      await updateStation(accessToken, station.id, { name, address, city, phone, fuelStatus, isActive });
+      await updateStation(accessToken, station.id, {
+        name,
+        latitude: latitude ? parseFloat(latitude) : undefined,
+        longitude: longitude ? parseFloat(longitude) : undefined,
+        city,
+        phone,
+        remainingFuel: remainingFuel ? parseFloat(remainingFuel) : undefined,
+        isActive,
+      });
       onSuccess();
       setOpen(false);
     } catch (error) {
@@ -233,30 +245,27 @@ function EditStationDialog({ station, onSuccess }: { station: Station, onSuccess
             <Label htmlFor="edit-name">Station Name</Label>
             <Input id="edit-name" required value={name} onChange={e => setName(e.target.value)} />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="edit-address">Address</Label>
-            <Input id="edit-address" required value={address} onChange={e => setAddress(e.target.value)} />
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="edit-latitude">Latitude</Label>
+              <Input id="edit-latitude" type="number" step="any" value={latitude} onChange={e => setLatitude(e.target.value)} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-longitude">Longitude</Label>
+              <Input id="edit-longitude" type="number" step="any" value={longitude} onChange={e => setLongitude(e.target.value)} />
+            </div>
           </div>
           <div className="space-y-2">
             <Label htmlFor="edit-city">City</Label>
-            <Input id="edit-city" required value={city} onChange={e => setCity(e.target.value)} />
+            <Input id="edit-city" value={city} onChange={e => setCity(e.target.value)} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="edit-phone">Phone</Label>
-            <Input id="edit-phone" required value={phone} onChange={e => setPhone(e.target.value)} />
+            <Input id="edit-phone" value={phone} onChange={e => setPhone(e.target.value)} />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="edit-fuelStatus">Fuel Status</Label>
-            <Select value={fuelStatus} onValueChange={setFuelStatus}>
-              <SelectTrigger id="edit-fuelStatus" className="w-full bg-transparent focus:ring-1 focus:ring-primary">
-                <SelectValue placeholder="Select Status" />
-              </SelectTrigger>
-              <SelectContent position="popper">
-                <SelectItem value="AVAILABLE">Available</SelectItem>
-                <SelectItem value="UNAVAILABLE">Unavailable</SelectItem>
-                <SelectItem value="DEPLETED">Depleted</SelectItem>
-              </SelectContent>
-            </Select>
+            <Label htmlFor="edit-remainingFuel">Remaining Fuel (Liters)</Label>
+            <Input id="edit-remainingFuel" type="number" step="any" value={remainingFuel} onChange={e => setRemainingFuel(e.target.value)} />
           </div>
           <div className="flex items-center space-x-2 mt-4">
             <input 
