@@ -64,7 +64,6 @@ export default function StationsPage() {
               <TableHead>ID</TableHead>
               <TableHead>Name</TableHead>
               <TableHead>Coordinates</TableHead>
-              <TableHead>City</TableHead>
               <TableHead>Phone</TableHead>
               <TableHead>Remaining Fuel (L)</TableHead>
               <TableHead>Active</TableHead>
@@ -74,14 +73,14 @@ export default function StationsPage() {
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={8} className="text-center py-6 text-muted-foreground">
+                <TableCell colSpan={7} className="text-center py-6 text-muted-foreground">
                   Loading stations...
                 </TableCell>
               </TableRow>
             ) : stations.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={8} className="text-center py-6 text-muted-foreground">
-                  No stations found.
+               <TableCell colSpan={7} className="text-center py-6 text-muted-foreground">
+                   No stations found.
                 </TableCell>
               </TableRow>
             ) : (
@@ -94,7 +93,6 @@ export default function StationsPage() {
                       ? `${station.latitude}, ${station.longitude}`
                       : "N/A"}
                   </TableCell>
-                  <TableCell>{station.city || "N/A"}</TableCell>
                   <TableCell>{station.phone || "N/A"}</TableCell>
                   <TableCell>{station.remainingFuel ?? "N/A"}</TableCell>
                   <TableCell>{station.isActive ? "Active" : "Inactive"}</TableCell>
@@ -116,7 +114,6 @@ function CreateStationDialog({ open, onOpenChange, onSuccess }: { open: boolean,
   const [name, setName] = useState("");
   const [latitude, setLatitude] = useState("");
   const [longitude, setLongitude] = useState("");
-  const [city, setCity] = useState("");
   const [phone, setPhone] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -129,7 +126,6 @@ function CreateStationDialog({ open, onOpenChange, onSuccess }: { open: boolean,
         name,
         latitude: latitude ? parseFloat(latitude) : undefined,
         longitude: longitude ? parseFloat(longitude) : undefined,
-        city,
         phone,
       });
       onSuccess();
@@ -137,7 +133,6 @@ function CreateStationDialog({ open, onOpenChange, onSuccess }: { open: boolean,
       setName("");
       setLatitude("");
       setLongitude("");
-      setCity("");
       setPhone("");
     } catch (error) {
       console.error(error);
@@ -174,10 +169,6 @@ function CreateStationDialog({ open, onOpenChange, onSuccess }: { open: boolean,
             </div>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="city">City</Label>
-            <Input id="city" value={city} onChange={e => setCity(e.target.value)} />
-          </div>
-          <div className="space-y-2">
             <Label htmlFor="phone">Phone</Label>
             <Input id="phone" value={phone} onChange={e => setPhone(e.target.value)} />
           </div>
@@ -201,7 +192,6 @@ function EditStationDialog({ station, onSuccess }: { station: Station, onSuccess
   const [name, setName] = useState(station.name);
   const [latitude, setLatitude] = useState(station.latitude?.toString() || "");
   const [longitude, setLongitude] = useState(station.longitude?.toString() || "");
-  const [city, setCity] = useState(station.city || "");
   const [phone, setPhone] = useState(station.phone || "");
   const [remainingFuel, setRemainingFuel] = useState(station.remainingFuel?.toString() || "");
   const [isActive, setIsActive] = useState(station.isActive);
@@ -216,7 +206,6 @@ function EditStationDialog({ station, onSuccess }: { station: Station, onSuccess
         name,
         latitude: latitude ? parseFloat(latitude) : undefined,
         longitude: longitude ? parseFloat(longitude) : undefined,
-        city,
         phone,
         remainingFuel: remainingFuel ? parseFloat(remainingFuel) : undefined,
         isActive,
@@ -254,10 +243,6 @@ function EditStationDialog({ station, onSuccess }: { station: Station, onSuccess
               <Label htmlFor="edit-longitude">Longitude</Label>
               <Input id="edit-longitude" type="number" step="any" value={longitude} onChange={e => setLongitude(e.target.value)} />
             </div>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="edit-city">City</Label>
-            <Input id="edit-city" value={city} onChange={e => setCity(e.target.value)} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="edit-phone">Phone</Label>
