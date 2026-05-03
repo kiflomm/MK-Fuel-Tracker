@@ -2,7 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth/context";
-import { getLiveQueue, LiveQueue } from "@/lib/api/station-manager";
+import {
+  getLiveQueue,
+  getStationFuelInventory,
+  LiveQueue,
+  StationFuelInventoryRow,
+} from "@/lib/api/station-manager";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
@@ -51,6 +56,9 @@ const SECTIONS = [
 export default function StationManagerPage() {
   const { user, accessToken } = useAuth();
   const [queue, setQueue] = useState<LiveQueue | null>(null);
+  const [fuelInventory, setFuelInventory] = useState<StationFuelInventoryRow[] | null>(
+    null,
+  );
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -63,8 +71,12 @@ export default function StationManagerPage() {
     setLoading(true);
     try {
       if (!accessToken) return;
-      const res = await getLiveQueue(accessToken);
-      if (res.data) setQueue(res.data);
+      const [queueRes, invRes] = await Promise.all([
+        getLiveQueue(accessToken),
+        getStationFuelInventory(accessToken),
+      ]);
+      if (queueRes.data) setQueue(queueRes.data);
+      if (invRes.data) setFuelInventory(invRes.data);
     } catch (error) {
       console.error(error);
     } finally {
@@ -121,6 +133,70 @@ export default function StationManagerPage() {
             </span>
           </div>
         </div>
+      </div>
+
+      {/* Fuel inventory (manual refresh uses header button) */}
+      <div className="rounded-2xl border border-outline/15 bg-card p-6 shadow-sm">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+          <div>
+            <h2 className="text-xs font-black tracking-[0.2em] uppercase text-black/40">
+              Fuel remaining (by type)
+            </h2>
+            <p className="text-sm text-muted-foreground mt-1">
+              Levels are set by government admin with a full audit trail. Use Refresh Status above to reload.
+            </p>
+          </div>
+        </div>
+        {loading ? (
+          <p className="text-sm text-muted-foreground py-6 text-center">
+            Loading inventory…
+          </p>
+        ) : !fuelInventory || fuelInventory.length === 0 ? (
+          <p className="text-sm text-muted-foreground py-6 text-center">
+            No fuel types configured yet, or no inventory rows apply to this station.
+          </p>
+        ) : (
+          <div className="rounded-xl border border-outline/10 overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b bg-muted/40 text-left text-[10px] font-black uppercase tracking-widest text-black/45">
+                  <th className="px-4 py-3">Fuel type</th>
+                  <th className="px-4 py-3">Code</th>
+                  <th className="px-4 py-3 text-right">Remaining (L)</th>
+                  <th className="px-4 py-3 text-right">Last inventory update</th>
+                </tr>
+              </thead>
+              <tbody>
+                {fuelInventory.map((row) => (
+                  <tr key={row.fuelTypeId} className="border-b last:border-0">
+                    <td className="px-4 py-3 font-medium">
+                      {row.fuelTypeName}
+                      {!row.fuelTypeIsActive && (
+                        <span className="ml-2 text-[10px] uppercase tracking-wider text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded">
+                          Inactive
+                        </span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3 font-mono text-xs text-muted-foreground">
+                      {row.fuelTypeCode}
+                    </td>
+                    <td className="px-4 py-3 text-right font-semibold tabular-nums">
+                      {row.remainingLiters.toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
+                    </td>
+                    <td className="px-4 py-3 text-right text-muted-foreground text-xs">
+                      {row.inventoryUpdatedAt
+                        ? new Date(row.inventoryUpdatedAt).toLocaleString()
+                        : "—"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
 
       {/* Section heading */}

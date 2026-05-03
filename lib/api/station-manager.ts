@@ -78,6 +78,16 @@ export interface LiveQueue {
   items: QueueItem[];
 }
 
+/** Per fuel type remaining liters at this station */
+export interface StationFuelInventoryRow {
+  fuelTypeId: number;
+  fuelTypeCode: string;
+  fuelTypeName: string;
+  fuelTypeIsActive: boolean;
+  remainingLiters: number;
+  inventoryUpdatedAt: string | null;
+}
+
 export interface StationTransaction {
   id: number;
   plateNumber: string;
@@ -146,6 +156,12 @@ export async function updateStationWorkerStatus(
 
 export async function getLiveQueue(accessToken: string) {
   return smRequest<LiveQueue>("/station-manager/queue/live", accessToken, {
+    method: "GET",
+  });
+}
+
+export async function getStationFuelInventory(accessToken: string) {
+  return smRequest<StationFuelInventoryRow[]>("/station-manager/fuel-inventory", accessToken, {
     method: "GET",
   });
 }

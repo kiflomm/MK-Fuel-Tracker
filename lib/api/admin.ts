@@ -86,6 +86,94 @@ export async function updateStation(
   });
 }
 
+export interface StationFuelInventoryItem {
+  fuelTypeId: number;
+  fuelTypeCode: string;
+  fuelTypeName: string;
+  fuelTypeIsActive: boolean;
+  remainingLiters: number;
+  inventoryUpdatedAt: string | null;
+}
+
+export interface AdjustStationFuelInventoryResult {
+  stationId: number;
+  fuelTypeId: number;
+  previousLiters: number;
+  updatedLiters: number;
+  deltaLiters: number;
+  reason: string | null;
+  note: string | null;
+  adjustmentId: number;
+}
+
+export interface FuelInventoryAdjustmentEntry {
+  id: number;
+  stationId: number;
+  fuelTypeId: number;
+  fuelTypeCode: string;
+  fuelTypeName: string;
+  previousLiters: number;
+  updatedLiters: number;
+  deltaLiters: number;
+  reason: string | null;
+  note: string | null;
+  changedByUserId: number;
+  changedByEmail: string;
+  changedByFirstName: string;
+  changedByLastName: string;
+  changedAt: string;
+}
+
+export async function getStationFuelInventory(accessToken: string, stationId: number) {
+  return adminRequest<StationFuelInventoryItem[]>(
+    `/admin/stations/${stationId}/fuel-inventory`,
+    accessToken,
+    { method: "GET" },
+  );
+}
+
+export async function adjustStationFuelInventory(
+  accessToken: string,
+  stationId: number,
+  data: { fuelTypeId: number; remainingLiters: number; reason?: string; note?: string },
+) {
+  return adminRequest<AdjustStationFuelInventoryResult>(
+    `/admin/stations/${stationId}/fuel-inventory/adjust`,
+    accessToken,
+    {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    },
+  );
+}
+
+export async function getFuelInventoryAdjustments(
+  accessToken: string,
+  params?: {
+    stationId?: number;
+    fuelTypeId?: number;
+    from?: string;
+    to?: string;
+    limit?: number;
+    offset?: number;
+  },
+) {
+  const query = new URLSearchParams();
+  if (params?.stationId !== undefined) query.set("stationId", String(params.stationId));
+  if (params?.fuelTypeId !== undefined) query.set("fuelTypeId", String(params.fuelTypeId));
+  if (params?.from) query.set("from", params.from);
+  if (params?.to) query.set("to", params.to);
+  if (params?.limit !== undefined) query.set("limit", String(params.limit));
+  if (params?.offset !== undefined) query.set("offset", String(params.offset));
+
+  const qs = query.toString() ? `?${query.toString()}` : "";
+  return adminRequest<FuelInventoryAdjustmentEntry[]>(
+    `/admin/fuel-inventory-adjustments${qs}`,
+    accessToken,
+    { method: "GET" },
+  );
+}
+
 // ----------------------------------------------------------------------------
 // Users
 // ----------------------------------------------------------------------------
