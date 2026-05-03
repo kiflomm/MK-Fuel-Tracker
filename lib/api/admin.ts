@@ -54,15 +54,19 @@ export interface Station {
   name: string;
   latitude: number | null;
   longitude: number | null;
-  phone: string;
+  phone: string | null;
   isActive: boolean;
-  remainingFuel: number | null;
+  queueIntakePaused?: boolean;
   createdAt: string;
   updatedAt: string;
 }
 
 export async function getStations(accessToken: string) {
   return adminRequest<Station[]>("/admin/stations", accessToken, { method: "GET" });
+}
+
+export async function getStation(accessToken: string, id: number) {
+  return adminRequest<Station>(`/admin/stations/${id}`, accessToken, { method: "GET" });
 }
 
 export async function createStation(
@@ -78,7 +82,14 @@ export async function createStation(
 export async function updateStation(
   accessToken: string,
   id: number,
-  data: { name?: string; latitude?: number; longitude?: number; phone?: string; remainingFuel?: number; isActive?: boolean },
+  data: {
+    name?: string;
+    latitude?: number;
+    longitude?: number;
+    phone?: string;
+    isActive?: boolean;
+    queueIntakePaused?: boolean;
+  },
 ) {
   return adminRequest<Station>(`/admin/stations/${id}`, accessToken, {
     method: "PATCH",
