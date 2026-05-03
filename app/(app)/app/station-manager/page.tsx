@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth/context";
-import { getLiveQueue, updateFuelStatus, FuelStatus, LiveQueue } from "@/lib/api/station-manager";
+import { getLiveQueue, LiveQueue } from "@/lib/api/station-manager";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
@@ -52,7 +52,6 @@ export default function StationManagerPage() {
   const { user, accessToken } = useAuth();
   const [queue, setQueue] = useState<LiveQueue | null>(null);
   const [loading, setLoading] = useState(true);
-  const [updating, setUpdating] = useState(false);
 
   useEffect(() => {
     if (accessToken) {
@@ -70,21 +69,6 @@ export default function StationManagerPage() {
       console.error(error);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleUpdateFuel = async (status: FuelStatus) => {
-    if (!accessToken) return;
-    setUpdating(true);
-    try {
-      await updateFuelStatus(accessToken, status);
-      alert("Fuel status updated successfully");
-      fetchData();
-    } catch (error) {
-      console.error(error);
-      alert("Failed to update fuel status");
-    } finally {
-      setUpdating(false);
     }
   };
 
@@ -178,48 +162,6 @@ export default function StationManagerPage() {
         </div>
       </div>
 
-      {/* Quick links row equivalent for station manager -> Quick Fuel Control */}
-      <div className="rounded-2xl border border-outline/10 bg-neutral-50 p-5">
-        <div className="flex items-center gap-2 mb-3">
-          <span className="material-symbols-outlined text-black/40 text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>settings_input_component</span>
-          <p className="text-[10px] font-black uppercase tracking-widest text-black/40 m-0">Quick Fuel Control</p>
-        </div>
-        <p className="text-xs text-black/60 mb-4 max-w-xl">
-          Instantly update the operational fuel status of this station. This will reflect immediately on the network.
-        </p>
-        <div className="flex flex-wrap gap-3">
-          <Button 
-            size="sm" 
-            variant="outline" 
-            className="bg-green-50 text-green-700 hover:bg-green-100 hover:text-green-800 border-green-200 rounded-full px-4"
-            disabled={updating}
-            onClick={() => handleUpdateFuel('AVAILABLE')}
-          >
-            <span className="material-symbols-outlined text-base mr-1.5" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
-            Available
-          </Button>
-          <Button 
-            size="sm" 
-            variant="outline" 
-            className="bg-amber-50 text-amber-700 hover:bg-amber-100 hover:text-amber-800 border-amber-200 rounded-full px-4"
-            disabled={updating}
-            onClick={() => handleUpdateFuel('UNAVAILABLE')}
-          >
-            <span className="material-symbols-outlined text-base mr-1.5" style={{ fontVariationSettings: "'FILL' 1" }}>warning</span>
-            Unavailable
-          </Button>
-          <Button 
-            size="sm" 
-            variant="outline" 
-            className="bg-red-50 text-red-700 hover:bg-red-100 hover:text-red-800 border-red-200 rounded-full px-4"
-            disabled={updating}
-            onClick={() => handleUpdateFuel('DEPLETED')}
-          >
-            <span className="material-symbols-outlined text-base mr-1.5" style={{ fontVariationSettings: "'FILL' 1" }}>ev_station</span>
-            Depleted
-          </Button>
-        </div>
-      </div>
     </div>
   );
 }

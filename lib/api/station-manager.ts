@@ -78,8 +78,6 @@ export interface LiveQueue {
   items: QueueItem[];
 }
 
-export type FuelStatus = 'AVAILABLE' | 'UNAVAILABLE' | 'DEPLETED';
-
 export interface StationTransaction {
   id: number;
   plateNumber: string;
@@ -161,17 +159,6 @@ export async function pauseQueueIntake(accessToken: string) {
 export async function resumeQueueIntake(accessToken: string) {
   return smRequest<any>("/station-manager/queue/intake/resume", accessToken, {
     method: "PATCH",
-  });
-}
-
-// ----------------------------------------------------------------------------
-// Station Control
-// ----------------------------------------------------------------------------
-
-export async function updateFuelStatus(accessToken: string, fuelStatus: FuelStatus) {
-  return smRequest<any>("/station-manager/station/fuel-status", accessToken, {
-    method: "PATCH",
-    body: JSON.stringify({ fuelStatus }),
   });
 }
 
