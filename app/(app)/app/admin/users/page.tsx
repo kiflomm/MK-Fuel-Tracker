@@ -1,21 +1,17 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth/context";
 import {
-  addVehiclesToOwner,
   createStationManager,
   createVehicleOwner,
-  getVehicleQuotaRules,
   getStations,
-  getUserById,
   getUsers,
   getVehicleCategories,
-  OwnerVehicle,
   Station,
   User,
   VehicleCategory,
-  updateVehicleQuotaRules,
   updateUserStatus,
 } from "@/lib/api/admin";
 import { Button } from "@/components/ui/button";
@@ -98,7 +94,9 @@ export default function UsersPage() {
                 <TableCell>{user.isActive ? "Active" : "Suspended"}</TableCell>
                 <TableCell className="text-right space-x-2">
                   {user.role === "VEHICLE_OWNER" ? (
-                    <ManageVehiclesDialog ownerUserId={user.id} categories={categories} />
+                    <Button size="sm" variant="outline" asChild>
+                      <Link href={`/app/admin/users/${user.id}/vehicles`}>Vehicles</Link>
+                    </Button>
                   ) : null}
                   <Button size="sm" variant="outline" onClick={() => void handleStatusChange(user.id, user.isActive)}>
                     {user.isActive ? "Suspend" : "Activate"}
@@ -205,120 +203,6 @@ function CreateOwnerDialog({ onSuccess, categories }: { onSuccess: () => Promise
           </div>
           <DialogFooter><Button type="submit">Create</Button></DialogFooter>
         </form>
-      </DialogContent>
-    </Dialog>
-  );
-}
-
-function ManageVehiclesDialog({ ownerUserId, categories }: { ownerUserId: number; categories: VehicleCategory[] }) {
-  const { accessToken } = useAuth();
-  const [open, setOpen] = useState(false);
-  const [vehicles, setVehicles] = useState<OwnerVehicle[]>([]);
-  const [draft, setDraft] = useState<{ plateNumber: string; categoryId: string }>({
-    plateNumber: "",
-    categoryId: "",
-  });
-  const [selectedVehicleId, setSelectedVehicleId] = useState<number | null>(null);
-  const [quotaDraft, setQuotaDraft] = useState<{ DAILY: string; WEEKLY: string; MONTHLY: string }>({
-    DAILY: "",
-    WEEKLY: "",
-    MONTHLY: "",
-  });
-
-  useEffect(() => {
-    if (!open || !accessToken) return;
-    void getUserById(accessToken, ownerUserId).then((res) => setVehicles(res.data?.vehicles ?? []));
-  }, [open, accessToken, ownerUserId]);
-
-  const handleAdd = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!accessToken) return;
-    if (!draft.plateNumber.trim() || !draft.categoryId) return;
-    const res = await addVehiclesToOwner(accessToken, ownerUserId, [{
-      plateNumber: draft.plateNumber.trim(),
-      categoryId: Number(draft.categoryId),
-    }]);
-    setVehicles(res.data ?? []);
-    setDraft({ ...draft, plateNumber: "" });
-  };
-
-  const selectVehicleForQuota = async (vehicleId: number) => {
-    if (!accessToken) return;
-    setSelectedVehicleId(vehicleId);
-    const res = await getVehicleQuotaRules(accessToken, vehicleId);
-    const next = { DAILY: "", WEEKLY: "", MONTHLY: "" };
-    for (const rule of res.data ?? []) {
-      next[rule.period] = String(rule.litersLimit);
-    }
-    setQuotaDraft(next);
-  };
-
-  const saveVehicleQuota = async () => {
-    if (!accessToken || !selectedVehicleId) return;
-    const quotaRules: Array<{ period: "DAILY" | "WEEKLY" | "MONTHLY"; litersLimit: number }> = [];
-    (["DAILY", "WEEKLY", "MONTHLY"] as const).forEach((period) => {
-      const litersLimit = Number(quotaDraft[period]);
-      if (Number.isFinite(litersLimit) && litersLimit > 0) {
-        quotaRules.push({ period, litersLimit });
-      }
-    });
-    if (quotaRules.length === 0) return;
-    await updateVehicleQuotaRules(accessToken, selectedVehicleId, quotaRules);
-    const userRes = await getUserById(accessToken, ownerUserId);
-    setVehicles(userRes.data?.vehicles ?? []);
-  };
-
-  return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild><Button size="sm" variant="outline">Vehicles</Button></DialogTrigger>
-      <DialogContent>
-        <DialogHeader><DialogTitle>Manage Vehicles</DialogTitle></DialogHeader>
-        <div className="space-y-2">
-          {vehicles.map((v) => (
-            <div key={v.id} className="flex items-center justify-between text-sm">
-              <span>{v.plateNumber} - {v.categoryName ?? v.categoryCode ?? v.categoryId}</span>
-              <Button type="button" size="sm" variant="outline" onClick={() => void selectVehicleForQuota(v.id)}>
-                Edit Quota
-              </Button>
-            </div>
-          ))}
-        </div>
-        <form onSubmit={handleAdd} className="space-y-2">
-          <Input placeholder="Plate number" value={draft.plateNumber} onChange={(e) => setDraft({ ...draft, plateNumber: e.target.value })} required />
-          <Select value={draft.categoryId} onValueChange={(v) => setDraft({ ...draft, categoryId: v })}>
-            <SelectTrigger><SelectValue placeholder="Category" /></SelectTrigger>
-            <SelectContent>{categories.map((c) => <SelectItem key={c.id} value={String(c.id)}>{c.name} ({c.code})</SelectItem>)}</SelectContent>
-          </Select>
-          <DialogFooter><Button type="submit">Add vehicle</Button></DialogFooter>
-        </form>
-        {selectedVehicleId ? (
-          <div className="rounded border p-3 space-y-2">
-            <div className="font-medium">Manual quota for vehicle #{selectedVehicleId}</div>
-            <div className="grid grid-cols-3 gap-2">
-              <Input
-                type="number"
-                placeholder="Daily liters"
-                value={quotaDraft.DAILY}
-                onChange={(e) => setQuotaDraft({ ...quotaDraft, DAILY: e.target.value })}
-              />
-              <Input
-                type="number"
-                placeholder="Weekly liters"
-                value={quotaDraft.WEEKLY}
-                onChange={(e) => setQuotaDraft({ ...quotaDraft, WEEKLY: e.target.value })}
-              />
-              <Input
-                type="number"
-                placeholder="Monthly liters"
-                value={quotaDraft.MONTHLY}
-                onChange={(e) => setQuotaDraft({ ...quotaDraft, MONTHLY: e.target.value })}
-              />
-            </div>
-            <Button type="button" onClick={() => void saveVehicleQuota()}>
-              Save Vehicle Quota
-            </Button>
-          </div>
-        ) : null}
       </DialogContent>
     </Dialog>
   );
