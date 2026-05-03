@@ -146,7 +146,7 @@ export async function getStationFuelInventory(accessToken: string, stationId: nu
 export async function adjustStationFuelInventory(
   accessToken: string,
   stationId: number,
-  data: { fuelTypeId: number; remainingLiters: number; reason?: string; note?: string },
+  data: { fuelTypeId: number; deltaLiters: number; reason?: string; note?: string },
 ) {
   return adminRequest<AdjustStationFuelInventoryResult>(
     `/admin/stations/${stationId}/fuel-inventory/adjust`,
