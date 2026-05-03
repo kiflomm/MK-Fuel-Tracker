@@ -56,9 +56,14 @@ export default function StationFuelInventoryPage() {
   const [stationError, setStationError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [fuelTypeId, setFuelTypeId] = useState("");
-  const [remainingLiters, setRemainingLiters] = useState("");
+  const [litersToAdd, setLitersToAdd] = useState("");
+  const [adjustFormError, setAdjustFormError] = useState<string | null>(null);
   const [reason, setReason] = useState("");
   const [note, setNote] = useState("");
+
+  const selectedInventoryRow = inventory.find(
+    (r) => r.fuelTypeId === Number(fuelTypeId),
+  );
 
   const loadAll = useCallback(async () => {
     if (!accessToken || !Number.isFinite(stationId) || stationId < 1) return;
@@ -104,21 +109,22 @@ export default function StationFuelInventoryPage() {
 
   const handleAdjust = async (e: React.FormEvent) => {
     e.preventDefault();
+    setAdjustFormError(null);
     if (!accessToken || !fuelTypeId || !Number.isFinite(stationId)) return;
-    const liters = parseFloat(remainingLiters);
-    if (Number.isNaN(liters) || liters < 0) {
-      alert("Enter a valid liters amount (≥ 0).");
+    const delta = parseFloat(litersToAdd);
+    if (Number.isNaN(delta) || delta <= 0) {
+      setAdjustFormError("Enter a positive number of liters to add.");
       return;
     }
     setSubmitting(true);
     try {
       await adjustStationFuelInventory(accessToken, stationId, {
         fuelTypeId: Number(fuelTypeId),
-        remainingLiters: liters,
+        deltaLiters: delta,
         reason: reason.trim() || undefined,
         note: note.trim() || undefined,
       });
-      setRemainingLiters("");
+      setLitersToAdd("");
       setReason("");
       setNote("");
       await loadAll();
@@ -252,17 +258,27 @@ export default function StationFuelInventoryPage() {
                 </table>
               </div>
 
-              <form
+                <form
                 onSubmit={handleAdjust}
                 className="space-y-3 rounded-lg border p-4 bg-muted/20"
               >
                 <div className="text-xs font-black uppercase tracking-widest text-muted-foreground">
-                  Set remaining liters (logged)
+                  Add to stock (logged)
                 </div>
+                <p className="text-xs text-muted-foreground">
+                  The liters you enter are added to the current balance for that fuel type. Audit
+                  history records previous total, new total, and liters added.
+                </p>
                 <div className="grid gap-3 sm:grid-cols-2">
                   <div className="space-y-2">
                     <Label>Fuel type</Label>
-                    <Select value={fuelTypeId} onValueChange={setFuelTypeId}>
+                    <Select
+                      value={fuelTypeId}
+                      onValueChange={(v) => {
+                        setFuelTypeId(v);
+                        setAdjustFormError(null);
+                      }}
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Select fuel type" />
                       </SelectTrigger>
@@ -274,21 +290,39 @@ export default function StationFuelInventoryPage() {
                         ))}
                       </SelectContent>
                     </Select>
+                    {selectedInventoryRow ? (
+                      <p className="text-xs text-muted-foreground">
+                        Current remaining:{" "}
+                        <span className="font-medium text-foreground tabular-nums">
+                          {formatL(selectedInventoryRow.remainingLiters)} L
+                        </span>
+                      </p>
+                    ) : fuelTypeId ? (
+                      <p className="text-xs text-muted-foreground">
+                        Current remaining: <span className="font-medium">0.00 L</span> (no row yet)
+                      </p>
+                    ) : null}
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="inv-liters">New remaining liters</Label>
+                    <Label htmlFor="inv-liters">Liters to add</Label>
                     <Input
                       id="inv-liters"
                       type="number"
                       step="any"
-                      min={0}
+                      min={0.0001}
                       required
-                      value={remainingLiters}
-                      onChange={(e) => setRemainingLiters(e.target.value)}
-                      placeholder="0.00"
+                      value={litersToAdd}
+                      onChange={(e) => {
+                        setLitersToAdd(e.target.value);
+                        setAdjustFormError(null);
+                      }}
+                      placeholder="e.g. 500"
                     />
                   </div>
                 </div>
+                {adjustFormError ? (
+                  <p className="text-sm text-destructive">{adjustFormError}</p>
+                ) : null}
                 <div className="space-y-2">
                   <Label htmlFor="inv-reason">Reason (optional)</Label>
                   <Input
