@@ -130,7 +130,7 @@ export default function AdminPage() {
             { href: "/app/admin/users", icon: "manage_accounts", label: "Users" },
             { href: "/app/admin/stations", icon: "local_gas_station", label: "Stations" },
           ].map((item) => (
-            <Link key={item.href} href={item.href}
+            <Link key={`${item.href}-${item.label}`} href={item.href}
               className="flex items-center gap-1.5 rounded-full border border-outline/20 bg-white px-3 py-1.5 text-xs font-semibold text-black/70 hover:bg-primary-container hover:text-black hover:border-yellow-300 transition-all shadow-sm">
               <span className="material-symbols-outlined text-sm">{item.icon}</span>
               {item.label}
