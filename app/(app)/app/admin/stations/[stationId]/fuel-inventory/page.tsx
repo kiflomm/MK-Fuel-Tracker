@@ -92,13 +92,19 @@ export default function StationFuelInventoryPage() {
       if (stationRes.data) setStation(stationRes.data);
       if (invRes.data) setInventory(invRes.data);
       if (adjRes.data) setAdjustments(adjRes.data);
-      if (typesRes.data) {
-        setFuelTypes(typesRes.data);
+      const fuelTypesData = typesRes.data ?? [];
+      if (fuelTypesData.length > 0) {
+        setFuelTypes(fuelTypesData);
         setFuelTypeId((prev) => {
           if (prev) return prev;
-          const firstActive = typesRes.data!.find((t) => t.isActive);
-          return String((firstActive ?? typesRes.data![0]).id);
+          const firstActive = fuelTypesData.find((t) => t.isActive);
+          const fallback = fuelTypesData[0];
+          const selected = firstActive ?? fallback;
+          return selected?.id !== undefined ? String(selected.id) : "";
         });
+      } else {
+        setFuelTypes([]);
+        setFuelTypeId("");
       }
     } catch (e) {
       console.error(e);
