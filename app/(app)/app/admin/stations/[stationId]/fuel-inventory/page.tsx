@@ -28,11 +28,20 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-function formatL(n: number) {
+function formatL(value: unknown) {
+  const n = typeof value === "number" ? value : Number(value);
+  if (!Number.isFinite(n)) return "0.00";
   return n.toLocaleString(undefined, {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
+}
+
+function formatDateTime(value: unknown) {
+  if (typeof value !== "string" || value.trim().length === 0) return "—";
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return "—";
+  return d.toLocaleString();
 }
 
 export default function StationFuelInventoryPage() {
@@ -247,9 +256,7 @@ export default function StationFuelInventoryPage() {
                             {formatL(row.remainingLiters)}
                           </td>
                           <td className="px-3 py-2 text-right text-xs text-muted-foreground">
-                            {row.inventoryUpdatedAt
-                              ? new Date(row.inventoryUpdatedAt).toLocaleString()
-                              : "—"}
+                            {formatDateTime(row.inventoryUpdatedAt)}
                           </td>
                         </tr>
                       ))
@@ -385,7 +392,7 @@ export default function StationFuelInventoryPage() {
                   {adjustments.map((a) => (
                     <tr key={a.id} className="border-b last:border-0 align-top">
                       <td className="px-2 py-2 whitespace-nowrap text-muted-foreground">
-                        {new Date(a.changedAt).toLocaleString()}
+                        {formatDateTime(a.changedAt)}
                       </td>
                       <td className="px-2 py-2">
                         <div className="font-medium">{a.fuelTypeName}</div>
@@ -399,7 +406,7 @@ export default function StationFuelInventoryPage() {
                       </td>
                       <td className="px-2 py-2 text-right tabular-nums">{formatL(a.deltaLiters)}</td>
                       <td className="px-2 py-2">
-                        {a.changedByFirstName} {a.changedByLastName}
+                        {`${(a.changedByFirstName ?? "").trim()} ${(a.changedByLastName ?? "").trim()}`.trim() || "—"}
                         <div
                           className="text-muted-foreground truncate max-w-[8rem]"
                           title={a.changedByEmail}
