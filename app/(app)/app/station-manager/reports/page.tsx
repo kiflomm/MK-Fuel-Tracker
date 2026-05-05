@@ -111,13 +111,13 @@ export default function ReportsPage() {
         <TabsList className="bg-neutral-100/50 p-1 rounded-xl border border-outline/5 h-12">
           <TabsTrigger 
             value="transactions" 
-            className="rounded-lg px-6 text-[10px] font-black uppercase tracking-widest data-[state=active]:bg-yellow-400 data-[state=active]:text-black data-[state=active]:shadow-sm h-full transition-all"
+            className="rounded-lg px-6 text-[10px] font-black uppercase tracking-widest data-[state=active]:!bg-yellow-400 data-[state=active]:!text-black data-[state=active]:shadow-sm h-full transition-all text-black"
           >
             Recent Transactions
           </TabsTrigger>
           <TabsTrigger 
             value="daily-totals" 
-            className="rounded-lg px-6 text-[10px] font-black uppercase tracking-widest data-[state=active]:bg-yellow-400 data-[state=active]:text-black data-[state=active]:shadow-sm h-full transition-all"
+            className="rounded-lg px-6 text-[10px] font-black uppercase tracking-widest data-[state=active]:!bg-yellow-400 data-[state=active]:!text-black data-[state=active]:shadow-sm h-full transition-all text-black"
           >
             Daily Totals
           </TabsTrigger>
