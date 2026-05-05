@@ -127,6 +127,19 @@ export const translations = {
     sm_nav_workers_desc: "Manage station staff",
     sm_nav_reports: "Reports",
     sm_nav_reports_desc: "Analytics & exports",
+    
+    // ── Sign-In Page ──────────────────────────────────────────────────────────
+    login_title_welcome: "Welcome back",
+    login_desc: "Sign in to continue to your role-specific dashboard.",
+    login_email_label: "Email Address",
+    login_password_label: "Password",
+    login_forgot_link: "Forgot?",
+    login_submit_btn: "Official Sign In",
+    login_authenticating: "Authenticating...",
+    login_help_text: "Need help?",
+    login_reset_link: "Reset password",
+    login_success: "Signed in successfully.",
+    login_error_generic: "Unable to sign in. Please try again.",
   },
 
   ti: {
@@ -255,6 +268,19 @@ export const translations = {
     sm_nav_workers_desc: "ናይ ጣቢያ ሰራሕተኛ ምምሕዳር",
     sm_nav_reports: "ጸብጻባት",
     sm_nav_reports_desc: "ትንታነን ምቕናዕን",
+
+    // ── Sign-In Page ──────────────────────────────────────────────────────────
+    login_title_welcome: "እንቋዕ ደሓን መጻእካ",
+    login_desc: "ናብ ናይ ስራሕ ዓውድኻ ንምእታው ኣብዚ ይለዩ።",
+    login_email_label: "ናይ ኢሜይል አድራሻ",
+    login_password_label: "መፍትሕ ቃል",
+    login_forgot_link: "ሪሲዕካዮ?",
+    login_submit_btn: "ወግዓዊ ምእታው",
+    login_authenticating: "ይረጋገጽ ኣሎ...",
+    login_help_text: "ሓገዝ የድልየካ?",
+    login_reset_link: "መፍትሕ ቃል ቀይር",
+    login_success: "ብትኽክል ኣቲኻ ኣለኻ።",
+    login_error_generic: "ምእታው ኣይተኻእለን። በጃኹም እንደገና ፈትኑ።",
   },
 } as const;
 
