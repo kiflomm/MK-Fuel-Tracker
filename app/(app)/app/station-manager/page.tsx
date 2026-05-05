@@ -9,6 +9,7 @@ import {
   StationFuelInventoryRow,
 } from "@/lib/api/station-manager";
 import Link from "next/link";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 
 const SECTIONS = [
@@ -165,41 +166,41 @@ export default function StationManagerPage() {
             </p>
           </div>
         ) : (
-          <div className="rounded-xl border border-outline/5 overflow-hidden">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b bg-neutral-50/50 text-left text-[10px] font-black uppercase tracking-widest text-black/50">
-                  <th className="px-6 py-4">Fuel type</th>
-                  <th className="px-6 py-4">Code</th>
-                  <th className="px-6 py-4 text-right">Remaining (L)</th>
-                  <th className="px-6 py-4 text-right">Last Updated</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-outline/5">
+          <div className="rounded-xl border border-outline/10 overflow-hidden shadow-sm bg-white">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-neutral-50/50 hover:bg-neutral-50/50 h-11">
+                  <TableHead className="text-[11px] font-bold uppercase tracking-wider text-black/60 px-4">Fuel type</TableHead>
+                  <TableHead className="text-[11px] font-bold uppercase tracking-wider text-black/60 px-4">Code</TableHead>
+                  <TableHead className="text-[11px] font-bold uppercase tracking-wider text-black/60 px-4 text-right">Remaining (L)</TableHead>
+                  <TableHead className="text-[11px] font-bold uppercase tracking-wider text-black/60 px-4 text-right">Last Updated</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
                 {fuelInventory.map((row) => (
-                  <tr key={row.fuelTypeId} className="group hover:bg-neutral-50/50 transition-colors">
-                    <td className="px-6 py-4">
+                  <TableRow key={row.fuelTypeId} className="group hover:bg-neutral-50/50 transition-colors border-b border-outline/5 last:border-0">
+                    <TableCell className="px-4 py-3.5">
                       <div className="flex items-center gap-3">
-                        <span className="font-bold text-neutral-900">{row.fuelTypeName}</span>
+                        <span className="font-bold text-neutral-800">{row.fuelTypeName}</span>
                         {!row.fuelTypeIsActive && (
                           <span className="inline-flex items-center rounded-md bg-amber-50 px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-amber-700 ring-1 ring-inset ring-amber-700/10">
                             Inactive
                           </span>
                         )}
                       </div>
-                    </td>
-                    <td className="px-6 py-4">
+                    </TableCell>
+                    <TableCell className="px-4 py-3.5">
                       <span className="font-mono text-[11px] font-bold text-black/40 bg-black/5 px-2 py-1 rounded">
                         {row.fuelTypeCode}
                       </span>
-                    </td>
-                    <td className="px-6 py-4 text-right font-black text-neutral-900 tabular-nums">
+                    </TableCell>
+                    <TableCell className="px-6 py-4 text-right font-black text-neutral-900 tabular-nums">
                       {row.remainingLiters.toLocaleString(undefined, {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2,
                       })}
-                    </td>
-                    <td className="px-6 py-4 text-right">
+                    </TableCell>
+                    <TableCell className="px-6 py-4 text-right">
                       <div className="flex flex-col items-end">
                         <span className="text-[11px] font-bold text-black/60 truncate max-w-[120px]">
                           {row.inventoryUpdatedAt ? new Date(row.inventoryUpdatedAt).toLocaleDateString() : "—"}
@@ -208,11 +209,11 @@ export default function StationManagerPage() {
                           {row.inventoryUpdatedAt ? new Date(row.inventoryUpdatedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ""}
                         </span>
                       </div>
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           </div>
         )}
         <div className="mt-4 p-4 rounded-xl bg-amber-50/50 border border-amber-200/50 flex items-start gap-3">

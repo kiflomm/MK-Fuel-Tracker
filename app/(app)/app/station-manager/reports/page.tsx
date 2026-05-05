@@ -127,13 +127,13 @@ export default function ReportsPage() {
           <div className="rounded-xl border border-outline/10 overflow-hidden shadow-sm bg-white">
             <Table>
               <TableHeader>
-                <TableRow className="bg-neutral-50/50 hover:bg-neutral-50/50">
-                  <TableHead className="text-[10px] font-black uppercase tracking-widest text-black/45 px-6">Timestamp</TableHead>
-                  <TableHead className="text-[10px] font-black uppercase tracking-widest text-black/45 px-6">Vehicle Plate</TableHead>
-                  <TableHead className="text-[10px] font-black uppercase tracking-widest text-black/45 px-6">Fuel Type</TableHead>
-                  <TableHead className="text-[10px] font-black uppercase tracking-widest text-black/45 px-6">Volume</TableHead>
-                  <TableHead className="text-[10px] font-black uppercase tracking-widest text-black/45 px-6">Gross Amount</TableHead>
-                  <TableHead className="text-[10px] font-black uppercase tracking-widest text-black/45 px-6">Worker</TableHead>
+                <TableRow className="bg-neutral-50/50 hover:bg-neutral-50/50 h-11">
+                  <TableHead className="text-[11px] font-bold uppercase tracking-wider text-black/60 px-4">Timestamp</TableHead>
+                  <TableHead className="text-[11px] font-bold uppercase tracking-wider text-black/60 px-4">Vehicle Plate</TableHead>
+                  <TableHead className="text-[11px] font-bold uppercase tracking-wider text-black/60 px-4">Fuel Type</TableHead>
+                  <TableHead className="text-[11px] font-bold uppercase tracking-wider text-black/60 px-4">Volume</TableHead>
+                  <TableHead className="text-[11px] font-bold uppercase tracking-wider text-black/60 px-4">Gross Amount</TableHead>
+                  <TableHead className="text-[11px] font-bold uppercase tracking-wider text-black/60 px-4">Worker</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -153,8 +153,8 @@ export default function ReportsPage() {
                   </TableRow>
                 ) : (
                   transactions.map((tx) => (
-                    <TableRow key={tx.id} className="group hover:bg-neutral-50/30 transition-colors">
-                      <TableCell className="px-6 py-4">
+                    <TableRow key={tx.id} className="group hover:bg-neutral-50/50 transition-colors border-b border-outline/5 last:border-0">
+                      <TableCell className="px-4 py-3.5">
                         <div className="flex flex-col">
                           <span className="text-[12px] font-bold text-neutral-600">
                             {new Date(tx.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
@@ -164,21 +164,21 @@ export default function ReportsPage() {
                           </span>
                         </div>
                       </TableCell>
-                      <TableCell className="px-6 py-4">
+                      <TableCell className="px-4 py-3.5">
                         <span className="font-black text-neutral-800 tracking-tight">{tx.plateNumber}</span>
                       </TableCell>
-                      <TableCell className="px-6 py-4">
+                      <TableCell className="px-4 py-3.5">
                         <span className="inline-flex items-center rounded-md bg-violet-50 px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-violet-700 ring-1 ring-inset ring-violet-700/10">
                           {tx.fuelType}
                         </span>
                       </TableCell>
-                      <TableCell className="px-6 py-4 font-black text-neutral-900 tabular-nums">
+                      <TableCell className="px-4 py-3.5 font-black text-neutral-900 tabular-nums">
                         {tx.liters.toFixed(2)} <span className="text-[10px] text-black/30 ml-0.5">L</span>
                       </TableCell>
-                      <TableCell className="px-6 py-4 font-black text-neutral-900 tabular-nums">
+                      <TableCell className="px-4 py-3.5 font-black text-neutral-900 tabular-nums">
                         {tx.totalPrice.toLocaleString()} <span className="text-[10px] text-black/30 ml-0.5">ETB</span>
                       </TableCell>
-                      <TableCell className="px-6 py-4">
+                      <TableCell className="px-4 py-3.5">
                         <span className="text-[12px] font-bold text-neutral-600">{tx.workerName}</span>
                       </TableCell>
                     </TableRow>
@@ -193,11 +193,11 @@ export default function ReportsPage() {
           <div className="rounded-xl border border-outline/10 overflow-hidden shadow-sm bg-white">
             <Table>
               <TableHeader>
-                <TableRow className="bg-neutral-50/50 hover:bg-neutral-50/50">
-                  <TableHead className="text-[10px] font-black uppercase tracking-widest text-black/45 px-6">Operational Date</TableHead>
-                  <TableHead className="text-[10px] font-black uppercase tracking-widest text-black/45 px-6">Total Volume dispensed</TableHead>
-                  <TableHead className="text-[10px] font-black uppercase tracking-widest text-black/45 px-6">Gross Revenue</TableHead>
-                  <TableHead className="text-[10px] font-black uppercase tracking-widest text-black/45 px-6">TX Count</TableHead>
+                <TableRow className="bg-neutral-50/50 hover:bg-neutral-50/50 h-11">
+                  <TableHead className="text-[11px] font-bold uppercase tracking-wider text-black/60 px-4">Operational Date</TableHead>
+                  <TableHead className="text-[11px] font-bold uppercase tracking-wider text-black/60 px-4">Total Volume dispensed</TableHead>
+                  <TableHead className="text-[11px] font-bold uppercase tracking-wider text-black/60 px-4">Gross Revenue</TableHead>
+                  <TableHead className="text-[11px] font-bold uppercase tracking-wider text-black/60 px-4">TX Count</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -217,17 +217,17 @@ export default function ReportsPage() {
                   </TableRow>
                 ) : (
                   dailyTotals.map((day) => (
-                    <TableRow key={day.date} className="group hover:bg-neutral-50/30 transition-colors">
-                      <TableCell className="px-6 py-4">
+                    <TableRow key={day.date} className="group hover:bg-neutral-50/50 transition-colors border-b border-outline/5 last:border-0">
+                      <TableCell className="px-4 py-3.5">
                         <span className="font-bold text-neutral-800">{new Date(day.date).toLocaleDateString("en-US", { month: 'short', day: 'numeric', year: 'numeric' })}</span>
                       </TableCell>
-                      <TableCell className="px-6 py-4 font-black text-neutral-900 tabular-nums text-lg">
+                      <TableCell className="px-4 py-3.5 font-black text-neutral-900 tabular-nums text-lg">
                         {Number(day.totalLitersDispensed).toFixed(2)} <span className="text-[10px] text-black/30 ml-0.5 font-black uppercase">Liters</span>
                       </TableCell>
-                      <TableCell className="px-6 py-4 font-black text-neutral-900 tabular-nums">
+                      <TableCell className="px-4 py-3.5 font-black text-neutral-900 tabular-nums">
                         {Number(day.totalGrossAmount).toLocaleString()} <span className="text-[10px] text-black/30 ml-0.5">ETB</span>
                       </TableCell>
-                      <TableCell className="px-6 py-4">
+                      <TableCell className="px-4 py-3.5">
                         <span className="inline-flex items-center rounded-md bg-neutral-100 px-2 py-1 text-[10px] font-black uppercase tracking-wider text-neutral-700 ring-1 ring-inset ring-neutral-700/10">
                           {day.completedTransactionCount} Transactions
                         </span>

@@ -63,11 +63,11 @@ export default function WorkersPage() {
       <div className="rounded-xl border border-outline/10 overflow-hidden shadow-sm bg-white">
         <Table>
           <TableHeader>
-            <TableRow className="bg-neutral-50/50 hover:bg-neutral-50/50">
-              <TableHead className="text-[10px] font-black uppercase tracking-widest text-black/45 px-6">Worker Name</TableHead>
-              <TableHead className="text-[10px] font-black uppercase tracking-widest text-black/45 px-6">Email Address</TableHead>
-              <TableHead className="text-[10px] font-black uppercase tracking-widest text-black/45 px-6">Account Status</TableHead>
-              <TableHead className="text-right text-[10px] font-black uppercase tracking-widest text-black/45 px-6">Actions</TableHead>
+            <TableRow className="bg-neutral-50/50 hover:bg-neutral-50/50 h-11">
+              <TableHead className="text-[11px] font-bold uppercase tracking-wider text-black/60 px-4">Worker Name</TableHead>
+              <TableHead className="text-[11px] font-bold uppercase tracking-wider text-black/60 px-4">Email Address</TableHead>
+              <TableHead className="text-[11px] font-bold uppercase tracking-wider text-black/60 px-4">Account Status</TableHead>
+              <TableHead className="text-right text-[11px] font-bold uppercase tracking-wider text-black/60 px-4">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -87,17 +87,17 @@ export default function WorkersPage() {
               </TableRow>
             ) : (
               workers.map((worker) => (
-                <TableRow key={worker.id} className="group hover:bg-neutral-50/30 transition-colors">
-                  <TableCell className="px-6 py-4">
+                <TableRow key={worker.id} className="group hover:bg-neutral-50/50 transition-colors border-b border-outline/5 last:border-0">
+                  <TableCell className="px-4 py-3.5">
                     <div className="flex flex-col">
                       <span className="font-bold text-neutral-800">{worker.firstName} {worker.lastName}</span>
                       <span className="font-mono text-[10px] font-bold text-black/30 tracking-tight">ID: #{worker.id}</span>
                     </div>
                   </TableCell>
-                  <TableCell className="px-6 py-4">
+                  <TableCell className="px-4 py-3.5">
                     <span className="text-[13px] font-medium text-neutral-600">{worker.email}</span>
                   </TableCell>
-                  <TableCell className="px-6 py-4">
+                  <TableCell className="px-4 py-3.5">
                     <span className={cn(
                       "inline-flex items-center rounded-md px-2 py-0.5 text-[10px] font-bold ring-1 ring-inset uppercase tracking-wider",
                       worker.isActive 
@@ -107,7 +107,7 @@ export default function WorkersPage() {
                       {worker.isActive ? "Active" : "Suspended"}
                     </span>
                   </TableCell>
-                  <TableCell className="text-right px-6 py-4 space-x-2">
+                  <TableCell className="text-right px-4 py-3.5 space-x-2">
                     <EditWorkerDialog worker={worker} onSuccess={fetchWorkers} />
                     <Button 
                       variant="outline"
@@ -173,56 +173,40 @@ function CreateWorkerDialog({ onSuccess }: { onSuccess: () => void }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-yellow-400 text-black hover:bg-yellow-500 transition-all shadow-sm font-bold text-[10px] uppercase tracking-widest px-6 h-10 rounded-xl">
+        <Button className="bg-yellow-400 text-black hover:bg-yellow-500 transition-all shadow-sm font-label-caps text-[10px] uppercase tracking-widest px-4 h-9 rounded-full">
           <Plus className="mr-2 h-3.5 w-3.5" /> Add Worker
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader><DialogTitle>Create Station Worker</DialogTitle></DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4 pt-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label className="text-[10px] font-black uppercase tracking-widest text-black/40 ml-1">First Name</Label>
-              <Input required value={formData.firstName} onChange={e => setFormData({...formData, firstName: e.target.value})} className="rounded-xl" />
-            </div>
-            <div className="space-y-2">
-              <Label className="text-[10px] font-black uppercase tracking-widest text-black/40 ml-1">Last Name</Label>
-              <Input required value={formData.lastName} onChange={e => setFormData({...formData, lastName: e.target.value})} className="rounded-xl" />
-            </div>
-          </div>
-          <div className="space-y-2">
-            <Label className="text-[10px] font-black uppercase tracking-widest text-black/40 ml-1">Email address</Label>
-            <Input type="email" required value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} className="rounded-xl" />
-          </div>
-          <div className="space-y-2">
-            <Label className="text-[10px] font-black uppercase tracking-widest text-black/40 ml-1">Password</Label>
-            <InputGroup>
-              <InputGroupInput 
-                type={showPassword ? "text" : "password"} 
-                placeholder="Initial password"
-                required
-                minLength={6}
-                value={formData.password} 
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })} 
-                className="rounded-xl"
-              />
-              <InputGroupAddon align="inline-end">
-                <InputGroupButton 
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="text-muted-foreground mr-2"
-                >
-                  <span className="material-symbols-outlined text-sm">
-                    {showPassword ? "visibility_off" : "visibility"}
-                  </span>
-                </InputGroupButton>
-              </InputGroupAddon>
-            </InputGroup>
-          </div>
+        <form onSubmit={handleSubmit} className="space-y-3">
+          <Input placeholder="First name" required value={formData.firstName} onChange={e => setFormData({...formData, firstName: e.target.value})} />
+          <Input placeholder="Last name" required value={formData.lastName} onChange={e => setFormData({...formData, lastName: e.target.value})} />
+          <Input type="email" placeholder="Email address" required value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} />
+          <InputGroup>
+            <InputGroupInput 
+              type={showPassword ? "text" : "password"} 
+              placeholder="Password (min 6 characters)"
+              required
+              minLength={6}
+              value={formData.password} 
+              onChange={(e) => setFormData({ ...formData, password: e.target.value })} 
+            />
+            <InputGroupAddon align="inline-end">
+              <InputGroupButton 
+                onClick={() => setShowPassword(!showPassword)}
+                className="text-muted-foreground mr-1"
+              >
+                <span className="material-symbols-outlined text-sm">
+                  {showPassword ? "visibility_off" : "visibility"}
+                </span>
+              </InputGroupButton>
+            </InputGroupAddon>
+          </InputGroup>
 
           <DialogFooter className="pt-2">
-            <Button type="button" variant="outline" onClick={() => setOpen(false)} className="rounded-xl font-bold uppercase text-[10px] tracking-widest">Cancel</Button>
-            <Button type="submit" disabled={isSubmitting} className="rounded-xl font-bold uppercase text-[10px] tracking-widest bg-emerald-900 text-white hover:bg-emerald-800">
-              {isSubmitting ? "Creating..." : "Create Worker Account"}
+            <Button type="submit" disabled={isSubmitting} className="w-full">
+              {isSubmitting ? "Creating..." : "Create Worker"}
             </Button>
           </DialogFooter>
         </form>
@@ -268,46 +252,31 @@ function EditWorkerDialog({ worker, onSuccess }: { worker: StationWorker, onSucc
       </DialogTrigger>
       <DialogContent>
         <DialogHeader><DialogTitle>Edit Station Worker</DialogTitle></DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4 pt-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label className="text-[10px] font-black uppercase tracking-widest text-black/40 ml-1">First Name</Label>
-              <Input required value={formData.firstName} onChange={e => setFormData({...formData, firstName: e.target.value})} className="rounded-xl" />
-            </div>
-            <div className="space-y-2">
-              <Label className="text-[10px] font-black uppercase tracking-widest text-black/40 ml-1">Last Name</Label>
-              <Input required value={formData.lastName} onChange={e => setFormData({...formData, lastName: e.target.value})} className="rounded-xl" />
-            </div>
-          </div>
-          <div className="space-y-2">
-            <Label className="text-[10px] font-black uppercase tracking-widest text-black/40 ml-1">Email address</Label>
-            <Input type="email" required value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} className="rounded-xl" />
-          </div>
-          <div className="space-y-2">
-            <Label className="text-[10px] font-black uppercase tracking-widest text-black/40 ml-1">Reset Password</Label>
-            <InputGroup>
-              <InputGroupInput 
-                type={showPassword ? "text" : "password"} 
-                placeholder="Leave empty to keep current"
-                value={formData.password} 
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })} 
-                className="rounded-xl"
-              />
-              <InputGroupAddon align="inline-end">
-                <InputGroupButton 
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="text-muted-foreground mr-2"
-                >
-                  <span className="material-symbols-outlined text-sm">
-                    {showPassword ? "visibility_off" : "visibility"}
-                  </span>
-                </InputGroupButton>
-              </InputGroupAddon>
-            </InputGroup>
-          </div>
+        <form onSubmit={handleSubmit} className="space-y-3">
+          <Input placeholder="First name" required value={formData.firstName} onChange={e => setFormData({...formData, firstName: e.target.value})} />
+          <Input placeholder="Last name" required value={formData.lastName} onChange={e => setFormData({...formData, lastName: e.target.value})} />
+          <Input type="email" placeholder="Email address" required value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} />
+          <InputGroup>
+            <InputGroupInput 
+              type={showPassword ? "text" : "password"} 
+              placeholder="Reset Password (leave empty to keep current)"
+              value={formData.password} 
+              onChange={(e) => setFormData({ ...formData, password: e.target.value })} 
+            />
+            <InputGroupAddon align="inline-end">
+              <InputGroupButton 
+                onClick={() => setShowPassword(!showPassword)}
+                className="text-muted-foreground mr-1"
+              >
+                <span className="material-symbols-outlined text-sm">
+                  {showPassword ? "visibility_off" : "visibility"}
+                </span>
+              </InputGroupButton>
+            </InputGroupAddon>
+          </InputGroup>
+
           <DialogFooter className="pt-2">
-            <Button type="button" variant="outline" onClick={() => setOpen(false)} className="rounded-xl font-bold uppercase text-[10px] tracking-widest">Cancel</Button>
-            <Button type="submit" disabled={isSubmitting} className="rounded-xl font-bold uppercase text-[10px] tracking-widest bg-emerald-900 text-white hover:bg-emerald-800">
+            <Button type="submit" disabled={isSubmitting} className="w-full">
               {isSubmitting ? "Saving..." : "Save Changes"}
             </Button>
           </DialogFooter>

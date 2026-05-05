@@ -124,11 +124,11 @@ export default function QueuePage() {
       <div className="rounded-xl border border-outline/10 overflow-hidden shadow-sm bg-white">
         <Table>
           <TableHeader>
-            <TableRow className="bg-neutral-50/50 hover:bg-neutral-50/50">
-              <TableHead className="text-[10px] font-black uppercase tracking-widest text-black/45 px-6">Identified Plate</TableHead>
-              <TableHead className="text-[10px] font-black uppercase tracking-widest text-black/45 px-6">Vehicle Category</TableHead>
-              <TableHead className="text-[10px] font-black uppercase tracking-widest text-black/45 px-6">Join Time</TableHead>
-              <TableHead className="text-[10px] font-black uppercase tracking-widest text-black/45 px-6">Current Status</TableHead>
+            <TableRow className="bg-neutral-50/50 hover:bg-neutral-50/50 h-11">
+              <TableHead className="text-[11px] font-bold uppercase tracking-wider text-black/60 px-4">Identified Plate</TableHead>
+              <TableHead className="text-[11px] font-bold uppercase tracking-wider text-black/60 px-4">Vehicle Category</TableHead>
+              <TableHead className="text-[11px] font-bold uppercase tracking-wider text-black/60 px-4">Join Time</TableHead>
+              <TableHead className="text-[11px] font-bold uppercase tracking-wider text-black/60 px-4">Current Status</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -147,17 +147,17 @@ export default function QueuePage() {
                 </TableCell>
               </TableRow>
             ) : (
-              queue.items.map((item) => (
-                <TableRow key={item.id} className="group hover:bg-neutral-50/30 transition-colors">
-                  <TableCell className="px-6 py-4">
-                    <span className="font-black text-neutral-800 tracking-tight">{item.plateNumber}</span>
+              queue?.items?.map((item) => (
+                <TableRow key={item.id} className="group hover:bg-neutral-50/50 transition-colors border-b border-outline/5 last:border-0">
+                  <TableCell className="px-4 py-3.5">
+                    <span className="font-medium text-neutral-800 tracking-tight">{item.plateNumber}</span>
                   </TableCell>
-                  <TableCell className="px-6 py-4">
-                    <span className="inline-flex items-center rounded-md bg-sky-50 px-2 py-1 text-[10px] font-black uppercase tracking-wider text-sky-700 ring-1 ring-inset ring-sky-700/10">
+                  <TableCell className="px-4 py-3.5">
+                    <span className="inline-flex items-center rounded-md bg-sky-50 px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-sky-700 ring-1 ring-inset ring-sky-700/10">
                       {item.vehicleCategory}
                     </span>
                   </TableCell>
-                  <TableCell className="px-6 py-4">
+                  <TableCell className="px-4 py-3.5">
                     <div className="flex flex-col">
                       <span className="text-[13px] font-bold text-neutral-600">
                         {new Date(item.joinedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
@@ -167,7 +167,7 @@ export default function QueuePage() {
                       </span>
                     </div>
                   </TableCell>
-                  <TableCell className="px-6 py-4">
+                  <TableCell className="px-4 py-3.5">
                     <span className="inline-flex items-center rounded-full bg-neutral-100 px-2.5 py-0.5 text-[10px] font-bold text-neutral-600 ring-1 ring-inset ring-neutral-200">
                       {item.status}
                     </span>
