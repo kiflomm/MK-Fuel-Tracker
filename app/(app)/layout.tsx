@@ -1,8 +1,14 @@
+"use client";
+
 import Link from "next/link";
 import { ProtectedAppGate } from "@/components/auth/protected-app-gate";
 import { LogoutButton } from "@/components/auth/logout-button";
+import { LanguageToggle } from "@/components/ui/language-toggle";
+import { useLanguage } from "@/lib/i18n/language-context";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
+  const { t } = useLanguage();
+
   return (
     <ProtectedAppGate>
       <div className="flex min-h-screen flex-col bg-background-landing relative font-['Public_Sans']">
@@ -28,12 +34,13 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 </span>
               </div>
             </Link>
-            <div className="flex items-center gap-6">
-              <nav className="hidden md:flex items-center gap-6 mr-6 border-r border-outline/10 pr-6">
+            <div className="flex items-center gap-4">
+              <nav className="hidden md:flex items-center gap-6 mr-2 border-r border-outline/10 pr-6">
                 <Link href="/app" className="text-xs font-semibold uppercase tracking-widest text-primary hover:text-surface-tint transition-colors">
-                  Dashboard
+                  {t("app_nav_dashboard")}
                 </Link>
               </nav>
+              <LanguageToggle />
               <LogoutButton />
             </div>
           </div>
@@ -46,7 +53,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <footer className="w-full py-8 mt-auto border-t border-outline/10 bg-surface-container-lowest/50 backdrop-blur-sm">
           <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
             <p className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">
-              © 2026 GC Software Engineering • Mekelle Fuel Tracker
+              {t("app_footer_copy")}
             </p>
             <div className="flex items-center gap-4">
               <div className="h-[1px] w-8 bg-neutral-300"></div>

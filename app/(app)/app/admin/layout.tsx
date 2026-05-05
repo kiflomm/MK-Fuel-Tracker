@@ -3,16 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-
-const NAV_ITEMS = [
-  { href: "/app/admin", label: "Dashboard", exact: true, icon: "dashboard", desc: "Overview & stats" },
-  { href: "/app/admin/stations", label: "Stations", icon: "local_gas_station", desc: "Manage fuel stations" },
-  { href: "/app/admin/users", label: "Users", icon: "manage_accounts", desc: "Managers & owners" },
-  { href: "/app/admin/vehicle-categories", label: "Vehicle Categories", icon: "category", desc: "Dynamic category list" },
-  { href: "/app/admin/fuel-types", label: "Fuel Types", icon: "local_gas_station", desc: "Manage fuel options & pricing" },
-  { href: "/app/admin/reports", label: "Reports", icon: "assessment", desc: "Analytics & exports" },
-  { href: "/app/admin/audit-logs", label: "Audit Logs", icon: "policy", desc: "System activity trail" },
-];
+import { useLanguage } from "@/lib/i18n/language-context";
 
 function cn(...classes: (string | undefined | null | false)[]) {
   return classes.filter(Boolean).join(" ");
@@ -21,6 +12,17 @@ function cn(...classes: (string | undefined | null | false)[]) {
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { t } = useLanguage();
+
+  const NAV_ITEMS = [
+    { href: "/app/admin", label: t("admin_nav_dashboard"), exact: true, icon: "dashboard", desc: t("admin_nav_dashboard_desc") },
+    { href: "/app/admin/stations", label: t("admin_nav_stations"), icon: "local_gas_station", desc: t("admin_nav_stations_desc") },
+    { href: "/app/admin/users", label: t("admin_nav_users"), icon: "manage_accounts", desc: t("admin_nav_users_desc") },
+    { href: "/app/admin/vehicle-categories", label: t("admin_nav_vehicle_categories"), icon: "category", desc: t("admin_nav_vehicle_categories_desc") },
+    { href: "/app/admin/fuel-types", label: t("admin_nav_fuel_types"), icon: "local_gas_station", desc: t("admin_nav_fuel_types_desc") },
+    { href: "/app/admin/reports", label: t("admin_nav_reports"), icon: "assessment", desc: t("admin_nav_reports_desc") },
+    { href: "/app/admin/audit-logs", label: t("admin_nav_audit_logs"), icon: "policy", desc: t("admin_nav_audit_logs_desc") },
+  ];
 
   // Close mobile drawer on scroll
   useEffect(() => {
@@ -48,7 +50,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <div className="lg:hidden w-full flex items-center justify-between bg-yellow-50/50 rounded-2xl p-4 border border-yellow-200/50 backdrop-blur-sm">
         <div className="flex items-center gap-2">
           <span className="material-symbols-outlined text-yellow-700 text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>shield_person</span>
-          <h2 className="text-xs font-black tracking-[0.2em] text-yellow-700 uppercase">Admin Menu</h2>
+          <h2 className="text-xs font-black tracking-[0.2em] text-yellow-700 uppercase">{t("admin_mobile_menu")}</h2>
         </div>
         <button 
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
@@ -81,10 +83,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <div>
             <div className="flex items-center gap-2 mb-1">
               <span className="material-symbols-outlined text-yellow-700 text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>shield_person</span>
-              <h2 className="text-xs font-black tracking-[0.2em] text-yellow-700 uppercase">Admin Control</h2>
+              <h2 className="text-xs font-black tracking-[0.2em] text-yellow-700 uppercase">{t("admin_panel_title")}</h2>
             </div>
             <div className="h-0.5 bg-gradient-to-r from-yellow-600 via-yellow-400 to-transparent rounded-full" />
-            <p className="text-[10px] text-black/40 mt-1.5 uppercase tracking-widest font-semibold">System Administration Panel</p>
+            <p className="text-[10px] text-black/40 mt-1.5 uppercase tracking-widest font-semibold">{t("admin_panel_subtitle")}</p>
           </div>
           {/* Close button on mobile inside the drawer */}
           <button 
