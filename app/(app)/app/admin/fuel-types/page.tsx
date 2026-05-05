@@ -16,6 +16,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Dialog
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { cn } from "@/lib/utils";
 
 export default function FuelTypesPage() {
   const { accessToken } = useAuth();
@@ -83,12 +84,12 @@ export default function FuelTypesPage() {
       <div className="rounded-xl border border-outline/10 overflow-hidden shadow-sm">
         <Table>
           <TableHeader>
-            <TableRow>
-              <TableHead>Code</TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Price (Birr/L)</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+            <TableRow className="bg-neutral-50/50">
+              <TableHead className="font-bold text-[11px] uppercase tracking-wider">Code</TableHead>
+              <TableHead className="font-bold text-[11px] uppercase tracking-wider">Name</TableHead>
+              <TableHead className="font-bold text-[11px] uppercase tracking-wider">Price (Birr/L)</TableHead>
+              <TableHead className="font-bold text-[11px] uppercase tracking-wider">Status</TableHead>
+              <TableHead className="font-bold text-[11px] uppercase tracking-wider text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -106,22 +107,33 @@ export default function FuelTypesPage() {
               </TableRow>
             ) : (
               fuelTypes.map((t) => (
-                <TableRow key={t.id}>
-                  <TableCell className="font-mono font-semibold">{t.code}</TableCell>
-                  <TableCell className="font-medium">{t.name}</TableCell>
+                <TableRow key={t.id} className="hover:bg-neutral-50/50 transition-colors">
+                  <TableCell>
+                    <span className="inline-flex items-center rounded-md bg-fuchsia-50 px-2 py-1 text-[10px] font-black uppercase tracking-wider text-fuchsia-700 ring-1 ring-inset ring-fuchsia-700/10">
+                      {t.code}
+                    </span>
+                  </TableCell>
+                  <TableCell className="font-bold text-neutral-800">{t.name}</TableCell>
                   <TableCell>
                     {t.pricePerLiter ? (
-                      <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-700/10">
+                      <span className="font-mono text-sm font-semibold text-emerald-600">
                         {Number(t.pricePerLiter).toFixed(2)}
                       </span>
                     ) : (
-                      <span className="inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-500 ring-1 ring-inset ring-gray-700/10">
-                        Not set
-                      </span>
+                      <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest">Not Set</span>
                     )}
                   </TableCell>
-                  <TableCell>{t.isActive ? "Active" : "Inactive"}</TableCell>
-                  <TableCell className="text-right space-x-2">
+                  <TableCell>
+                    <span className={cn(
+                      "inline-flex items-center rounded-md px-2 py-0.5 text-[10px] font-bold ring-1 ring-inset",
+                      t.isActive 
+                        ? "bg-green-50 text-green-700 ring-green-600/20" 
+                        : "bg-red-50 text-red-700 ring-red-600/20"
+                    )}>
+                      {t.isActive ? "Active" : "Inactive"}
+                    </span>
+                  </TableCell>
+                  <TableCell className="text-right space-x-2 text-black">
                     <EditFuelTypeDialog fuelType={t} onSuccess={fetchFuelTypes} />
                     <Button variant="destructive" size="sm" onClick={() => handleDelete(t.id)}>
                       Delete

@@ -6,6 +6,7 @@ import { getDailyTotals, getServiceActivity, getDistributionReport } from "@/lib
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { parseISO, format } from "date-fns";
+import { cn } from "@/lib/utils";
 
 export default function ReportsPage() {
   const { accessToken } = useAuth();
@@ -73,11 +74,17 @@ export default function ReportsPage() {
         </div>
       </div>
 
-      <div className="rounded-xl border border-outline/10 p-6 bg-white shadow-sm overflow-x-auto">
+      <div className="rounded-xl border border-outline/10 overflow-hidden bg-white shadow-sm overflow-x-auto">
         {loading ? (
-          <p className="text-center text-muted-foreground py-6">Loading report data...</p>
+          <div className="flex flex-col items-center justify-center py-12 gap-3">
+            <span className="material-symbols-outlined animate-spin text-violet-600">progress_activity</span>
+            <p className="text-sm text-neutral-500 font-medium">Synthesizing analytics data...</p>
+          </div>
         ) : data.length === 0 ? (
-          <p className="text-center text-muted-foreground py-6">No data available for this report.</p>
+          <div className="flex flex-col items-center justify-center py-12 gap-3">
+            <span className="material-symbols-outlined text-neutral-300 text-4xl">analytics</span>
+            <p className="text-sm text-neutral-500 font-medium">No results found for the selected parameters.</p>
+          </div>
         ) : (
           <ReportTable data={data} reportType={reportType} />
         )}
@@ -91,22 +98,22 @@ function ReportTable({ data, reportType }: { data: any[], reportType: string }) 
     return (
       <Table>
         <TableHeader>
-          <TableRow>
-            <TableHead>Date</TableHead>
-            <TableHead>Total Liters</TableHead>
-            <TableHead>Total Revenue</TableHead>
-            <TableHead>Vehicle Count</TableHead>
+          <TableRow className="bg-neutral-50/50">
+            <TableHead className="font-bold text-[11px] uppercase tracking-wider">Date</TableHead>
+            <TableHead className="font-bold text-[11px] uppercase tracking-wider">Total Liters</TableHead>
+            <TableHead className="font-bold text-[11px] uppercase tracking-wider">Total Revenue</TableHead>
+            <TableHead className="font-bold text-[11px] uppercase tracking-wider">Vehicle Count</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {data.map((row, i) => (
-            <TableRow key={i}>
-              <TableCell className="font-medium">
+            <TableRow key={i} className="hover:bg-neutral-50/50 transition-colors">
+              <TableCell className="font-bold text-neutral-900">
                  {row.date ? format(parseISO(row.date), "MMM d, yyyy") : "N/A"}
               </TableCell>
-              <TableCell>{Number(row.totalLiters || 0).toFixed(2)} L</TableCell>
-              <TableCell>{Number(row.totalRevenue || 0).toFixed(2)} Birr</TableCell>
-              <TableCell>{row.vehicleCount || 0}</TableCell>
+              <TableCell className="font-mono text-sm font-semibold text-neutral-600">{Number(row.totalLiters || 0).toFixed(2)} L</TableCell>
+              <TableCell className="font-mono text-sm font-semibold text-emerald-600">{Number(row.totalRevenue || 0).toFixed(2)} Birr</TableCell>
+              <TableCell className="font-bold text-neutral-700">{row.vehicleCount || 0}</TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -120,17 +127,21 @@ function ReportTable({ data, reportType }: { data: any[], reportType: string }) 
   return (
     <Table>
       <TableHeader>
-        <TableRow>
+        <TableRow className="bg-neutral-50/50">
           {columns.map(col => (
-            <TableHead key={col} className="capitalize">{col.replace(/([A-Z])/g, ' $1').trim()}</TableHead>
+            <TableHead key={col} className="font-bold text-[11px] uppercase tracking-wider">
+              {col.replace(/([A-Z])/g, ' $1').trim()}
+            </TableHead>
           ))}
         </TableRow>
       </TableHeader>
       <TableBody>
         {data.map((row, i) => (
-          <TableRow key={i}>
+          <TableRow key={i} className="hover:bg-neutral-50/50 transition-colors">
             {columns.map(col => (
-              <TableCell key={col}>{String(row[col])}</TableCell>
+              <TableCell key={col} className="text-sm font-medium text-neutral-700">
+                {String(row[col])}
+              </TableCell>
             ))}
           </TableRow>
         ))}
