@@ -155,21 +155,42 @@ function CreateManagerDialog({ onSuccess }: { onSuccess: () => Promise<void> | v
   const [showPassword, setShowPassword] = useState(false);
   const [stations, setStations] = useState<Station[]>([]);
   const [formData, setFormData] = useState({ firstName: "", lastName: "", email: "", password: "", stationId: "" });
+  const [error, setError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     if (!open || !accessToken) return;
+    setError(null);
+    setFormData({ firstName: "", lastName: "", email: "", password: "", stationId: "" });
     void getStations(accessToken).then((res) => setStations(res.data ?? []));
   }, [open, accessToken]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!accessToken) return;
-    await createStationManager(accessToken, {
-      ...formData,
-      stationId: Number(formData.stationId),
-    });
-    await onSuccess();
-    setOpen(false);
+    if (!formData.stationId) {
+      setError("Please select a station.");
+      return;
+    }
+    if (formData.password.length < 6) {
+      setError("Password must be at least 6 characters.");
+      return;
+    }
+    setError(null);
+    setSubmitting(true);
+    try {
+      await createStationManager(accessToken, {
+        ...formData,
+        stationId: Number(formData.stationId),
+      });
+      await onSuccess();
+      setOpen(false);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to create station manager.";
+      setError(msg);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -182,13 +203,20 @@ function CreateManagerDialog({ onSuccess }: { onSuccess: () => Promise<void> | v
       <DialogContent>
         <DialogHeader><DialogTitle>Create Station Manager</DialogTitle></DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-3">
+          {error && (
+            <div className="rounded-md bg-red-50 border border-red-200 px-3 py-2 text-sm text-red-700">
+              {error}
+            </div>
+          )}
           <Input placeholder="First name" value={formData.firstName} onChange={(e) => setFormData({ ...formData, firstName: e.target.value })} required />
           <Input placeholder="Last name" value={formData.lastName} onChange={(e) => setFormData({ ...formData, lastName: e.target.value })} required />
           <Input type="email" placeholder="Email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} required />
           <InputGroup>
             <InputGroupInput 
               type={showPassword ? "text" : "password"} 
-              placeholder="Password" 
+              placeholder="Password (min 6 characters)"
+              required
+              minLength={6}
               value={formData.password} 
               onChange={(e) => setFormData({ ...formData, password: e.target.value })} 
             />
@@ -207,7 +235,7 @@ function CreateManagerDialog({ onSuccess }: { onSuccess: () => Promise<void> | v
             <SelectTrigger><SelectValue placeholder="Select station" /></SelectTrigger>
             <SelectContent>{stations.map((s) => <SelectItem key={s.id} value={String(s.id)}>{s.name}</SelectItem>)}</SelectContent>
           </Select>
-          <DialogFooter><Button type="submit">Create</Button></DialogFooter>
+          <DialogFooter><Button type="submit" disabled={submitting}>{submitting ? "Creating…" : "Create"}</Button></DialogFooter>
         </form>
       </DialogContent>
     </Dialog>
