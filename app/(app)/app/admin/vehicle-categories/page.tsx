@@ -14,6 +14,13 @@ import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
 import { cn } from "@/lib/utils";
 
 export default function VehicleCategoriesPage() {
@@ -52,71 +59,91 @@ export default function VehicleCategoriesPage() {
   return (
     <div className="space-y-6">
       {/* Premium Header */}
-      <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-emerald-950 to-neutral-900 px-6 py-7 shadow-lg">
-        <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500/10 rounded-full -mr-16 -mt-16 blur-3xl" />
+      <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-emerald-950 to-neutral-900 px-6 py-7 shadow-lg min-h-[160px] flex flex-col justify-center">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full -mr-20 -mt-20 blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-32 h-32 bg-emerald-500/5 rounded-full -ml-10 -mb-10 blur-2xl" />
         <div className="relative z-10 flex items-center justify-between gap-4 flex-wrap">
           <div>
-            <div className="flex items-center gap-2 mb-2">
-              <span className="material-symbols-outlined text-emerald-400 text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>category</span>
-              <span className="text-[10px] font-black tracking-[0.25em] text-emerald-400 uppercase">Policy Framework</span>
+            <div className="flex items-center gap-2 mb-3">
+              <div className="flex items-center justify-center w-6 h-6 rounded-lg bg-emerald-400/20">
+                <span className="material-symbols-outlined text-emerald-400 text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>category</span>
+              </div>
+              <span className="text-[10px] font-black tracking-[0.25em] text-emerald-400/80 uppercase">Policy Framework</span>
             </div>
-            <h1 className="text-3xl font-black text-white tracking-tight leading-none mb-1">Vehicle Categories</h1>
-            <p className="text-sm text-neutral-400 font-medium">Define vehicle classes, subsidy rules, and allocation quotas.</p>
+            <h1 className="text-3xl font-black text-white tracking-tight leading-none mb-2">Vehicle Categories</h1>
+            <p className="text-xs sm:text-sm text-neutral-400 font-medium max-w-xl leading-relaxed">
+              Define vehicle classes, subsidy rules, and allocation quotas for the national fuel distribution policy.
+            </p>
           </div>
-          <CreateCategoryDialog onSuccess={load} />
+          <div className="flex items-center gap-3">
+            <CreateCategoryDialog onSuccess={load} />
+          </div>
         </div>
       </div>
 
-      <div className="rounded-xl border border-outline/10 overflow-hidden shadow-sm">
+      <div className="rounded-xl border border-outline/10 overflow-hidden shadow-sm bg-white">
         <Table>
           <TableHeader>
-            <TableRow>
-              <TableHead>Code</TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Subsidy (%)</TableHead>
-              <TableHead>Quotas (Liters)</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+            <TableRow className="bg-muted/40 hover:bg-muted/40">
+              <TableHead className="text-[11px] font-bold uppercase tracking-wider px-4 py-3.5">Code</TableHead>
+              <TableHead className="text-[11px] font-bold uppercase tracking-wider px-4 py-3.5">Name</TableHead>
+              <TableHead className="text-[11px] font-bold uppercase tracking-wider px-4 py-3.5">Subsidy (%)</TableHead>
+              <TableHead className="text-[11px] font-bold uppercase tracking-wider px-4 py-3.5">Quotas (Liters)</TableHead>
+              <TableHead className="text-[11px] font-bold uppercase tracking-wider px-4 py-3.5">Status</TableHead>
+              <TableHead className="text-[11px] font-bold uppercase tracking-wider px-4 py-3.5 text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-6 text-muted-foreground">
-                  Loading categories...
+                <TableCell colSpan={6} className="text-center py-12">
+                   <div className="flex flex-col items-center gap-3">
+                      <span className="material-symbols-outlined animate-spin text-3xl text-emerald-400">sync</span>
+                      <p className="text-sm text-muted-foreground font-medium">Loading categories...</p>
+                   </div>
                 </TableCell>
               </TableRow>
             ) : rows.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-6 text-muted-foreground">
-                  No categories found.
+                <TableCell colSpan={6} className="p-0">
+                   <Empty className="py-20 border-0 rounded-none bg-neutral-50/30">
+                      <EmptyHeader>
+                        <EmptyMedia variant="icon">
+                          <span className="material-symbols-outlined text-emerald-400">category</span>
+                        </EmptyMedia>
+                        <EmptyTitle className="text-neutral-900 font-bold">No categories defined</EmptyTitle>
+                        <EmptyDescription>
+                          Start by creating a vehicle category to define fuel subsidies and quotas.
+                        </EmptyDescription>
+                      </EmptyHeader>
+                    </Empty>
                 </TableCell>
               </TableRow>
             ) : (
               rows.map((row) => (
-                <TableRow key={row.id}>
-                  <TableCell>
-                    <span className="inline-flex items-center rounded-md bg-emerald-50 px-2 py-1 text-[10px] font-black uppercase tracking-wider text-emerald-700 ring-1 ring-inset ring-emerald-700/10">
+                <TableRow key={row.id} className="group transition-colors hover:bg-neutral-50/50">
+                  <TableCell className="px-4 py-4">
+                    <span className="font-mono text-[10px] text-emerald-700 font-bold bg-emerald-50 px-1.5 py-0.5 rounded uppercase tracking-wider ring-1 ring-inset ring-emerald-600/10">
                       {row.code}
                     </span>
                   </TableCell>
-                  <TableCell className="font-bold text-neutral-800">{row.name}</TableCell>
-                  <TableCell>
-                    <span className="font-mono text-sm font-semibold text-emerald-600">
+                  <TableCell className="px-4 py-4 font-black text-neutral-900 text-sm">{row.name}</TableCell>
+                  <TableCell className="px-4 py-4">
+                    <span className="font-mono text-sm font-black text-emerald-600 tabular-nums">
                       {(Number(row.fuelSubsidyPercentage) || 0).toFixed(1)}%
                     </span>
                   </TableCell>
-                  <TableCell>
-                    <div className="flex flex-wrap gap-1">
+                  <TableCell className="px-4 py-4">
+                    <div className="flex flex-wrap gap-1.5">
                       {row.quotaRules.map((rule) => (
-                        <div key={rule.period} className="flex items-center gap-1 bg-neutral-100 rounded px-1.5 py-0.5 border border-neutral-200">
-                          <span className="text-[9px] font-bold text-neutral-500 uppercase">{rule.period.charAt(0)}</span>
-                          <span className="text-[10px] font-bold text-neutral-700">{Number(rule.litersLimit).toFixed(0)}L</span>
+                        <div key={rule.period} className="flex items-center gap-1.5 bg-neutral-50 rounded-md px-2 py-1 border border-neutral-200/60 shadow-sm">
+                          <span className="text-[9px] font-black text-neutral-500 uppercase tracking-tighter">{rule.period.charAt(0)}</span>
+                          <span className="text-[11px] font-black text-neutral-800 tabular-nums">{Number(rule.litersLimit).toFixed(0)}L</span>
                         </div>
                       ))}
                     </div>
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="px-4 py-4">
                     <span className={cn(
                       "inline-flex items-center rounded-md px-2 py-0.5 text-[10px] font-bold ring-1 ring-inset",
                       row.isActive 
@@ -126,12 +153,22 @@ export default function VehicleCategoriesPage() {
                       {row.isActive ? "Active" : "Inactive"}
                     </span>
                   </TableCell>
-                  <TableCell className="text-right space-x-2">
+                  <TableCell className="px-4 py-4 text-right space-x-2">
                     <EditCategoryDialog category={row} onSuccess={load} />
-                    <Button variant="outline" size="sm" onClick={() => void toggleActive(row)}>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => void toggleActive(row)}
+                      className="text-[10px] font-bold uppercase tracking-widest px-3 h-8 rounded-full border-neutral-200 hover:bg-neutral-50"
+                    >
                       {row.isActive ? "Disable" : "Enable"}
                     </Button>
-                    <Button variant="destructive" size="sm" onClick={() => void remove(row)}>
+                    <Button 
+                      variant="destructive" 
+                      size="sm" 
+                      onClick={() => void remove(row)}
+                      className="text-[10px] font-bold uppercase tracking-widest px-3 h-8 rounded-full shadow-sm"
+                    >
                       Delete
                     </Button>
                   </TableCell>
