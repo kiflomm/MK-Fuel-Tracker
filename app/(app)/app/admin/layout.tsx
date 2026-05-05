@@ -70,11 +70,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <aside className={cn(
         "shrink-0 transition-transform duration-300 z-50",
         // Desktop styles
-        "lg:w-72 lg:sticky lg:top-24 lg:self-start lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto lg:block lg:translate-x-0",
+        "lg:w-72 lg:sticky lg:top-24 lg:self-start lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto lg:overflow-x-hidden lg:block lg:translate-x-0",
         // Mobile styles
         isMobileMenuOpen 
-          ? "fixed inset-y-0 left-0 w-[280px] bg-white p-6 shadow-2xl h-[100dvh] top-0 overflow-y-auto translate-x-0" 
-          : "fixed inset-y-0 left-0 w-[280px] bg-white p-6 shadow-2xl h-[100dvh] top-0 overflow-y-auto -translate-x-full lg:translate-x-0 lg:p-0 lg:shadow-none lg:bg-transparent"
+          ? "fixed inset-y-0 left-0 w-[280px] bg-white p-6 shadow-2xl h-[100dvh] top-0 overflow-y-auto overflow-x-hidden translate-x-0" 
+          : "fixed inset-y-0 left-0 w-[280px] bg-white p-6 shadow-2xl h-[100dvh] top-0 overflow-y-auto overflow-x-hidden -translate-x-full lg:translate-x-0 lg:p-0 lg:shadow-none lg:bg-transparent"
       )}>
         {/* Sidebar Header */}
         <div className="mb-6 px-1 flex justify-between items-start lg:block">
