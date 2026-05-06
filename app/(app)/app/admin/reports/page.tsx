@@ -3,10 +3,10 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth/context";
 import { getDailyTotals, getServiceActivity, getDistributionReport } from "@/lib/api/admin";
+import { RevenueTimeseriesPanel } from "@/components/revenue/RevenueTimeseriesPanel";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { parseISO, format } from "date-fns";
-import { cn } from "@/lib/utils";
 
 export default function ReportsPage() {
   const { accessToken } = useAuth();
@@ -15,7 +15,8 @@ export default function ReportsPage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (accessToken) fetchReport();
+    if (!accessToken || reportType === "revenueTimeseries") return;
+    fetchReport();
   }, [accessToken, reportType]);
 
   const fetchReport = async () => {
@@ -68,12 +69,18 @@ export default function ReportsPage() {
                 <SelectItem value="dailyTotals">Daily Totals</SelectItem>
                 <SelectItem value="serviceActivity">Service Activity</SelectItem>
                 <SelectItem value="distribution">Distribution Report</SelectItem>
+                <SelectItem value="revenueTimeseries">Revenue over time</SelectItem>
               </SelectContent>
             </Select>
           </div>
         </div>
       </div>
 
+      {reportType === "revenueTimeseries" ? (
+        <div className="rounded-xl border border-outline/10 overflow-hidden bg-white shadow-sm overflow-x-auto">
+          <RevenueTimeseriesPanel accessToken={accessToken ?? null} variant="admin" />
+        </div>
+      ) : (
       <div className="rounded-xl border border-outline/10 overflow-hidden bg-white shadow-sm overflow-x-auto">
         {loading ? (
           <div className="flex flex-col items-center justify-center py-12 gap-3">
@@ -89,6 +96,7 @@ export default function ReportsPage() {
           <ReportTable data={data} reportType={reportType} />
         )}
       </div>
+      )}
     </div>
   );
 }

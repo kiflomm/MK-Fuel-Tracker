@@ -5,9 +5,11 @@ import { ProtectedAppGate } from "@/components/auth/protected-app-gate";
 import { LogoutButton } from "@/components/auth/logout-button";
 import { LanguageToggle } from "@/components/ui/language-toggle";
 import { useLanguage } from "@/lib/i18n/language-context";
+import { useAuth } from "@/lib/auth/context";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const { t } = useLanguage();
+  const { user } = useAuth();
 
   return (
     <ProtectedAppGate>
@@ -39,6 +41,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 <Link href="/app" className="text-xs font-semibold uppercase tracking-widest text-primary hover:text-surface-tint transition-colors">
                   {t("app_nav_dashboard")}
                 </Link>
+                {user?.role === "STATION_WORKER" && (
+                  <Link
+                    href="/app/station-worker/revenue"
+                    className="text-xs font-semibold uppercase tracking-widest text-primary hover:text-surface-tint transition-colors"
+                  >
+                    Revenue
+                  </Link>
+                )}
               </nav>
               <LanguageToggle />
               <LogoutButton />

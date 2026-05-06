@@ -504,6 +504,56 @@ export async function updateVehicleQuotaRules(
 // Reports
 // ----------------------------------------------------------------------------
 
+export type RevenueGranularity = "DAILY" | "WEEKLY" | "MONTHLY";
+
+export interface RevenueTimeseriesTotals {
+  revenue: string;
+  transactionCount: number;
+  litersDispensed: string;
+  uniqueVehicles: number;
+}
+
+export interface RevenueStationBreakdown extends RevenueTimeseriesTotals {
+  stationId: number;
+  stationName: string | null;
+}
+
+export interface RevenueTimeseriesBucket {
+  periodStart: string;
+  periodEnd: string;
+  totals: RevenueTimeseriesTotals;
+  byStation?: RevenueStationBreakdown[];
+}
+
+export interface RevenueTimeseriesData {
+  granularity: RevenueGranularity;
+  from: string;
+  to: string;
+  paymentStatusFilter: "SUCCESS";
+  buckets: RevenueTimeseriesBucket[];
+}
+
+export async function getRevenueTimeseries(
+  accessToken: string,
+  params: {
+    from: string;
+    to: string;
+    granularity: RevenueGranularity;
+    stationId?: number;
+  },
+) {
+  const query = new URLSearchParams();
+  query.append("from", params.from);
+  query.append("to", params.to);
+  query.append("granularity", params.granularity);
+  if (params.stationId != null) query.append("stationId", params.stationId.toString());
+  return adminRequest<RevenueTimeseriesData>(
+    `/admin/reports/revenue-timeseries?${query.toString()}`,
+    accessToken,
+    { method: "GET" },
+  );
+}
+
 export interface DailyTotals {
   date: string;
   totalLiters: number;
