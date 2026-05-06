@@ -89,13 +89,39 @@ export interface StationFuelInventoryRow {
 }
 
 export interface StationTransaction {
-  id: number;
-  plateNumber: string;
-  liters: number;
-  totalPrice: number;
-  fuelType: string;
-  timestamp: string;
-  workerName: string;
+  transactionId: number;
+  queueBookingId: number;
+  servedAt: string;
+  litersDispensed: string | number;
+  receiptRef: string | null;
+  stationWorker: {
+    id: number;
+    firstName: string;
+    lastName: string;
+    email: string;
+  } | null;
+  vehicle: {
+    id: number;
+    plateNumber: string;
+    categoryId: number;
+    label: string | null;
+  } | null;
+  owner: {
+    id: number;
+    firstName: string;
+    lastName: string;
+    email: string;
+  } | null;
+  payment: {
+    id: number;
+    fuelType: string;
+    litersRequested: string | number;
+    pricePerLiter: string | number;
+    amount: string | number;
+    currency: string;
+    status: string;
+    paidAt: string | null;
+  } | null;
 }
 
 // ----------------------------------------------------------------------------

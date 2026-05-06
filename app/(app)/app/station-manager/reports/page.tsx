@@ -11,9 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
 
 export default function ReportsPage() {
   const { accessToken } = useAuth();
@@ -75,6 +73,19 @@ export default function ReportsPage() {
   const formatLocale = (value: unknown) => {
     const numericValue = Number(value);
     return Number.isFinite(numericValue) ? numericValue.toLocaleString() : "0";
+  };
+
+  const getValidDate = (value: unknown) => {
+    if (!value) return null;
+    const parsedDate = new Date(String(value));
+    return Number.isNaN(parsedDate.getTime()) ? null : parsedDate;
+  };
+
+  const formatWorkerName = (tx: StationTransaction) => {
+    const w = tx.stationWorker;
+    if (!w) return "—";
+    const name = `${w.firstName ?? ""} ${w.lastName ?? ""}`.trim();
+    return name || "—";
   };
 
   return (
@@ -148,48 +159,65 @@ export default function ReportsPage() {
               </TableHeader>
               <TableBody>
                 {loading ? (
-                  <TableRow>
+                  <TableRow key="transactions-loading">
                     <TableCell colSpan={6} className="text-center py-12 text-muted-foreground">
                       <span className="material-symbols-outlined text-3xl text-black/5 animate-spin block mb-2">refresh</span>
                       <span className="text-xs font-bold uppercase tracking-widest opacity-40">Fetching logs...</span>
                     </TableCell>
                   </TableRow>
                 ) : transactions.length === 0 ? (
-                  <TableRow>
+                  <TableRow key="transactions-empty">
                     <TableCell colSpan={6} className="text-center py-12 text-muted-foreground">
                       <span className="material-symbols-outlined text-3xl text-black/5 block mb-2">history</span>
                       <span className="text-xs font-bold uppercase tracking-widest opacity-40">No transactions found for this period.</span>
                     </TableCell>
                   </TableRow>
                 ) : (
-                  transactions.map((tx) => (
-                    <TableRow key={tx.id} className="group hover:bg-neutral-50/50 transition-colors border-b border-outline/5 last:border-0">
+                  transactions.map((tx, index) => (
+                    <TableRow
+                      key={`${tx.transactionId}-${tx.servedAt ?? "no-ts"}-${index}`}
+                      className="group hover:bg-neutral-50/50 transition-colors border-b border-outline/5 last:border-0"
+                    >
                       <TableCell className="px-4 py-3.5">
                         <div className="flex flex-col">
-                          <span className="text-[12px] font-bold text-neutral-600">
-                            {new Date(tx.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                          </span>
-                          <span className="text-[9px] font-black text-black/20 uppercase tracking-tighter">
-                            {new Date(tx.timestamp).toLocaleDateString()}
-                          </span>
+                          {(() => {
+                            const timestamp = getValidDate(tx.servedAt);
+                            return (
+                              <>
+                                <span className="text-[12px] font-bold text-neutral-600">
+                                  {timestamp
+                                    ? timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+                                    : "--:--"}
+                                </span>
+                                <span className="text-[9px] font-black text-black/20 uppercase tracking-tighter">
+                                  {timestamp ? timestamp.toLocaleDateString() : "Unavailable Date"}
+                                </span>
+                              </>
+                            );
+                          })()}
                         </div>
                       </TableCell>
                       <TableCell className="px-4 py-3.5">
-                        <span className="font-black text-neutral-800 tracking-tight">{tx.plateNumber}</span>
+                        <span className="font-black text-neutral-800 tracking-tight">
+                          {tx.vehicle?.plateNumber ?? "—"}
+                        </span>
                       </TableCell>
                       <TableCell className="px-4 py-3.5">
                         <span className="inline-flex items-center rounded-md bg-violet-50 px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-violet-700 ring-1 ring-inset ring-violet-700/10">
-                          {tx.fuelType}
+                          {tx.payment?.fuelType ?? "—"}
                         </span>
                       </TableCell>
                       <TableCell className="px-4 py-3.5 font-black text-neutral-900 tabular-nums">
-                        {formatFixed(tx.liters)} <span className="text-[10px] text-black/30 ml-0.5">L</span>
+                        {formatFixed(tx.litersDispensed)} <span className="text-[10px] text-black/30 ml-0.5">L</span>
                       </TableCell>
                       <TableCell className="px-4 py-3.5 font-black text-neutral-900 tabular-nums">
-                        {formatLocale(tx.totalPrice)} <span className="text-[10px] text-black/30 ml-0.5">ETB</span>
+                        {formatLocale(tx.payment?.amount)}{" "}
+                        <span className="text-[10px] text-black/30 ml-0.5">
+                          {tx.payment?.currency ?? "ETB"}
+                        </span>
                       </TableCell>
                       <TableCell className="px-4 py-3.5">
-                        <span className="text-[12px] font-bold text-neutral-600">{tx.workerName}</span>
+                        <span className="text-[12px] font-bold text-neutral-600">{formatWorkerName(tx)}</span>
                       </TableCell>
                     </TableRow>
                   ))
@@ -212,24 +240,34 @@ export default function ReportsPage() {
               </TableHeader>
               <TableBody>
                 {loading ? (
-                  <TableRow>
+                  <TableRow key="daily-totals-loading">
                     <TableCell colSpan={4} className="text-center py-12 text-muted-foreground">
                       <span className="material-symbols-outlined text-3xl text-black/5 animate-spin block mb-2">refresh</span>
                       <span className="text-xs font-bold uppercase tracking-widest opacity-40">Calculating totals...</span>
                     </TableCell>
                   </TableRow>
                 ) : dailyTotals.length === 0 ? (
-                  <TableRow>
+                  <TableRow key="daily-totals-empty">
                     <TableCell colSpan={4} className="text-center py-12 text-muted-foreground">
                       <span className="material-symbols-outlined text-3xl text-black/5 block mb-2">summarize</span>
                       <span className="text-xs font-bold uppercase tracking-widest opacity-40">No summary data found.</span>
                     </TableCell>
                   </TableRow>
                 ) : (
-                  dailyTotals.map((day) => (
-                    <TableRow key={day.date} className="group hover:bg-neutral-50/50 transition-colors border-b border-outline/5 last:border-0">
+                  dailyTotals.map((day, index) => (
+                    <TableRow
+                      key={`${day.date ?? "day"}-${index}`}
+                      className="group hover:bg-neutral-50/50 transition-colors border-b border-outline/5 last:border-0"
+                    >
                       <TableCell className="px-4 py-3.5">
-                        <span className="font-bold text-neutral-800">{new Date(day.date).toLocaleDateString("en-US", { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                        <span className="font-bold text-neutral-800">
+                          {(() => {
+                            const operationalDate = getValidDate(day.date);
+                            return operationalDate
+                              ? operationalDate.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
+                              : "Unavailable Date";
+                          })()}
+                        </span>
                       </TableCell>
                       <TableCell className="px-4 py-3.5 font-black text-neutral-900 tabular-nums text-lg">
                         {formatFixed(day.totalLitersDispensed)} <span className="text-[10px] text-black/30 ml-0.5 font-black uppercase">Liters</span>
