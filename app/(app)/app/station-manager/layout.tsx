@@ -3,18 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-<<<<<<< HEAD
 import { useLanguage } from "@/lib/i18n/language-context";
-=======
-
-const NAV_ITEMS = [
-  { href: "/app/station-manager", label: "Overview", exact: true, icon: "dashboard", desc: "Live status & summary" },
-  { href: "/app/station-manager/workers", label: "Workers", icon: "badge", desc: "Manage staff access" },
-  { href: "/app/station-manager/queue", label: "Live Queue", icon: "directions_car", desc: "Monitor vehicles" },
-  { href: "/app/station-manager/reports", label: "Reports", icon: "assessment", desc: "Daily intake & sales" },
-  { href: "/app/change-password", label: "Change Password", icon: "key", desc: "Update your login secret" },
-];
->>>>>>> 724b219 (feat: implement secure password change functionality for admin and station manager roles)
 
 function cn(...classes: (string | undefined | null | false)[]) {
   return classes.filter(Boolean).join(" ");

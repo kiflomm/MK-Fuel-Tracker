@@ -8,7 +8,7 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: "Public Sans", var(--font-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   --font-heading: "Public Sans", var(--font-sans);
   --font-body-md: "Public Sans", var(--font-sans);
   --font-label-caps: "Inter", var(--font-sans);

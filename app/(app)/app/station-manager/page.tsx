@@ -140,7 +140,6 @@ export default function StationManagerPage() {
       <div className="rounded-2xl border border-outline/10 bg-white p-6 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
           <div>
-<<<<<<< HEAD
             <div className="flex items-center gap-2 mb-1">
               <span className="material-symbols-outlined text-yellow-700 text-base" style={{ fontVariationSettings: "'FILL' 1" }}>inventory_2</span>
               <h2 className="text-xs font-black tracking-[0.2em] uppercase text-yellow-700">
@@ -150,11 +149,6 @@ export default function StationManagerPage() {
             <p className="text-[10px] text-black/40 uppercase tracking-widest font-semibold">
               Live stock levels by fuel type
             </p>
-=======
-            <h2 className="text-xs font-black tracking-[0.2em] uppercase text-black/40">
-              Fuel remaining (by type)
-            </h2>
->>>>>>> 724b219 (feat: implement secure password change functionality for admin and station manager roles)
           </div>
         </div>
         {loading ? (
