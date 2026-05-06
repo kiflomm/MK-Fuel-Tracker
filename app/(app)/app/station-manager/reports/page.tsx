@@ -67,6 +67,16 @@ export default function ReportsPage() {
     }
   };
 
+  const formatFixed = (value: unknown, decimals = 2) => {
+    const numericValue = Number(value);
+    return Number.isFinite(numericValue) ? numericValue.toFixed(decimals) : (0).toFixed(decimals);
+  };
+
+  const formatLocale = (value: unknown) => {
+    const numericValue = Number(value);
+    return Number.isFinite(numericValue) ? numericValue.toLocaleString() : "0";
+  };
+
   return (
     <div className="space-y-6">
       {/* Premium Header */}
@@ -173,10 +183,10 @@ export default function ReportsPage() {
                         </span>
                       </TableCell>
                       <TableCell className="px-4 py-3.5 font-black text-neutral-900 tabular-nums">
-                        {tx.liters.toFixed(2)} <span className="text-[10px] text-black/30 ml-0.5">L</span>
+                        {formatFixed(tx.liters)} <span className="text-[10px] text-black/30 ml-0.5">L</span>
                       </TableCell>
                       <TableCell className="px-4 py-3.5 font-black text-neutral-900 tabular-nums">
-                        {tx.totalPrice.toLocaleString()} <span className="text-[10px] text-black/30 ml-0.5">ETB</span>
+                        {formatLocale(tx.totalPrice)} <span className="text-[10px] text-black/30 ml-0.5">ETB</span>
                       </TableCell>
                       <TableCell className="px-4 py-3.5">
                         <span className="text-[12px] font-bold text-neutral-600">{tx.workerName}</span>
@@ -222,10 +232,10 @@ export default function ReportsPage() {
                         <span className="font-bold text-neutral-800">{new Date(day.date).toLocaleDateString("en-US", { month: 'short', day: 'numeric', year: 'numeric' })}</span>
                       </TableCell>
                       <TableCell className="px-4 py-3.5 font-black text-neutral-900 tabular-nums text-lg">
-                        {Number(day.totalLitersDispensed).toFixed(2)} <span className="text-[10px] text-black/30 ml-0.5 font-black uppercase">Liters</span>
+                        {formatFixed(day.totalLitersDispensed)} <span className="text-[10px] text-black/30 ml-0.5 font-black uppercase">Liters</span>
                       </TableCell>
                       <TableCell className="px-4 py-3.5 font-black text-neutral-900 tabular-nums">
-                        {Number(day.totalGrossAmount).toLocaleString()} <span className="text-[10px] text-black/30 ml-0.5">ETB</span>
+                        {formatLocale(day.totalGrossAmount)} <span className="text-[10px] text-black/30 ml-0.5">ETB</span>
                       </TableCell>
                       <TableCell className="px-4 py-3.5">
                         <span className="inline-flex items-center rounded-md bg-neutral-100 px-2 py-1 text-[10px] font-black uppercase tracking-wider text-neutral-700 ring-1 ring-inset ring-neutral-700/10">
