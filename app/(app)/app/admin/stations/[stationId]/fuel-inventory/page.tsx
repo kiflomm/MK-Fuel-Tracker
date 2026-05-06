@@ -43,7 +43,7 @@ import {
   EmptyTitle,
 } from "@/components/ui/empty";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+import { cn, formatStationWithId } from "@/lib/utils";
 
 function formatL(value: unknown) {
   const n = typeof value === "number" ? value : Number(value);
@@ -216,7 +216,7 @@ export default function StationFuelInventoryPage() {
               </span>
             </div>
             <h1 className="text-3xl font-black text-white tracking-tight leading-none mb-2">
-              {station?.name ?? `Station ${stationId}`}
+              {formatStationWithId(stationId, station?.name ?? null)}
             </h1>
             <p className="text-xs sm:text-sm text-neutral-400 font-medium max-w-xl leading-relaxed">
               Real-time monitoring of fuel levels with a complete auditable adjustment history for {station?.name || "this station"}.

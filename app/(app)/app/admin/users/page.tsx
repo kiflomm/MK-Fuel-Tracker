@@ -21,7 +21,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group";
-import { cn } from "@/lib/utils";
+import { cn, formatStationWithId } from "@/lib/utils";
 
 type VehiclePayload = {
   plateNumber: string;
@@ -92,6 +92,7 @@ export default function UsersPage() {
               <TableHead>Name</TableHead>
               <TableHead>Email</TableHead>
               <TableHead>Role</TableHead>
+              <TableHead>Station</TableHead>
               <TableHead>Status</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
@@ -99,13 +100,13 @@ export default function UsersPage() {
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-6 text-muted-foreground">
+                <TableCell colSpan={7} className="text-center py-6 text-muted-foreground">
                   Loading users...
                 </TableCell>
               </TableRow>
             ) : users.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-6 text-muted-foreground">
+                <TableCell colSpan={7} className="text-center py-6 text-muted-foreground">
                   No users found.
                 </TableCell>
               </TableRow>
@@ -119,6 +120,11 @@ export default function UsersPage() {
                   <span className="inline-flex items-center rounded-md bg-indigo-50 px-2 py-1 text-[10px] font-black uppercase tracking-wider text-indigo-700 ring-1 ring-inset ring-indigo-700/10">
                     {user.role.replace(/_/g, " ")}
                   </span>
+                </TableCell>
+                <TableCell className="text-sm text-neutral-700">
+                  {user.stationId != null
+                    ? formatStationWithId(user.stationId, user.stationName ?? null)
+                    : "—"}
                 </TableCell>
                 <TableCell>
                   <span className={cn(
@@ -233,7 +239,13 @@ function CreateManagerDialog({ onSuccess }: { onSuccess: () => Promise<void> | v
           </InputGroup>
           <Select value={formData.stationId} onValueChange={(v) => setFormData({ ...formData, stationId: v })}>
             <SelectTrigger><SelectValue placeholder="Select station" /></SelectTrigger>
-            <SelectContent>{stations.map((s) => <SelectItem key={s.id} value={String(s.id)}>{s.name}</SelectItem>)}</SelectContent>
+            <SelectContent>
+              {stations.map((s) => (
+                <SelectItem key={s.id} value={String(s.id)}>
+                  {s.name} (ID {s.id})
+                </SelectItem>
+              ))}
+            </SelectContent>
           </Select>
           <DialogFooter><Button type="submit" disabled={submitting}>{submitting ? "Creating…" : "Create"}</Button></DialogFooter>
         </form>

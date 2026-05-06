@@ -198,6 +198,7 @@ export interface User {
   role: string;
   isActive: boolean;
   stationId?: number;
+  stationName?: string | null;
   createdAt: string;
   updatedAt: string;
 }

@@ -2,6 +2,7 @@
 
 import { useAuth } from "@/lib/auth/context";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { formatStationWithId } from "@/lib/utils";
 
 export function RoleDashboard() {
   const { user } = useAuth();
@@ -32,7 +33,11 @@ export function RoleDashboard() {
             </div>
             <div className="p-5 bg-surface-container-low border border-outline/10 rounded-lg">
               <span className="font-label-caps text-xs text-on-surface-variant font-bold uppercase tracking-widest block mb-2">Assigned Station</span>
-              <p className="text-base font-semibold text-on-surface">{user?.stationId ?? "Not Assigned"}</p>
+              <p className="text-base font-semibold text-on-surface">
+                {user?.stationId != null
+                  ? formatStationWithId(user.stationId, user.stationName ?? null)
+                  : "Not assigned"}
+              </p>
             </div>
           </div>
         </CardContent>

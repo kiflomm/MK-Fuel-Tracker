@@ -13,6 +13,8 @@ export interface AuthUser {
   lastName: string;
   role: UserRole;
   stationId: number | null;
+  /** Present when stationId is set; loaded from stations table. */
+  stationName?: string | null;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;

@@ -3,13 +3,23 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   getRevenueTimeseries,
+  getStations,
   type RevenueGranularity,
   type RevenueTimeseriesBucket,
   type RevenueTimeseriesData,
+  type Station,
 } from "@/lib/api/admin";
 import { getWorkerRevenueTimeseries } from "@/lib/api/station-worker";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { formatStationWithId } from "@/lib/utils";
 import {
   ChartContainer,
   ChartTooltip,
@@ -50,9 +60,15 @@ export function RevenueTimeseriesPanel({
   const [to, setTo] = useState(() => new Date().toISOString().slice(0, 10));
   const [granularity, setGranularity] = useState<RevenueGranularity>("DAILY");
   const [stationIdRaw, setStationIdRaw] = useState("");
+  const [stations, setStations] = useState<Station[]>([]);
   const [data, setData] = useState<RevenueTimeseriesData | null>(null);
   const [loading, setLoading] = useState(false);
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+
+  useEffect(() => {
+    if (!accessToken || !showStationBreakdown) return;
+    void getStations(accessToken).then((res) => setStations(res.data ?? []));
+  }, [accessToken, showStationBreakdown]);
 
   const stationIdParsed = useMemo(() => {
     const t = stationIdRaw.trim();
@@ -143,18 +159,26 @@ export function RevenueTimeseriesPanel({
           </div>
         </div>
         {showStationBreakdown && (
-          <div className="grid gap-2">
+          <div className="grid gap-2 min-w-[12rem]">
             <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-500">
-              Station ID (optional)
+              Station (optional)
             </span>
-            <Input
-              type="number"
-              min={1}
-              placeholder="All stations"
-              value={stationIdRaw}
-              onChange={(e) => setStationIdRaw(e.target.value)}
-              className="w-44"
-            />
+            <Select
+              value={stationIdRaw.trim() === "" ? "__all__" : stationIdRaw}
+              onValueChange={(v) => setStationIdRaw(v === "__all__" ? "" : v)}
+            >
+              <SelectTrigger className="w-full md:w-[280px]">
+                <SelectValue placeholder="All stations" />
+              </SelectTrigger>
+              <SelectContent position="popper">
+                <SelectItem value="__all__">All stations</SelectItem>
+                {stations.map((s) => (
+                  <SelectItem key={s.id} value={String(s.id)}>
+                    {s.name} (ID {s.id})
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         )}
         <Button type="button" onClick={() => void load()} disabled={loading} className="shrink-0">
@@ -167,10 +191,6 @@ export function RevenueTimeseriesPanel({
         <span className="font-semibold text-neutral-700">SUCCESS</span> payments only. Buckets use UTC
         (weekly: ISO weeks, Monday start).
       </p>
-
-      {variant === "admin" && stationIdRaw.trim() !== "" && stationIdParsed === undefined && (
-        <p className="text-xs text-amber-700 font-medium">Enter a valid station ID or clear the field.</p>
-      )}
 
       {loading ? (
         <div className="flex flex-col items-center justify-center py-12 gap-3">
@@ -258,7 +278,7 @@ export function RevenueTimeseriesPanel({
                                     {stations.map((s) => (
                                       <TableRow key={s.stationId}>
                                         <TableCell>
-                                          {s.stationName ?? `ID ${s.stationId}`}
+                                          {formatStationWithId(s.stationId, s.stationName)}
                                         </TableCell>
                                         <TableCell className="text-right font-mono">{s.revenue}</TableCell>
                                         <TableCell className="text-right font-mono">{s.litersDispensed}</TableCell>

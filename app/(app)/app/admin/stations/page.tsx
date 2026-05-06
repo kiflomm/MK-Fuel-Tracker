@@ -61,8 +61,7 @@ export default function StationsPage() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>ID</TableHead>
-              <TableHead>Name</TableHead>
+              <TableHead>Station</TableHead>
               <TableHead>Coordinates</TableHead>
               <TableHead>Phone</TableHead>
               <TableHead>Active</TableHead>
@@ -72,21 +71,23 @@ export default function StationsPage() {
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-6 text-muted-foreground">
+                <TableCell colSpan={5} className="text-center py-6 text-muted-foreground">
                   Loading stations...
                 </TableCell>
               </TableRow>
             ) : stations.length === 0 ? (
               <TableRow>
-               <TableCell colSpan={6} className="text-center py-6 text-muted-foreground">
+               <TableCell colSpan={5} className="text-center py-6 text-muted-foreground">
                    No stations found.
                 </TableCell>
               </TableRow>
             ) : (
               stations.map((station) => (
                 <TableRow key={station.id}>
-                  <TableCell>{station.id}</TableCell>
-                  <TableCell className="font-medium">{station.name}</TableCell>
+                  <TableCell>
+                    <div className="font-medium text-neutral-900">{station.name}</div>
+                    <div className="text-xs text-muted-foreground font-mono">ID {station.id}</div>
+                  </TableCell>
                   <TableCell>
                     {station.latitude != null && station.longitude != null
                       ? `${station.latitude}, ${station.longitude}`

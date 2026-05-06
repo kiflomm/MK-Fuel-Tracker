@@ -7,6 +7,174 @@ import { RevenueTimeseriesPanel } from "@/components/revenue/RevenueTimeseriesPa
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { parseISO, format } from "date-fns";
+import { formatStationWithId } from "@/lib/utils";
+
+function formatWorkerCell(row: {
+  stationWorker?: {
+    id: number;
+    firstName: string | null;
+    lastName: string | null;
+    email: string | null;
+  };
+}) {
+  const w = row.stationWorker;
+  if (!w) return "—";
+  const name = `${w.firstName ?? ""} ${w.lastName ?? ""}`.trim();
+  if (name && w.email) return `${name} · ${w.email}`;
+  if (name) return name;
+  if (w.email) return w.email;
+  return `User ID ${w.id}`;
+}
+
+type DistributionBucketRow = {
+  station?: { id: number; name: string | null };
+  vehicleCategory?: string;
+  fuelType?: string;
+  completedTransactionCount: number;
+  totalLitersDispensed: string;
+  totalGrossAmount: string;
+  uniqueVehiclesServedCount: number;
+};
+
+function DistributionReportTables({ report }: { report: Record<string, unknown> }) {
+  const totalsOverall = report.totalsOverall as
+    | {
+        completedTransactionCount: number;
+        totalLitersDispensed: string;
+        totalGrossAmount: string;
+        uniqueVehiclesServedCount: number;
+      }
+    | undefined;
+  const byStation = (report.byStation ?? []) as DistributionBucketRow[];
+  const byVehicleCategory = (report.byVehicleCategory ?? []) as DistributionBucketRow[];
+  const byFuelType = (report.byFuelType ?? []) as DistributionBucketRow[];
+
+  if (!totalsOverall) {
+    return <p className="p-6 text-sm text-neutral-500">No distribution data in this response.</p>;
+  }
+
+  return (
+    <div className="space-y-8 p-4 md:p-6">
+      <section>
+        <h3 className="text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-3">Overall</h3>
+        <div className="rounded-lg border border-outline/10 overflow-hidden">
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-neutral-50/50">
+                <TableHead className="font-bold text-[11px] uppercase tracking-wider">Transactions</TableHead>
+                <TableHead className="font-bold text-[11px] uppercase tracking-wider">Liters</TableHead>
+                <TableHead className="font-bold text-[11px] uppercase tracking-wider">Gross amount</TableHead>
+                <TableHead className="font-bold text-[11px] uppercase tracking-wider">Unique vehicles</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow>
+                <TableCell>{totalsOverall.completedTransactionCount}</TableCell>
+                <TableCell className="font-mono">{totalsOverall.totalLitersDispensed} L</TableCell>
+                <TableCell className="font-mono text-emerald-700">{totalsOverall.totalGrossAmount} Birr</TableCell>
+                <TableCell>{totalsOverall.uniqueVehiclesServedCount}</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </div>
+      </section>
+
+      {byStation.length > 0 ? (
+        <section>
+          <h3 className="text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-3">By station</h3>
+          <div className="rounded-lg border border-outline/10 overflow-hidden">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-neutral-50/50">
+                  <TableHead className="font-bold text-[11px] uppercase tracking-wider">Station</TableHead>
+                  <TableHead className="font-bold text-[11px] uppercase tracking-wider">Transactions</TableHead>
+                  <TableHead className="font-bold text-[11px] uppercase tracking-wider">Liters</TableHead>
+                  <TableHead className="font-bold text-[11px] uppercase tracking-wider">Gross amount</TableHead>
+                  <TableHead className="font-bold text-[11px] uppercase tracking-wider">Unique vehicles</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {byStation.map((row, i) => (
+                  <TableRow key={`st-${row.station?.id ?? i}`}>
+                    <TableCell className="font-medium">
+                      {row.station
+                        ? formatStationWithId(row.station.id, row.station.name)
+                        : "—"}
+                    </TableCell>
+                    <TableCell>{row.completedTransactionCount}</TableCell>
+                    <TableCell className="font-mono">{row.totalLitersDispensed} L</TableCell>
+                    <TableCell className="font-mono text-emerald-700">{row.totalGrossAmount} Birr</TableCell>
+                    <TableCell>{row.uniqueVehiclesServedCount}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </section>
+      ) : null}
+
+      {byVehicleCategory.length > 0 ? (
+        <section>
+          <h3 className="text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-3">By vehicle category</h3>
+          <div className="rounded-lg border border-outline/10 overflow-hidden">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-neutral-50/50">
+                  <TableHead className="font-bold text-[11px] uppercase tracking-wider">Category</TableHead>
+                  <TableHead className="font-bold text-[11px] uppercase tracking-wider">Transactions</TableHead>
+                  <TableHead className="font-bold text-[11px] uppercase tracking-wider">Liters</TableHead>
+                  <TableHead className="font-bold text-[11px] uppercase tracking-wider">Gross amount</TableHead>
+                  <TableHead className="font-bold text-[11px] uppercase tracking-wider">Unique vehicles</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {byVehicleCategory.map((row, i) => (
+                  <TableRow key={`cat-${row.vehicleCategory ?? i}`}>
+                    <TableCell className="font-mono font-medium">{row.vehicleCategory}</TableCell>
+                    <TableCell>{row.completedTransactionCount}</TableCell>
+                    <TableCell className="font-mono">{row.totalLitersDispensed} L</TableCell>
+                    <TableCell className="font-mono text-emerald-700">{row.totalGrossAmount} Birr</TableCell>
+                    <TableCell>{row.uniqueVehiclesServedCount}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </section>
+      ) : null}
+
+      {byFuelType.length > 0 ? (
+        <section>
+          <h3 className="text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-3">By fuel type</h3>
+          <div className="rounded-lg border border-outline/10 overflow-hidden">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-neutral-50/50">
+                  <TableHead className="font-bold text-[11px] uppercase tracking-wider">Fuel type</TableHead>
+                  <TableHead className="font-bold text-[11px] uppercase tracking-wider">Transactions</TableHead>
+                  <TableHead className="font-bold text-[11px] uppercase tracking-wider">Liters</TableHead>
+                  <TableHead className="font-bold text-[11px] uppercase tracking-wider">Gross amount</TableHead>
+                  <TableHead className="font-bold text-[11px] uppercase tracking-wider">Unique vehicles</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {byFuelType.map((row, i) => (
+                  <TableRow key={`ft-${row.fuelType ?? i}`}>
+                    <TableCell className="font-mono font-medium">{row.fuelType}</TableCell>
+                    <TableCell>{row.completedTransactionCount}</TableCell>
+                    <TableCell className="font-mono">{row.totalLitersDispensed} L</TableCell>
+                    <TableCell className="font-mono text-emerald-700">{row.totalGrossAmount} Birr</TableCell>
+                    <TableCell>{row.uniqueVehiclesServedCount}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </section>
+      ) : null}
+    </div>
+  );
+}
 
 export default function ReportsPage() {
   const { accessToken } = useAuth();
@@ -31,13 +199,18 @@ export default function ReportsPage() {
       } else if (reportType === "distribution") {
         res = await getDistributionReport(accessToken);
       }
-      
+
       if (res?.data) {
-         // handle if the response is an object or array. 
-         // Typically lists are arrays. If it's an object, we wrap it.
-         setData(Array.isArray(res.data) ? res.data : [res.data]);
+        const payload = res.data;
+        if (Array.isArray(payload)) {
+          setData(payload);
+        } else if (reportType === "distribution" && payload && typeof payload === "object") {
+          setData([payload]);
+        } else {
+          setData([payload]);
+        }
       } else {
-         setData([]);
+        setData([]);
       }
     } catch (error) {
       console.error(error);
@@ -48,7 +221,6 @@ export default function ReportsPage() {
 
   return (
     <div className="space-y-6 text-black">
-      {/* Premium Header */}
       <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-violet-950 to-neutral-900 px-6 py-7 shadow-lg">
         <div className="absolute top-0 right-0 w-48 h-48 bg-violet-500/10 rounded-full -mr-16 -mt-16 blur-3xl" />
         <div className="relative z-10 flex items-center justify-between">
@@ -102,6 +274,10 @@ export default function ReportsPage() {
 }
 
 function ReportTable({ data, reportType }: { data: any[], reportType: string }) {
+  if (reportType === "distribution" && data[0]?.totalsOverall) {
+    return <DistributionReportTables report={data[0]} />;
+  }
+
   if (reportType === "dailyTotals") {
     return (
       <Table>
@@ -117,11 +293,22 @@ function ReportTable({ data, reportType }: { data: any[], reportType: string }) 
           {data.map((row, i) => (
             <TableRow key={i} className="hover:bg-neutral-50/50 transition-colors">
               <TableCell className="font-bold text-neutral-900">
-                 {row.date ? format(parseISO(row.date), "MMM d, yyyy") : "N/A"}
+                {row.date ? format(parseISO(String(row.date)), "MMM d, yyyy") : "N/A"}
+                {row.stationId != null && (
+                  <div className="text-xs font-normal text-neutral-500 mt-1">
+                    {formatStationWithId(row.stationId, row.station?.name ?? null)}
+                  </div>
+                )}
               </TableCell>
-              <TableCell className="font-mono text-sm font-semibold text-neutral-600">{Number(row.totalLiters || 0).toFixed(2)} L</TableCell>
-              <TableCell className="font-mono text-sm font-semibold text-emerald-600">{Number(row.totalRevenue || 0).toFixed(2)} Birr</TableCell>
-              <TableCell className="font-bold text-neutral-700">{row.vehicleCount || 0}</TableCell>
+              <TableCell className="font-mono text-sm font-semibold text-neutral-600">
+                {Number(row.totalLitersDispensed ?? row.totalLiters ?? 0).toFixed(2)} L
+              </TableCell>
+              <TableCell className="font-mono text-sm font-semibold text-emerald-600">
+                {Number(row.totalGrossAmount ?? row.totalRevenue ?? 0).toFixed(2)} Birr
+              </TableCell>
+              <TableCell className="font-bold text-neutral-700">
+                {row.uniqueVehiclesServedCount ?? row.vehicleCount ?? 0}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -129,7 +316,39 @@ function ReportTable({ data, reportType }: { data: any[], reportType: string }) 
     );
   }
 
-  // Fallback generic table for unknown formats (like distribution or serviceActivity if they differ)
+  if (reportType === "serviceActivity") {
+    return (
+      <Table>
+        <TableHeader>
+          <TableRow className="bg-neutral-50/50">
+            <TableHead className="font-bold text-[11px] uppercase tracking-wider">Station</TableHead>
+            <TableHead className="font-bold text-[11px] uppercase tracking-wider">Worker</TableHead>
+            <TableHead className="font-bold text-[11px] uppercase tracking-wider">Transactions</TableHead>
+            <TableHead className="font-bold text-[11px] uppercase tracking-wider">Liters</TableHead>
+            <TableHead className="font-bold text-[11px] uppercase tracking-wider">Gross amount</TableHead>
+            <TableHead className="font-bold text-[11px] uppercase tracking-wider">Latest service</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {data.map((row, i) => (
+            <TableRow key={i} className="hover:bg-neutral-50/50 transition-colors">
+              <TableCell className="font-medium text-neutral-900">
+                {formatStationWithId(row.stationId, row.station?.name ?? null)}
+              </TableCell>
+              <TableCell className="text-sm">{formatWorkerCell(row)}</TableCell>
+              <TableCell>{row.completedTransactionCount ?? 0}</TableCell>
+              <TableCell className="font-mono text-sm">{row.totalLitersDispensed ?? "0.00"} L</TableCell>
+              <TableCell className="font-mono text-sm text-emerald-700">{row.totalGrossAmount ?? "0.00"} Birr</TableCell>
+              <TableCell className="text-xs text-neutral-600">
+                {row.latestServiceAt ? new Date(row.latestServiceAt).toLocaleString() : "—"}
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    );
+  }
+
   const columns = data.length > 0 ? Object.keys(data[0]).filter(k => typeof data[0][k] !== "object") : [];
 
   return (
