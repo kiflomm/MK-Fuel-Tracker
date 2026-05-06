@@ -128,6 +128,9 @@ export const translations = {
     sm_nav_workers_desc: "Manage station staff",
     sm_nav_reports: "Reports",
     sm_nav_reports_desc: "Analytics & exports",
+    sm_settings_title: "Settings",
+    sm_nav_change_password: "Change Password",
+    sm_nav_change_password_desc: "Update your account password",
     
     // ── Sign-In Page ──────────────────────────────────────────────────────────
     login_title_welcome: "Welcome back",
@@ -270,6 +273,9 @@ export const translations = {
     sm_nav_workers_desc: "ናይ ጣቢያ ሰራሕተኛ ምምሕዳር",
     sm_nav_reports: "ጸብጻባት",
     sm_nav_reports_desc: "ትንታነን ምቕናዕን",
+    sm_settings_title: "ምርጓጂ",
+    sm_nav_change_password: "መፍትሕ ቃል ቀይር",
+    sm_nav_change_password_desc: "ናይ ኣካውንት መፍትሕ ቃል ምሕደራ",
 
     // ── Sign-In Page ──────────────────────────────────────────────────────────
     login_title_welcome: "እንቋዕ ደሓን መጻእካ",

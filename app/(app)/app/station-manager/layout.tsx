@@ -149,6 +149,42 @@ export default function StationManagerLayout({ children }: { children: React.Rea
             );
           })}
         </nav>
+
+        {/* Settings Section */}
+        <div className="mt-8 pt-6 border-t border-outline/10">
+          <div className="px-1 mb-3">
+            <h3 className="text-[10px] font-black tracking-[0.15em] uppercase text-black/30">
+              {t("sm_settings_title")}
+            </h3>
+          </div>
+          <nav className="flex flex-col space-y-1.5">
+            <Link
+              href="/app/change-password"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="flex items-center gap-3 rounded-xl px-3 py-2.5 transition-all duration-200 group hover:bg-surface-tint hover:shadow-md hover:translate-x-0.5"
+            >
+              {/* Icon badge */}
+              <span className="material-symbols-outlined text-[18px] w-8 h-8 flex items-center justify-center rounded-lg shrink-0 transition-all bg-amber-100 text-amber-700 group-hover:bg-amber-200 group-hover:text-amber-800" style={{ fontVariationSettings: "'FILL' 0" }}>
+                lock
+              </span>
+
+              {/* Label + desc */}
+              <div className="flex flex-col min-w-0">
+                <span className="text-sm font-bold leading-none tracking-tight text-black/80 group-hover:text-white">
+                  {t("sm_nav_change_password")}
+                </span>
+                <span className="text-[10px] leading-none mt-0.5 tracking-wide truncate text-black/40 group-hover:text-white/70">
+                  {t("sm_nav_change_password_desc")}
+                </span>
+              </div>
+
+              {/* Arrow indicator */}
+              <span className="ml-auto material-symbols-outlined text-sm text-black/30 group-hover:text-white/50 transition-transform group-hover:translate-x-0.5">
+                arrow_forward_ios
+              </span>
+            </Link>
+          </nav>
+        </div>
       </aside>
 
       <div className="flex-1 min-w-0 text-black">
