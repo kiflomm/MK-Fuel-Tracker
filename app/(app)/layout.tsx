@@ -39,6 +39,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 <Link href="/app" className="text-xs font-semibold uppercase tracking-widest text-primary hover:text-surface-tint transition-colors">
                   {t("app_nav_dashboard")}
                 </Link>
+                <Link
+                  href="/app/change-password"
+                  className="text-xs font-semibold uppercase tracking-widest text-primary hover:text-surface-tint transition-colors"
+                >
+                  {t("app_nav_change_password")}
+                </Link>
               </nav>
               <LanguageToggle />
               <LogoutButton />

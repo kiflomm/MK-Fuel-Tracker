@@ -65,6 +65,7 @@ export const translations = {
 
     // ── App / Dashboard Layout ────────────────────────────────────────────────
     app_nav_dashboard: "Dashboard",
+    app_nav_change_password: "Change Password",
     app_footer_copy: "© 2026 GC Software Engineering • Mekelle Fuel Tracker",
 
     // ── Admin Sidebar ─────────────────────────────────────────────────────────
@@ -206,6 +207,7 @@ export const translations = {
 
     // ── App / Dashboard Layout ────────────────────────────────────────────────
     app_nav_dashboard: "ዳሽቦርድ",
+    app_nav_change_password: "መፍትሕ ቃል ቀይር",
     app_footer_copy: "© 2026 GC Software Engineering • ናይ ምኽዳ ነዳዲ ምክትታሊ",
 
     // ── Admin Sidebar ─────────────────────────────────────────────────────────

@@ -1,26 +1,14 @@
 "use client";
 
-import { useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { ChangePasswordForm } from "@/components/auth/change-password-form";
 import { useAuth } from "@/lib/auth/context";
 import { getRoleHomePath } from "@/lib/auth/roles";
 
-const ALLOWED_ROLES = new Set(["GOVERNMENT_ADMIN", "STATION_MANAGER"]);
-
 export default function ChangePasswordPage() {
-  const router = useRouter();
   const { user } = useAuth();
 
-  useEffect(() => {
-    if (!user?.role) return;
-    if (!ALLOWED_ROLES.has(user.role)) {
-      router.replace(getRoleHomePath(user.role));
-    }
-  }, [router, user?.role]);
-
-  if (!user?.role || !ALLOWED_ROLES.has(user.role)) {
+  if (!user?.role) {
     return null;
   }
 
