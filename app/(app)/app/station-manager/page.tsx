@@ -102,7 +102,7 @@ export default function StationManagerPage() {
               Station Overview
             </h1>
             <p className="text-neutral-400 text-sm font-medium">
-              Manager: <span className="text-yellow-400 font-bold">{user?.firstName ?? "Unknown"}</span> • Station ID: <span className="text-white font-bold">{user?.stationId ?? "Unknown"}</span>
+              Manager: <span className="text-yellow-400 font-bold">{user?.firstName ?? "Unknown"}</span> • Station: <span className="text-white font-bold">{queue?.stationName ?? "Loading..."}</span>
             </p>
           </div>
           <Button variant="outline" size="sm" onClick={() => fetchData()} className="shrink-0 bg-white/5 border-white/10 text-white hover:bg-white/10 hover:text-white font-label-caps text-[10px] tracking-widest uppercase rounded-full">
