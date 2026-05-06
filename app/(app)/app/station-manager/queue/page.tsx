@@ -10,9 +10,9 @@ import {
 } from "@/lib/api/station-manager";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Play, Pause, RefreshCw } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export default function QueuePage() {
   const { accessToken } = useAuth();
@@ -88,50 +88,89 @@ export default function QueuePage() {
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-4">
-        <div className="md:col-span-1 rounded-2xl border border-outline/10 bg-neutral-50 p-5">
-          <h3 className="text-[10px] font-black uppercase tracking-widest text-black/40 mb-3">Intake Status</h3>
-          <Badge variant={queue?.isIntakePaused ? "destructive" : "default"}>
-            {queue?.isIntakePaused ? "Paused" : "Active"}
-          </Badge>
+      <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+        <div className="rounded-2xl border border-outline/10 bg-white p-5 shadow-sm">
+          <div className="flex items-center gap-2 mb-3">
+            <span className={cn(
+              "material-symbols-outlined text-lg",
+              queue?.isIntakePaused ? "text-red-600" : "text-green-600"
+            )} style={{ fontVariationSettings: "'FILL' 1" }}>
+              {queue?.isIntakePaused ? "pause_circle" : "check_circle"}
+            </span>
+            <h3 className="text-[10px] font-black uppercase tracking-widest text-black/40">Intake Status</h3>
+          </div>
+          <div className={cn(
+            "inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-black uppercase tracking-widest ring-1 ring-inset",
+            queue?.isIntakePaused 
+              ? "bg-red-50 text-red-700 ring-red-700/10" 
+              : "bg-green-50 text-green-700 ring-green-700/10"
+          )}>
+            {loading ? "Checking..." : queue?.isIntakePaused ? "Intake Paused" : "Active & Accepting"}
+          </div>
         </div>
-        <div className="md:col-span-1 rounded-2xl border border-outline/10 bg-neutral-50 p-5">
-          <h3 className="text-[10px] font-black uppercase tracking-widest text-black/40 mb-2">Queue Length</h3>
-          <div className="text-3xl font-black text-black leading-none">{queue?.queueLength ?? 0}</div>
+        
+        <div className="rounded-2xl border border-outline/10 bg-white p-5 shadow-sm">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="material-symbols-outlined text-sky-600 text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>directions_car</span>
+            <h3 className="text-[10px] font-black uppercase tracking-widest text-black/40">Queue Length</h3>
+          </div>
+          <div className="flex items-baseline gap-2">
+            <div className="text-3xl font-black text-black leading-none">{queue?.queueLength ?? 0}</div>
+            <span className="text-[10px] font-bold text-black/30 uppercase tracking-widest">Vehicles</span>
+          </div>
         </div>
       </div>
 
-      <div className="rounded-md border">
+      <div className="rounded-xl border border-outline/10 overflow-hidden shadow-sm bg-white">
         <Table>
           <TableHeader>
-            <TableRow>
-              <TableHead>Plate Number</TableHead>
-              <TableHead>Category</TableHead>
-              <TableHead>Joined At</TableHead>
-              <TableHead>Status</TableHead>
+            <TableRow className="bg-neutral-50/50 hover:bg-neutral-50/50 h-11">
+              <TableHead className="text-[11px] font-bold uppercase tracking-wider text-black/60 px-4">Identified Plate</TableHead>
+              <TableHead className="text-[11px] font-bold uppercase tracking-wider text-black/60 px-4">Vehicle Category</TableHead>
+              <TableHead className="text-[11px] font-bold uppercase tracking-wider text-black/60 px-4">Join Time</TableHead>
+              <TableHead className="text-[11px] font-bold uppercase tracking-wider text-black/60 px-4">Current Status</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={4} className="text-center py-6 text-muted-foreground">
-                  Loading queue data...
+                <TableCell colSpan={4} className="text-center py-12 text-muted-foreground">
+                  <span className="material-symbols-outlined text-3xl text-black/5 animate-spin block mb-2">refresh</span>
+                  <span className="text-xs font-bold uppercase tracking-widest opacity-40">Loading queue data...</span>
                 </TableCell>
               </TableRow>
             ) : !queue || !queue.items || queue.items.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={4} className="text-center py-6 text-muted-foreground">
-                  The queue is currently empty.
+                <TableCell colSpan={4} className="text-center py-12 text-muted-foreground">
+                  <span className="material-symbols-outlined text-3xl text-black/5 block mb-2">lane</span>
+                  <span className="text-xs font-bold uppercase tracking-widest opacity-40">The queue is currently empty.</span>
                 </TableCell>
               </TableRow>
             ) : (
-              queue.items.map((item) => (
-                <TableRow key={item.id}>
-                  <TableCell className="font-medium">{item.plateNumber}</TableCell>
-                  <TableCell>{item.vehicleCategory}</TableCell>
-                  <TableCell>{new Date(item.joinedAt).toLocaleTimeString()}</TableCell>
-                  <TableCell>
-                    <Badge variant="outline">{item.status}</Badge>
+              queue?.items?.map((item) => (
+                <TableRow key={item.id} className="group hover:bg-neutral-50/50 transition-colors border-b border-outline/5 last:border-0">
+                  <TableCell className="px-4 py-3.5">
+                    <span className="font-medium text-neutral-800 tracking-tight">{item.plateNumber}</span>
+                  </TableCell>
+                  <TableCell className="px-4 py-3.5">
+                    <span className="inline-flex items-center rounded-md bg-sky-50 px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-sky-700 ring-1 ring-inset ring-sky-700/10">
+                      {item.vehicleCategory}
+                    </span>
+                  </TableCell>
+                  <TableCell className="px-4 py-3.5">
+                    <div className="flex flex-col">
+                      <span className="text-[13px] font-bold text-neutral-600">
+                        {new Date(item.joinedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                      </span>
+                      <span className="text-[9px] font-black text-black/20 uppercase tracking-tighter">
+                        {new Date(item.joinedAt).toLocaleDateString()}
+                      </span>
+                    </div>
+                  </TableCell>
+                  <TableCell className="px-4 py-3.5">
+                    <span className="inline-flex items-center rounded-full bg-neutral-100 px-2.5 py-0.5 text-[10px] font-bold text-neutral-600 ring-1 ring-inset ring-neutral-200">
+                      {item.status}
+                    </span>
                   </TableCell>
                 </TableRow>
               ))

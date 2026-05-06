@@ -2,15 +2,18 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useLanguage } from "@/lib/i18n/language-context";
+import { LanguageToggle } from "@/components/ui/language-toggle";
 
 export function MarketingHeader() {
   const pathname = usePathname();
   const isHome = pathname === "/";
+  const { t } = useLanguage();
 
   const navLinks = [
-    { label: "Home", href: isHome ? "#home" : "/#home" },
-    { label: "Services", href: isHome ? "#services" : "/#services" },
-    { label: "Authorities", href: isHome ? "#authorities" : "/#authorities" },
+    { key: "nav_home" as const, href: isHome ? "#home" : "/#home" },
+    { key: "nav_services" as const, href: isHome ? "#services" : "/#services" },
+    { key: "nav_authorities" as const, href: isHome ? "#authorities" : "/#authorities" },
   ];
 
   return (
@@ -20,24 +23,25 @@ export function MarketingHeader() {
           energy_savings_leaf
         </span>
         <span className="text-lg font-bold tracking-tight text-neutral-900 dark:text-white uppercase">
-          Mekelle Fuel Tracker
+          {t("brand_name")}
         </span>
       </Link>
       <nav className="hidden md:flex items-center gap-8">
         {navLinks.map((link) => (
           <Link
-            key={link.label}
+            key={link.key}
             className="text-neutral-600 dark:text-neutral-400 font-medium hover:text-yellow-700 dark:hover:text-yellow-300 transition-all duration-300 cursor-pointer active:scale-95 transform"
             href={link.href}
           >
-            {link.label}
+            {t(link.key)}
           </Link>
         ))}
       </nav>
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3">
+        <LanguageToggle />
         <Link href="/sign-in">
           <button className="px-6 py-2 bg-primary-container text-on-primary-container font-label-caps text-xs uppercase rounded transition-all hover:bg-surface-tint hover:text-white transform active:scale-95">
-            Login
+            {t("nav_login")}
           </button>
         </Link>
       </div>

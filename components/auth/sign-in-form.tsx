@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/lib/auth/context";
+import { useLanguage } from "@/lib/i18n/language-context";
 import { getRoleHomePath } from "@/lib/auth/roles";
 import { AuthApiError } from "@/lib/auth/api";
 import { Eye, EyeOff } from "lucide-react";
@@ -15,6 +16,7 @@ import { Eye, EyeOff } from "lucide-react";
 export function SignInForm() {
   const router = useRouter();
   const { signIn } = useAuth();
+  const { t } = useLanguage();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -25,11 +27,11 @@ export function SignInForm() {
     setIsSubmitting(true);
     try {
       const user = await signIn(email, password);
-      toast.success("Signed in successfully.");
+      toast.success(t("login_success"));
       router.push(getRoleHomePath(user.role));
     } catch (error) {
       const message =
-        error instanceof AuthApiError ? error.message : "Unable to sign in. Please try again.";
+        error instanceof AuthApiError ? error.message : t("login_error_generic");
       toast.error(message);
     } finally {
       setIsSubmitting(false);
@@ -39,7 +41,9 @@ export function SignInForm() {
   return (
     <form className="space-y-5" onSubmit={handleSubmit}>
       <div className="space-y-2.5">
-        <Label htmlFor="email" className="font-label-caps text-[10px] uppercase tracking-[0.2em] text-neutral-500 font-black">Email Address</Label>
+        <Label htmlFor="email" className="font-label-caps text-[10px] uppercase tracking-[0.2em] text-neutral-500 font-black">
+          {t("login_email_label")}
+        </Label>
         <Input
           id="email"
           type="email"
@@ -53,9 +57,11 @@ export function SignInForm() {
       </div>
       <div className="space-y-2.5">
         <div className="flex items-center justify-between">
-          <Label htmlFor="password" className="font-label-caps text-[10px] uppercase tracking-[0.2em] text-neutral-500 font-black">Password</Label>
+          <Label htmlFor="password" className="font-label-caps text-[10px] uppercase tracking-[0.2em] text-neutral-500 font-black">
+            {t("login_password_label")}
+          </Label>
           <Link href="/forgot-password" title="Forgot Password" className="font-label-caps text-[10px] uppercase tracking-widest text-primary hover:text-surface-tint transition-colors font-bold">
-            Forgot?
+            {t("login_forgot_link")}
           </Link>
         </div>
         <div className="relative">
@@ -85,10 +91,10 @@ export function SignInForm() {
         {isSubmitting ? (
           <span className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-white animate-pulse"></span>
-            Authenticating...
+            {t("login_authenticating")}
           </span>
         ) : (
-          "Official Sign In"
+          t("login_submit_btn")
         )}
       </Button>
     </form>

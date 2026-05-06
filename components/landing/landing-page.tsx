@@ -1,7 +1,12 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowRight, ShieldCheck, Activity, Users } from "lucide-react";
+import { useLanguage } from "@/lib/i18n/language-context";
 
 export function LandingPage() {
+  const { t } = useLanguage();
+
   return (
     <>
       <main className="bg-neutral-950 font-['Public_Sans'] overflow-x-hidden selection:bg-yellow-500/30">
@@ -25,30 +30,30 @@ export function LandingPage() {
               <div className="flex items-center gap-3 mb-6">
                 <div className="h-px w-8 bg-yellow-500/50"></div>
                 <span className="font-label-caps text-[10px] uppercase font-black tracking-[0.3em] text-yellow-500">
-                  Regional Energy Oversight
+                  {t("hero_eyebrow")}
                 </span>
               </div>
               
               <h1 className="text-4xl lg:text-5xl font-black text-white tracking-tighter leading-[1.1] mb-6">
-                Modernizing Fuel<br />Distribution for<br />
+                {t("hero_title_line1")}<br />{t("hero_title_line2")}<br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-600">
-                  Mekelle
+                  {t("hero_city")}
                 </span>
               </h1>
               
               <p className="text-neutral-400 text-base lg:text-lg font-medium leading-relaxed mb-8 max-w-md">
-                An authoritative digital framework ensuring equitable, transparent, and efficient energy resource management for the Tigray regional administration.
+                {t("hero_subtitle")}
               </p>
               
               <div className="flex flex-col sm:flex-row flex-wrap gap-4 items-center">
                 <Link href="/sign-in" className="w-full sm:w-auto">
                   <button className="w-full sm:w-auto bg-yellow-500 text-black px-8 py-3.5 font-label-caps text-[11px] font-black uppercase tracking-[0.2em] rounded-full hover:bg-yellow-400 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_0_40px_-10px_rgba(234,179,8,0.4)] flex items-center justify-center gap-3">
-                    Official Login
+                    {t("hero_cta_login")}
                     <ArrowRight className="w-4 h-4" />
                   </button>
                 </Link>
                 <button className="w-full sm:w-auto bg-transparent border border-neutral-700 text-white px-8 py-3.5 font-label-caps text-[11px] font-bold uppercase tracking-[0.2em] rounded-full hover:bg-white/5 hover:border-neutral-500 transition-all">
-                  Documentation
+                  {t("hero_cta_docs")}
                 </button>
               </div>
               <div className="mt-6 flex items-center justify-center sm:justify-start gap-4 text-neutral-500">
@@ -56,7 +61,7 @@ export function LandingPage() {
                   href="/forgot-password"
                   className="hover:text-yellow-500 text-[10px] font-label-caps font-bold uppercase tracking-widest transition-colors"
                 >
-                  Recover Account
+                  {t("hero_recover")}
                 </Link>
               </div>
             </div>
@@ -70,8 +75,8 @@ export function LandingPage() {
                       <Activity className="w-5 h-5 text-emerald-400" />
                     </div>
                     <div>
-                      <div className="text-[10px] font-black tracking-widest text-neutral-400 uppercase">Live Metrics</div>
-                      <div className="text-white font-bold">Network Status</div>
+                      <div className="text-[10px] font-black tracking-widest text-neutral-400 uppercase">{t("live_metrics")}</div>
+                      <div className="text-white font-bold">{t("network_status")}</div>
                     </div>
                   </div>
                   <span className="flex h-3 w-3">
@@ -82,15 +87,15 @@ export function LandingPage() {
                 
                 <div className="space-y-4">
                   <div className="bg-black/50 rounded-2xl p-4 border border-white/5 flex justify-between items-center">
-                    <span className="text-neutral-400 text-xs font-bold uppercase tracking-wider">Stations Online</span>
+                    <span className="text-neutral-400 text-xs font-bold uppercase tracking-wider">{t("stations_online")}</span>
                     <span className="text-white font-black text-xl tracking-tight">142</span>
                   </div>
                   <div className="bg-black/50 rounded-2xl p-4 border border-white/5 flex justify-between items-center">
-                    <span className="text-neutral-400 text-xs font-bold uppercase tracking-wider">Liters Distributed</span>
+                    <span className="text-neutral-400 text-xs font-bold uppercase tracking-wider">{t("liters_distributed")}</span>
                     <span className="text-yellow-400 font-black text-xl tracking-tight">1.2M+</span>
                   </div>
                   <div className="bg-black/50 rounded-2xl p-4 border border-white/5 flex justify-between items-center">
-                    <span className="text-neutral-400 text-xs font-bold uppercase tracking-wider">Active Vehicles</span>
+                    <span className="text-neutral-400 text-xs font-bold uppercase tracking-wider">{t("active_vehicles")}</span>
                     <span className="text-white font-black text-xl tracking-tight">50,491</span>
                   </div>
                 </div>
@@ -113,10 +118,10 @@ export function LandingPage() {
           <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
             <div className="text-center max-w-3xl mx-auto mb-20">
               <h2 className="text-3xl lg:text-5xl font-black text-white tracking-tighter mb-6">
-                Strategic Operational Verticals
+                {t("services_title")}
               </h2>
               <p className="text-neutral-400 font-medium text-lg">
-                Three integrated pillars designed to streamline regional energy logistics through uncompromising technology.
+                {t("services_subtitle")}
               </p>
             </div>
 
@@ -129,12 +134,12 @@ export function LandingPage() {
                   <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-yellow-500/20 to-amber-600/10 border border-yellow-500/20 flex items-center justify-center mb-8">
                     <ShieldCheck className="w-7 h-7 text-yellow-500" />
                   </div>
-                  <h3 className="text-2xl font-black text-white mb-4">Command Center</h3>
+                  <h3 className="text-2xl font-black text-white mb-4">{t("pillar1_title")}</h3>
                   <p className="text-neutral-400 text-sm leading-relaxed mb-8">
-                    Centralized authority and control with real-time, data-driven oversight of regional reserves and strategic distribution channels.
+                    {t("pillar1_desc")}
                   </p>
                   <ul className="space-y-3">
-                    {["Reserve Analytics", "Crisis Management", "Quota Definition"].map((item) => (
+                    {([t("pillar1_item1"), t("pillar1_item2"), t("pillar1_item3")] as string[]).map((item) => (
                       <li key={item} className="flex items-center text-xs font-bold text-neutral-300 uppercase tracking-wider">
                         <div className="w-1.5 h-1.5 rounded-full bg-yellow-500 mr-3"></div>
                         {item}
@@ -151,12 +156,12 @@ export function LandingPage() {
                   <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-teal-600/10 border border-emerald-500/20 flex items-center justify-center mb-8">
                     <span className="material-symbols-outlined text-3xl text-emerald-400" style={{ fontVariationSettings: "'FILL' 1" }}>local_gas_station</span>
                   </div>
-                  <h3 className="text-2xl font-black text-white mb-4">Fuel Stations</h3>
+                  <h3 className="text-2xl font-black text-white mb-4">{t("pillar2_title")}</h3>
                   <p className="text-neutral-400 text-sm leading-relaxed mb-8">
-                    Optimization of retail logistics through advanced queue management and irrefutable quota verification systems.
+                    {t("pillar2_desc")}
                   </p>
                   <ul className="space-y-3">
-                    {["Queue Optimization", "Stock Verification", "Worker Management"].map((item) => (
+                    {([t("pillar2_item1"), t("pillar2_item2"), t("pillar2_item3")] as string[]).map((item) => (
                       <li key={item} className="flex items-center text-xs font-bold text-neutral-300 uppercase tracking-wider">
                         <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-3"></div>
                         {item}
@@ -173,12 +178,12 @@ export function LandingPage() {
                   <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500/20 to-indigo-600/10 border border-blue-500/20 flex items-center justify-center mb-8">
                     <Users className="w-7 h-7 text-blue-400" />
                   </div>
-                  <h3 className="text-2xl font-black text-white mb-4">Citizens</h3>
+                  <h3 className="text-2xl font-black text-white mb-4">{t("pillar3_title")}</h3>
                   <p className="text-neutral-400 text-sm leading-relaxed mb-8">
-                    Empowering the public with live availability mapping and transparent personal quota tracking for essential needs.
+                    {t("pillar3_desc")}
                   </p>
                   <ul className="space-y-3">
-                    {["Live Map Access", "Smart Quotas", "Transaction History"].map((item) => (
+                    {([t("pillar3_item1"), t("pillar3_item2"), t("pillar3_item3")] as string[]).map((item) => (
                       <li key={item} className="flex items-center text-xs font-bold text-neutral-300 uppercase tracking-wider">
                         <div className="w-1.5 h-1.5 rounded-full bg-blue-400 mr-3"></div>
                         {item}
@@ -192,7 +197,7 @@ export function LandingPage() {
           </div>
         </section>
 
-        {/* AUTHORIZED BODIES BAnner */}
+        {/* AUTHORIZED BODIES BANNER */}
         <section
           id="authorities"
           className="border-t border-neutral-800 bg-neutral-950 py-16 lg:py-20"
@@ -200,22 +205,22 @@ export function LandingPage() {
           <div className="max-w-7xl mx-auto px-6 lg:px-12">
             <div className="text-center mb-10">
               <p className="font-label-caps text-[10px] text-neutral-600 font-bold tracking-[0.3em] uppercase">
-                Authorized Governing Partners
+                {t("authorities_label")}
               </p>
             </div>
             <div className="flex flex-wrap justify-center items-center gap-12 lg:gap-24 grayscale opacity-40 hover:grayscale-0 hover:opacity-100 transition-all duration-700">
               {[
-                { icon: "gavel", name: "Regional Bureau of Energy" },
-                { icon: "policy", name: "Transport Authority" },
-                { icon: "shield_with_heart", name: "Regional Security Bureau" },
-                { icon: "location_city", name: "Mekelle City Admin" },
+                { icon: "gavel", key: "auth1" as const },
+                { icon: "policy", key: "auth2" as const },
+                { icon: "shield_with_heart", key: "auth3" as const },
+                { icon: "location_city", key: "auth4" as const },
               ].map((authority) => (
-                <div key={authority.name} className="flex flex-col items-center gap-4 group">
+                <div key={authority.key} className="flex flex-col items-center gap-4 group">
                   <div className="w-16 h-16 rounded-2xl bg-neutral-900 border border-neutral-800 flex items-center justify-center group-hover:border-neutral-600 transition-colors">
                     <span className="material-symbols-outlined text-3xl text-neutral-500 group-hover:text-white transition-colors">{authority.icon}</span>
                   </div>
                   <span className="text-[10px] font-black tracking-widest text-neutral-500 uppercase group-hover:text-white transition-colors text-center max-w-[120px]">
-                    {authority.name}
+                    {t(authority.key)}
                   </span>
                 </div>
               ))}

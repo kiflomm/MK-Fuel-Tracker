@@ -9,6 +9,7 @@ import {
   StationFuelInventoryRow,
 } from "@/lib/api/station-manager";
 import Link from "next/link";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 
 const SECTIONS = [
@@ -136,67 +137,91 @@ export default function StationManagerPage() {
       </div>
 
       {/* Fuel inventory (manual refresh uses header button) */}
-      <div className="rounded-2xl border border-outline/15 bg-card p-6 shadow-sm">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+      <div className="rounded-2xl border border-outline/10 bg-white p-6 shadow-sm">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
           <div>
-            <h2 className="text-xs font-black tracking-[0.2em] uppercase text-black/40">
-              Fuel remaining (by type)
-            </h2>
-            <p className="text-sm text-muted-foreground mt-1">
-              Levels are set by government admin with a full audit trail. Use Refresh Status above to reload.
+            <div className="flex items-center gap-2 mb-1">
+              <span className="material-symbols-outlined text-yellow-700 text-base" style={{ fontVariationSettings: "'FILL' 1" }}>inventory_2</span>
+              <h2 className="text-xs font-black tracking-[0.2em] uppercase text-yellow-700">
+                Fuel Inventory
+              </h2>
+            </div>
+            <p className="text-[10px] text-black/40 uppercase tracking-widest font-semibold">
+              Live stock levels by fuel type
             </p>
           </div>
         </div>
         {loading ? (
-          <p className="text-sm text-muted-foreground py-6 text-center">
-            Loading inventory…
-          </p>
+          <div className="flex flex-col items-center justify-center py-12 text-center bg-neutral-50 rounded-xl border border-dashed border-outline/20">
+            <span className="material-symbols-outlined text-3xl text-black/10 animate-spin mb-2">refresh</span>
+            <p className="text-xs font-bold text-black/40 uppercase tracking-widest">
+              Synchronizing inventory…
+            </p>
+          </div>
         ) : !fuelInventory || fuelInventory.length === 0 ? (
-          <p className="text-sm text-muted-foreground py-6 text-center">
-            No fuel types configured yet, or no inventory rows apply to this station.
-          </p>
+          <div className="flex flex-col items-center justify-center py-12 text-center bg-neutral-50 rounded-xl border border-dashed border-outline/20">
+            <span className="material-symbols-outlined text-3xl text-black/10 mb-2">inventory</span>
+            <p className="text-xs font-bold text-black/40 uppercase tracking-widest">
+              No inventory data available
+            </p>
+          </div>
         ) : (
-          <div className="rounded-xl border border-outline/10 overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b bg-muted/40 text-left text-[10px] font-black uppercase tracking-widest text-black/45">
-                  <th className="px-4 py-3">Fuel type</th>
-                  <th className="px-4 py-3">Code</th>
-                  <th className="px-4 py-3 text-right">Remaining (L)</th>
-                  <th className="px-4 py-3 text-right">Last inventory update</th>
-                </tr>
-              </thead>
-              <tbody>
+          <div className="rounded-xl border border-outline/10 overflow-hidden shadow-sm bg-white">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-neutral-50/50 hover:bg-neutral-50/50 h-11">
+                  <TableHead className="text-[11px] font-bold uppercase tracking-wider text-black/60 px-4">Fuel type</TableHead>
+                  <TableHead className="text-[11px] font-bold uppercase tracking-wider text-black/60 px-4">Code</TableHead>
+                  <TableHead className="text-[11px] font-bold uppercase tracking-wider text-black/60 px-4 text-right">Remaining (L)</TableHead>
+                  <TableHead className="text-[11px] font-bold uppercase tracking-wider text-black/60 px-4 text-right">Last Updated</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
                 {fuelInventory.map((row) => (
-                  <tr key={row.fuelTypeId} className="border-b last:border-0">
-                    <td className="px-4 py-3 font-medium">
-                      {row.fuelTypeName}
-                      {!row.fuelTypeIsActive && (
-                        <span className="ml-2 text-[10px] uppercase tracking-wider text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded">
-                          Inactive
-                        </span>
-                      )}
-                    </td>
-                    <td className="px-4 py-3 font-mono text-xs text-muted-foreground">
-                      {row.fuelTypeCode}
-                    </td>
-                    <td className="px-4 py-3 text-right font-semibold tabular-nums">
+                  <TableRow key={row.fuelTypeId} className="group hover:bg-neutral-50/50 transition-colors border-b border-outline/5 last:border-0">
+                    <TableCell className="px-4 py-3.5">
+                      <div className="flex items-center gap-3">
+                        <span className="font-bold text-neutral-800">{row.fuelTypeName}</span>
+                        {!row.fuelTypeIsActive && (
+                          <span className="inline-flex items-center rounded-md bg-amber-50 px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-amber-700 ring-1 ring-inset ring-amber-700/10">
+                            Inactive
+                          </span>
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell className="px-4 py-3.5">
+                      <span className="font-mono text-[11px] font-bold text-black/40 bg-black/5 px-2 py-1 rounded">
+                        {row.fuelTypeCode}
+                      </span>
+                    </TableCell>
+                    <TableCell className="px-6 py-4 text-right font-black text-neutral-900 tabular-nums">
                       {row.remainingLiters.toLocaleString(undefined, {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2,
                       })}
-                    </td>
-                    <td className="px-4 py-3 text-right text-muted-foreground text-xs">
-                      {row.inventoryUpdatedAt
-                        ? new Date(row.inventoryUpdatedAt).toLocaleString()
-                        : "—"}
-                    </td>
-                  </tr>
+                    </TableCell>
+                    <TableCell className="px-6 py-4 text-right">
+                      <div className="flex flex-col items-end">
+                        <span className="text-[11px] font-bold text-black/60 truncate max-w-[120px]">
+                          {row.inventoryUpdatedAt ? new Date(row.inventoryUpdatedAt).toLocaleDateString() : "—"}
+                        </span>
+                        <span className="text-[9px] font-black text-black/30 uppercase tracking-tighter">
+                          {row.inventoryUpdatedAt ? new Date(row.inventoryUpdatedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ""}
+                        </span>
+                      </div>
+                    </TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           </div>
         )}
+        <div className="mt-4 p-4 rounded-xl bg-amber-50/50 border border-amber-200/50 flex items-start gap-3">
+          <span className="material-symbols-outlined text-amber-600 text-lg">info</span>
+          <p className="text-[11px] font-medium text-amber-800 leading-relaxed">
+            Inventory levels are managed by the regional administration. Station managers have read-only access to this data for operational oversight.
+          </p>
+        </div>
       </div>
 
       {/* Section heading */}
