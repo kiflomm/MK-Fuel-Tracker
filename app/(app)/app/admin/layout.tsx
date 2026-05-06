@@ -3,7 +3,17 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { useLanguage } from "@/lib/i18n/language-context";
+
+const NAV_ITEMS = [
+  { href: "/app/admin", label: "Dashboard", exact: true, icon: "dashboard", desc: "Overview & stats" },
+  { href: "/app/admin/stations", label: "Stations", icon: "local_gas_station", desc: "Manage fuel stations" },
+  { href: "/app/admin/users", label: "Users", icon: "manage_accounts", desc: "Managers & owners" },
+  { href: "/app/admin/vehicle-categories", label: "Vehicle Categories", icon: "category", desc: "Dynamic category list" },
+  { href: "/app/admin/fuel-types", label: "Fuel Types", icon: "local_gas_station", desc: "Manage fuel options & pricing" },
+  { href: "/app/admin/reports", label: "Reports", icon: "assessment", desc: "Analytics & exports" },
+  { href: "/app/admin/audit-logs", label: "Audit Logs", icon: "policy", desc: "System activity trail" },
+  { href: "/app/change-password", label: "Change Password", icon: "key", desc: "Update your login secret" },
+];
 
 function cn(...classes: (string | undefined | null | false)[]) {
   return classes.filter(Boolean).join(" ");

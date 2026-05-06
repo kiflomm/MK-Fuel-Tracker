@@ -92,3 +92,17 @@ export async function resetPassword(code: string, password: string) {
     body: JSON.stringify({ code, password }),
   });
 }
+
+export async function changePassword(
+  accessToken: string,
+  currentPassword: string,
+  newPassword: string,
+) {
+  return authRequest<null>("/auth/change-password", {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    body: JSON.stringify({ currentPassword, newPassword }),
+  });
+}
